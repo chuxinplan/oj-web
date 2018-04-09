@@ -1,0 +1,14 @@
+package: github.com/open-fightcoder/oj-web
+import:
+- package: github.com/gin-gonic/gin
+  version: ~1.2.0
+- package: github.com/gin-gonic/contrib
+  subpackages:
+  - cors
+- package: github.com/appleboy/gin-revision-middleware
+- package: github.com/aviddiviner/gin-limit
+- package: github.com/sirupsen/logrus
+  version: ^1.0.5
+- package: golang.org/x/crypto
+  subpackages:
+  - ssh/terminal
