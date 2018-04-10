@@ -8,7 +8,6 @@ cfg=cfg/cfg.toml.release
 pidfile=var/app.pid
 logfile=logs/app.log
 
-
 function start() {
 	mkdir -p var &>/dev/null
 	mkdir -p logs &>/dev/null

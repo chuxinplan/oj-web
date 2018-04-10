@@ -18,8 +18,8 @@ func rootHandler(context *gin.Context) {
 	context.JSON(http.StatusOK, gin.H{
 		"Hello": "world",
 	})
-	logrus.SetFormatter()
-	c.JSON(200, gin.H{"token": "aaa"})
+	// logrus.SetFormatter()
+	context.JSON(200, gin.H{"token": "aaa"})
 }
 
 func main() {
