@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+//限制请求并发量
 func MaxAllowed(n int) gin.HandlerFunc {
 	sem := make(chan struct{}, n)
 	acquire := func() { sem <- struct{}{} }
