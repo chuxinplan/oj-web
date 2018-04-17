@@ -8,7 +8,6 @@ func RegisterAccount(router *gin.RouterGroup) {
 }
 
 func httpHandlerLogin(c *gin.Context) {
-
 }
 
 func httpHandlerRegister(c *gin.Context) {
