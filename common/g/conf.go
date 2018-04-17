@@ -44,7 +44,7 @@ type JwtConfig struct {
 }
 
 var (
-	configFile string
+	ConfigFile string
 	config     *Config
 	configLock = new(sync.RWMutex)
 )
@@ -70,7 +70,7 @@ func LoadConfig(cfgFile string) {
 		log.Fatalln("config file specified not found:", cfgFile)
 	}
 
-	configFile = cfgFile
+	ConfigFile = cfgFile
 
 	if bs, err := ioutil.ReadFile(cfgFile); err != nil {
 		log.Fatalf("read config file failed: %s\n", err.Error())

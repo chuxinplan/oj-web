@@ -62,6 +62,10 @@ function restart() {
 	fi
 }
 
+function reload() {
+
+}
+
 function status() {
 	check_pid
 	local running=$?
@@ -124,6 +128,9 @@ case $action in
 	"restart" )
 		restart
 		;;
+	"reload" )
+	    reload
+	    ;;
 	"status" )
 		status
 		;;

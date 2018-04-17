@@ -3,6 +3,8 @@ package apiv1
 import (
 	"net/http"
 
+	"fmt"
+
 	"github.com/gin-gonic/gin"
 	"github.com/open-fightcoder/oj-web/common/g"
 )
@@ -10,6 +12,8 @@ import (
 func RegisterSelf(router *gin.RouterGroup) {
 	router.GET("self/health", httpHandlerHealth)
 	router.GET("self/config", httpHandlerConfig)
+	router.GET("self/reload", httpHandlerReload)
+
 }
 
 func httpHandlerHealth(c *gin.Context) {
@@ -17,5 +21,13 @@ func httpHandlerHealth(c *gin.Context) {
 }
 
 func httpHandlerConfig(c *gin.Context) {
-	c.String(http.StatusOK, g.Conf())
+	c.JSON(http.StatusOK, g.Conf())
+}
+
+func httpHandlerReload(c *gin.Context) {
+	cfg := c.GetString("cfg")
+	fmt.Println(cfg)
+	g.LoadConfig(g.ConfigFile)
+
+	c.String(http.StatusOK, "reload succeed")
 }

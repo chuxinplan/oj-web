@@ -1,5 +1,5 @@
-hash: 5b66ebea6b54259281b5ac89ba77a05b0ccc664283d9c7e603d308b6ca32b56a
-updated: 2018-04-17T21:40:32.475305+08:00
+hash: 705b44b455e6a772d47ebf389eb3c392b10132c1ce7307540dd68500375224e9
+updated: 2018-04-17T23:58:18.678243+08:00
 imports:
 - name: github.com/BurntSushi/toml
   version: b26d9c308763d68093482582cea63d69be07a0f0
@@ -45,7 +45,7 @@ imports:
 - name: golang.org/x/crypto/ssh/terminal
   version: d6449816ce06963d9d136eee5a56fca5b0616e7e
 - name: golang.org/x/sys
-  version: ecfd8b563e1320e7282dccf28ad48ec2c68aaebf
+  version: b126b21c05a91c856b027c16779c12e3bf236954
   subpackages:
   - unix
 - name: gopkg.in/go-playground/validator.v8
