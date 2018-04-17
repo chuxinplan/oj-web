@@ -9,7 +9,6 @@ type Account struct {
 	Email     string //邮箱
 	Password  string //密码
 	Phone     string //手机号
-	QqNumber  string //QQ号
 	QqId      string //用于QQ第三方登录
 	GithubId  string //Github第三方登录
 	WeichatId string //weichat第三方登录
