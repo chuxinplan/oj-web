@@ -7,5 +7,4 @@ public/
 .deploy*/
 *.iml
 .idea/
-oj-web
 output/
