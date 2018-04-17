@@ -5,8 +5,8 @@ import (
 
 	"github.com/gin-gonic/gin"
 	"github.com/open-fightcoder/oj-web/common/g"
-	apiv1 "github.com/open-fightcoder/oj-web/router/controllers/api/v1"
-	authv1 "github.com/open-fightcoder/oj-web/router/controllers/auth/v1"
+	"github.com/open-fightcoder/oj-web/router/controllers/apiv1"
+	"github.com/open-fightcoder/oj-web/router/controllers/authv1"
 	"github.com/open-fightcoder/oj-web/router/middleware"
 )
 
@@ -30,9 +30,9 @@ func initRouter() {
 	router.Use(middleware.Recovery())
 	router.Use(middleware.MaxAllowed(g.Conf().Run.MaxAllowed))
 
-	authRouter := router.Group("/auth", middleware.Auth())
-	authv1.RegisterAUTHV1(authRouter)
+	authRouter := router.Group("/authv1", middleware.Auth())
+	authv1.Register(authRouter)
 
-	apiRouter := router.Group("/api")
-	apiv1.RegisterAPIV1(apiRouter)
+	apiRouter := router.Group("/apiv1")
+	apiv1.Register(apiRouter)
 }

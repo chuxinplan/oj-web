@@ -1,4 +1,4 @@
-package controllers
+package apiv1
 
 import (
 	"net/http"
@@ -8,8 +8,8 @@ import (
 )
 
 func RegisterSelf(router *gin.RouterGroup) {
-	router.GET("/self/health", httpHandlerHealth)
-	router.GET("/self/config", httpHandlerConfig)
+	router.GET("self/health", httpHandlerHealth)
+	router.GET("self/config", httpHandlerConfig)
 }
 
 func httpHandlerHealth(c *gin.Context) {
