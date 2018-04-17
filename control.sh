@@ -64,7 +64,7 @@ function restart() {
 }
 
 function reload() {
-
+    curl -X GET http://127.0.0.1:8000/apiv1/self/reload
 }
 
 function status() {
@@ -116,6 +116,8 @@ function check_pid_number() {
 # action:
 #   - start     启动服务
 #   - stop      停止服务
+#   - restart   重启服务
+#   - reload   重新加载
 #   - status    查看状态(stoped, other)
 ######################################################################
 action=$1
@@ -137,6 +139,7 @@ case $action in
 		;;
 	* )
 		echo "unknown command [$action]"
+		echo "Usage [start, stop, restart, reload, status]"
 		exit 1
 		;;
 esac
