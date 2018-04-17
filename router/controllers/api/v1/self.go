@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/open-fightcoder/oj-web/common"
+	"github.com/open-fightcoder/oj-web/common/g"
 )
 
 func RegisterSelf(router *gin.RouterGroup) {
@@ -17,5 +17,5 @@ func httpHandlerHealth(c *gin.Context) {
 }
 
 func httpHandlerConfig(c *gin.Context) {
-	c.JSON(http.StatusOK, common.Conf())
+	c.String(http.StatusOK, g.Conf())
 }

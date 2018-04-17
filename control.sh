@@ -2,8 +2,7 @@
 workspace=$(cd $(dirname $0) && pwd -P)
 cd $workspace
 
-module="oj-web"
-app="fightcoder-$module"
+app="oj-web"
 cfg=cfg/cfg.toml.release
 pidfile=var/app.pid
 logfile=logs/app.log

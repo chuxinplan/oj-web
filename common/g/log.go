@@ -1,18 +1,25 @@
 package g
 
 import (
-	"fmt"
 	"os"
 	"path"
 	"time"
 
+	"io"
+
+	"os/exec"
+	"path/filepath"
+	"strings"
+
+	"github.com/lestrrat-go/file-rotatelogs"
+	"github.com/rifflock/lfshook"
 	log "github.com/sirupsen/logrus"
 )
 
 func InitLog() {
 	conf := Conf()
 	if !conf.Log.Enable {
-		fmt.Println("log to std err")
+		log.Info("log to std err")
 		log.SetOutput(os.Stdout)
 		log.SetLevel(log.DebugLevel)
 		return
@@ -40,36 +47,25 @@ func InitLog() {
 	log.AddHook(lfhook)
 }
 
-// TODO 更改日志切割，为每月分割，并以不同级别设置不同输出目的
-func getLogRotatFileHook(logPath string, logFileName string, maxAge time.Duration, rotationTime time.Duration) log.Hook {
-	baseLogPaht := path.Join(logPath, logFileName)
+func getWriter(logPath string, logFileName string, maxAge time.Duration, rotationTime time.Duration) io.Writer {
+	path := path.Join(getCurrPath(), logPath, logFileName)
+
 	writer, err := rotatelogs.New(
-		baseLogPaht+".%Y%m%d",
-		rotatelogs.WithLinkName(logFileName),                // 生成软链，指向最新日志文件
-		rotatelogs.WithMaxAge(maxAge*time.Hour),             // 文件最大保存时间
-		rotatelogs.WithRotationTime(rotationTime*time.Hour), // 日志切割时间间隔
+		path+".%Y%m%d%H%M.log",
+		rotatelogs.WithLinkName(path),
+		rotatelogs.WithMaxAge(maxAge*time.Hour),
+		rotatelogs.WithRotationTime(rotationTime*time.Hour),
 	)
 	if err != nil {
-		log.Errorf("config local file system logger error. ", err)
+		return nil
 	}
-	lfHook := lfshook.NewHook(lfshook.WriterMap{
-		log.DebugLevel: getWriter(), // 为不同级别设置不同的输出目的
-		log.InfoLevel:  writer,
-		log.WarnLevel:  writer,
-		log.ErrorLevel: writer,
-		log.FatalLevel: writer,
-		log.PanicLevel: writer,
-	}, &log.TextFormatter{ForceColors: true})
-	return lfHook
+	return writer
 }
 
-func getWriter(logPath string, logFileName string, maxAge time.Duration, rotationTime time.Duration) {
-	baseLogPath := path.Join(logPath, logFileName)
-	writer := rotatelogs.New(
-		baseLogPath+".%Y%m%d",
-		rotatelogs.WithLinkName(logFileName),                // 生成软链，指向最新日志文件
-		rotatelogs.WithMaxAge(maxAge*time.Hour),             // 文件最大保存时间
-		rotatelogs.WithRotationTime(rotationTime*time.Hour), // 日志切割时间间隔
-	)
-	return writer
+func getCurrPath() string {
+	file, _ := exec.LookPath(os.Args[0])
+	path, _ := filepath.Abs(file)
+	index := strings.LastIndex(path, string(os.PathSeparator))
+	ret := path[:index]
+	return ret
 }

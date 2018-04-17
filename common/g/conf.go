@@ -13,12 +13,14 @@ type Config struct {
 	Run   RunConfig   `toml:"run"`
 	Log   LogConfig   `toml:"log"`
 	Mysql MysqlConfig `toml:"mysql"`
+	Jwt   JwtConfig   `toml:"jwt"`
 }
 
 type RunConfig struct {
 	WaitTimeout int    `toml:"waitTimeout"`
 	HTTPPort    int    `toml:"httpPort"`
 	Mode        string `toml:"mode"`
+	MaxAllowed  int    `toml:maxAllowed"`
 }
 
 type LogConfig struct {
@@ -36,8 +38,13 @@ type MysqlConfig struct {
 	WebAddr string `toml:"webAddr"`
 }
 
+type JwtConfig struct {
+	EncodeMethod     string `toml:"encodeMethod"`
+	MaxEffectiveTime int64  `toml:"maxEffectiveTime"`
+}
+
 var (
-	ConfigFile string
+	configFile string
 	config     *Config
 	configLock = new(sync.RWMutex)
 )
@@ -45,7 +52,6 @@ var (
 func Conf() *Config {
 	configLock.RLock()
 	defer configLock.RUnlock()
-
 	return config
 }
 
@@ -54,17 +60,17 @@ func LoadConfig(cfgFile string) {
 	configLock.Lock()
 	defer configLock.Unlock()
 
-	//配置文件路径是否为空
+	// 配置文件路径是否为空
 	if cfgFile == "" {
 		log.Fatalln("config file not specified: use -c $filename")
 	}
 
-	//配置文件是否存在
+	// 配置文件是否存在
 	if _, err := os.Stat(cfgFile); os.IsNotExist(err) {
 		log.Fatalln("config file specified not found:", cfgFile)
 	}
 
-	ConfigFile = cfgFile
+	configFile = cfgFile
 
 	if bs, err := ioutil.ReadFile(cfgFile); err != nil {
 		log.Fatalf("read config file failed: %s\n", err.Error())
@@ -76,6 +82,4 @@ func LoadConfig(cfgFile string) {
 			log.Printf("config: %#v\n", config)
 		}
 	}
-
-	//fmt.Printf("配置文件内容：%#v\n", config)
 }

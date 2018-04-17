@@ -4,8 +4,10 @@ import (
 	"sync"
 
 	"github.com/gin-gonic/gin"
+	"github.com/open-fightcoder/oj-web/common/g"
 	apiv1 "github.com/open-fightcoder/oj-web/router/controllers/api/v1"
 	authv1 "github.com/open-fightcoder/oj-web/router/controllers/auth/v1"
+	"github.com/open-fightcoder/oj-web/router/middleware"
 )
 
 var router *gin.Engine
@@ -22,9 +24,13 @@ func GetRouter() *gin.Engine {
 
 // 初始化路由
 func initRouter() {
-	router := gin.New()
+	router = gin.Default()
 
-	authRouter := router.Group("/auth")
+	router.Use(middleware.Cors())
+	router.Use(middleware.Recovery())
+	router.Use(middleware.MaxAllowed(g.Conf().Run.MaxAllowed))
+
+	authRouter := router.Group("/auth", middleware.Auth())
 	authv1.RegisterAUTHV1(authRouter)
 
 	apiRouter := router.Group("/api")

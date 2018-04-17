@@ -5,12 +5,8 @@ import (
 	"github.com/open-fightcoder/oj-web/common/store"
 )
 
-func init() {
-	Init()
-}
-
-func Init(confFile string) {
-	g.LoadConfig(confFile)
+func Init(cfgFile string) {
+	g.LoadConfig(cfgFile)
 	g.InitLog()
 	store.InitMysql()
 	store.InitRedis()
