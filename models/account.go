@@ -50,8 +50,9 @@ func (this Account) GetById(id int64) (*Account, error) {
 	return account, nil
 }
 
-func (this Account) GetByAccount(account *Account) (*Account, error) {
-	has, err := OrmWeb.Get(account)
+func (this Account) GetByEmail(email string) (*Account, error) {
+	account := new(Account)
+	has, err := OrmWeb.Where("email=?", email).Get(account)
 	if err != nil {
 		return nil, err
 	}
