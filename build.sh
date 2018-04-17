@@ -3,16 +3,15 @@
 workspace=$(cd $(dirname $0) && pwd -P)
 cd $workspace
 
-#const
-app="oj-web"
+moudle="web"
+app="oj-$moudle"
 cfg=./cfg
-
 
 function build() {
 	export GOPATH="$GOPATH:$(pwd)"
 
 	echo "`go version`"
-	go build
+	go build -o $app
 }
 
 function make_output {

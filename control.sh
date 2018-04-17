@@ -2,7 +2,8 @@
 workspace=$(cd $(dirname $0) && pwd -P)
 cd $workspace
 
-app="oj-web"
+moudle="web"
+app="oj-$moudle"
 cfg=cfg/cfg.toml.release
 pidfile=var/app.pid
 logfile=logs/app.log
