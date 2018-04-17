@@ -14,6 +14,6 @@ var once sync.Once
 
 func InitAllInTest() {
 	once.Do(func() {
-		common.Init("../../cfg/cfg.toml.debug")
+		common.Init("../cfg/cfg.toml.debug")
 	})
 }

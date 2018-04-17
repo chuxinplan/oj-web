@@ -41,8 +41,7 @@ func AccountRegister(email, password string) (bool, int64, string) {
 }
 
 func getAccountByEmail(email string) *models.Account {
-	checkEmail := &models.Account{Email: email}
-	account, err := models.Account{}.GetByAccount(checkEmail)
+	account, err := models.Account{}.GetByEmail(email)
 	if err != nil {
 		panic(err.Error())
 	}
