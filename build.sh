@@ -4,9 +4,9 @@ workspace=$(cd $(dirname $0) && pwd -P)
 cd $workspace
 
 #const
-app="fightcoder-web"
-
+app="oj-web"
 cfg=./cfg
+
 
 function build() {
 	local go="/usr/local/go"

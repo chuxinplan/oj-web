@@ -1,14 +1,14 @@
 package: github.com/open-fightcoder/oj-web
 import:
+- package: github.com/BurntSushi/toml
+  version: ^0.3.0
 - package: github.com/gin-gonic/gin
-  version: ~1.2.0
-- package: github.com/gin-gonic/contrib
-  subpackages:
-  - cors
-- package: github.com/appleboy/gin-revision-middleware
-- package: github.com/aviddiviner/gin-limit
+  version: ^1.2.0
+- package: github.com/go-sql-driver/mysql
+  version: ^1.3.0
+- package: github.com/go-xorm/core
+  version: ^0.5.8
+- package: github.com/go-xorm/xorm
+  version: ^0.6.6
 - package: github.com/sirupsen/logrus
   version: ^1.0.5
-- package: golang.org/x/crypto
-  subpackages:
-  - ssh/terminal
