@@ -32,7 +32,7 @@ func CreateToken(userId int) (string, error) {
 
 	token := jwt.NewWithClaims(signingMethod, claims)
 
-	tokenStr, err := token.SignedString(mySigningKey)
+	tokenStr, err := token.SignedString([]byte(mySigningKey))
 	if err != nil {
 		return "", err
 	}

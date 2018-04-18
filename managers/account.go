@@ -32,7 +32,7 @@ func AccountRegister(email, password string) (bool, int64, string) {
 	if account != nil {
 		return false, 0, "Email is exist"
 	}
-	account = &models.Account{Email: email, Password: password}
+	account = &models.Account{Email: email, Password: md5Encode(password)}
 	if insertId, err := (models.Account{}).Add(account); err != nil {
 		panic(err.Error())
 	} else {

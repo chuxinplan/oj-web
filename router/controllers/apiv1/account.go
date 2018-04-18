@@ -2,7 +2,6 @@ package apiv1
 
 import (
 	"encoding/base64"
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -16,8 +15,8 @@ func RegisterAccount(router *gin.RouterGroup) {
 }
 
 func httpHandlerLogin(c *gin.Context) {
-	email := c.Query("email")
-	password := c.Query("password")
+	email := c.PostForm("email")
+	password := c.PostForm("password")
 	if flag, token, mess := managers.AccountLogin(email, password); flag == false {
 		c.JSON(http.StatusOK, (&baseController.Base{}).Fail(mess))
 	} else {
@@ -35,8 +34,6 @@ func httpHandlerLogin(c *gin.Context) {
 func httpHandlerRegister(c *gin.Context) {
 	email := c.PostForm("email")
 	password := c.PostForm("password")
-	fmt.Println("===============>, ", email)
-	fmt.Println("===============>, ", password)
 	if flag, userId, mess := managers.AccountRegister(email, password); flag == false {
 		c.JSON(http.StatusOK, (&baseController.Base{}).Fail(mess))
 	} else {

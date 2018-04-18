@@ -6,12 +6,6 @@ type HttpResponse struct {
 	Data interface{} `json:"data,omitempty"`
 }
 
-type PagingResponse struct {
-	RequestPage int         `json:"requestPage"`
-	TotalPages  int         `json:"totalPages"`
-	List        interface{} `json:"list"`
-}
-
 func (this *Base) Success(data ...interface{}) *HttpResponse {
 	resp := &HttpResponse{Code: 0}
 	if len(data) > 0 {
