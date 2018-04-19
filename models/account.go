@@ -6,8 +6,8 @@ import (
 
 type Account struct {
 	Id        int64
-	Email     string //邮箱
-	Password  string //密码
+	Email     string `form:"email" json:"email" binding:"required"`       //邮箱
+	Password  string `form:"password" json:"password" binding:"required"` //密码
 	Phone     string //手机号
 	QqId      string //用于QQ第三方登录
 	GithubId  string //Github第三方登录

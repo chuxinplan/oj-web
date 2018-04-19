@@ -29,7 +29,7 @@ CREATE TABLE `user_code` (
 	`user_id` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
 	`save_code` varchar(100) NOT NULL DEFAULT '' COMMENT '保存代码',
 	PRIMARY KEY (`id`),
-  	UNIQUE KEY `uniq_user` (`problem_id`,`user_id`)
+  	UNIQUE KEY `uniq_user` (`user_id`,`problem_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `user_collection` (
@@ -37,7 +37,7 @@ CREATE TABLE `user_collection` (
     `problem_id` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '题目ID',
     `user_id` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
     PRIMARY KEY (`id`),
-    KEY `idx_user_id` (`user_id`)
+    UNIQUE KEY `uniq_collection` (`user_id`,`problem_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `sys_config` (
