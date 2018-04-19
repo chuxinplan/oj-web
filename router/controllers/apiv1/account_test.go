@@ -12,13 +12,9 @@ import (
 )
 
 func TestLogin(t *testing.T) {
-	//resp, err := http.Post("http://127.0.0.1:8000/apiv1/account/login",
-	//	"application/json",
-	//	strings.NewReader("{\"email\":\"abcd.com\", \"password\": \"asdf\"}"))
-
-	resp, err := http.Post("http://127.0.0.1:8000/apiv1/account/register",
+	resp, err := http.Post("http://127.0.0.1:8000/apiv1/account/login",
 		"application/x-www-form-urlencoded",
-		strings.NewReader("email=abcd.com&password=asdf"))
+		strings.NewReader("email=asdfr.com&password=asdfr"))
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -40,7 +36,7 @@ func TestLogin(t *testing.T) {
 func TestRegister(t *testing.T) {
 	resp, err := http.Post("http://127.0.0.1:8000/apiv1/account/register",
 		"application/x-www-form-urlencoded",
-		strings.NewReader("email=abcd.com&password=asdf"))
+		strings.NewReader("email=asdfr.com&password=asdfr"))
 	if err != nil {
 		fmt.Println(err)
 	}
