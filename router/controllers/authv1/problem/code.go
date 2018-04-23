@@ -1,7 +1,6 @@
 package problem
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/gin-gonic/gin"
@@ -25,7 +24,6 @@ func httpHandlerCodeGet(c *gin.Context) {
 		panic(err)
 	}
 	userId := base.UserId(c)
-	fmt.Println("hahahahahahhahhahahha", userId)
 	code, err := problem.CodeGet(userId, userCode.ProblemId)
 	if err != nil {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))

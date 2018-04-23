@@ -26,6 +26,7 @@ type Problem struct {
 	Tag                int64  `form:"tag" json:"tag"`                               //题目标签
 	IsSpecialJudge     bool   `form:"isSpecialJudge" json:"isSpecialJudge"`         //是否特判
 	SpecialJudgeSource string `form:"specialJudgeSource" json:"specialJudgeSource"` //特判程序源代码
+	SpecialJudgeType   string `form:"specialJudgeType" json:"specialJudgeType"`     //特判程序源代码类型
 	Code               string `form:"code" json:"code"`                             //标准程序
 	LanguageLimit      string `form:"languageLimit" json:"languageLimit"`           //语言限制
 	Remark             string `form:"remark" json:"remark"`                         //备注

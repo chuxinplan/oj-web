@@ -13,7 +13,7 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestLogin(t *testing.T) {
+func TestCodeGet(t *testing.T) {
 	var client http.Client
 	jar, err := cookiejar.New(nil)
 	if err != nil {
