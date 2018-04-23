@@ -29,7 +29,7 @@ func CollectionSet(userId int64, problemId int64, flag string) (bool, error) {
 	return true, nil
 }
 
-func CollectionGet(userId int64, problemId string) (map[int64]bool, error) {
+func CollectionGet(userId int64, problemId string) ([]bool, error) {
 	ids := []int64{}
 	if problemId != "" {
 		strs := strings.Split(problemId, ",")
@@ -42,14 +42,14 @@ func CollectionGet(userId int64, problemId string) (map[int64]bool, error) {
 	if err != nil {
 		return nil, errors.New("获取收藏信息失败")
 	}
-	resMap := make(map[int64]bool)
+	resMap := []bool{}
 	for i := 0; i < len(ids); i++ {
-		resMap[ids[i]] = false
+		resMap = append(resMap, false)
 	}
 	for i := 0; i < len(ids); i++ {
 		for j := 0; j < len(isCollection); j++ {
 			if ids[i] == isCollection[j].ProblemId {
-				resMap[ids[i]] = true
+				resMap[i] = true
 				break
 			}
 		}
