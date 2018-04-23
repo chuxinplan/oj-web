@@ -17,6 +17,7 @@ CREATE TABLE `problem` (
   `tag` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '题目标签',
   `is_special_judge` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '是否特判 1-特判 2-非特判',
   `special_judge_source` varchar(100) DEFAULT NULL COMMENT '特判程序源代码',
+  `special_judge_type` varchar(20) NOT NULL DEFAULT '' COMMENT '特判程序源代码类型',
   `code` varchar(50) NOT NULL DEFAULT '' COMMENT '标准程序',
   `language_limit` varchar(100) DEFAULT NULL COMMENT '语言限制',
   `remark` varchar(100) NOT NULL DEFAULT '' COMMENT '备注',

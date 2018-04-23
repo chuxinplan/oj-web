@@ -22,8 +22,7 @@ func AccountLogin(email string, password string) (string, error) {
 		return "", errors.New("Password is wrong")
 	}
 
-	userId := 1
-	token, err := components.CreateToken(userId)
+	token, err := components.CreateToken(int64(23))
 	if err != nil {
 		return "", err
 	}

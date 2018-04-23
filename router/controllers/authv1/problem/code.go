@@ -19,20 +19,18 @@ func RegisterCode(router *gin.RouterGroup) {
 }
 
 func httpHandlerCodeGet(c *gin.Context) {
-	fmt.Println("sssssssssssssssssss")
 	userCode := CodeGetParam{}
 	err := c.Bind(&userCode)
 	if err != nil {
 		panic(err)
 	}
 	userId := base.UserId(c)
+	fmt.Println("hahahahahahhahhahahha", userId)
 	code, err := problem.CodeGet(userId, userCode.ProblemId)
-	fmt.Println("aaaaaaa", code)
 	if err != nil {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))
 		return
 	}
-	fmt.Println("bbbbbbbb")
 	c.JSON(http.StatusOK, base.Success(code))
 }
 func httpHandlerCodeSet(c *gin.Context) {

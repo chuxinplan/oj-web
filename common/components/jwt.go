@@ -2,6 +2,7 @@ package components
 
 import (
 	"fmt"
+	"strconv"
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
@@ -10,10 +11,10 @@ import (
 
 var mySigningKey = "let's to change the world!"
 
-func CreateToken(userId int) (string, error) {
+func CreateToken(userId int64) (string, error) {
 	cfg := g.Conf()
 	claims := jwt.MapClaims{
-		"uid": userId,
+		"uid": strconv.FormatInt(userId, 10),
 		"exp": time.Now().Add(time.Hour * 24 * time.Duration(cfg.Jwt.MaxEffectiveTime)).Unix(),
 	}
 
