@@ -8,7 +8,7 @@ import (
 func TestProblemCreate(t *testing.T) {
 	InitAllInTest()
 
-	problem := &Problem{UserId: 4, Tag: 48, Flag: 10, Title: "sadas", Description: "1111", TimeLimit: 1000, MemoryLimit: 128000}
+	problem := &Problem{UserId: 2, Tag: 48, Flag: 10, Title: "hhhhhhhhh", Description: "sssssssss", TimeLimit: 1000, MemoryLimit: 128000}
 	if _, err := ProblemCreate(problem); err != nil {
 		t.Error("Create() failed. Error:", err)
 	}
@@ -46,7 +46,7 @@ func TestProblemGetById(t *testing.T) {
 
 func TestProblemGetProblem(t *testing.T) {
 	InitAllInTest()
-	getProblem, _ := ProblemGetProblem([]int64{}, "", "id", "asc", 1, 10)
+	getProblem, _ := ProblemGetProblem("", "", "id", "asc", 1, 10)
 	for i := 0; i < len(getProblem); i++ {
 		fmt.Println(*getProblem[i])
 	}
@@ -54,7 +54,7 @@ func TestProblemGetProblem(t *testing.T) {
 
 func TestProblemGetIdsByConds(t *testing.T) {
 	InitAllInTest()
-	getProblem, _ := ProblemGetIdsByConds([]int64{1, 2, 3}, "")
+	getProblem, _ := ProblemGetIdsByConds("", "")
 	for i := 0; i < len(getProblem); i++ {
 		fmt.Println(*getProblem[i])
 	}
@@ -76,6 +76,6 @@ func TestProblemCountByUserId(t *testing.T) {
 
 func TestProblemCountProblem(t *testing.T) {
 	InitAllInTest()
-	count, _ := ProblemCountProblem([]int64{1, 2, 3}, "二,三")
+	count, _ := ProblemCountProblem("", "二,三")
 	fmt.Print(count)
 }

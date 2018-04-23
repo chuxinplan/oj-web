@@ -2,42 +2,24 @@ package problem
 
 import (
 	"math/rand"
-	"strconv"
-	"strings"
 	"time"
 
 	"github.com/open-fightcoder/oj-web/models"
 	"github.com/pkg/errors"
 )
 
-func getOriginList(origin string) []int64 {
-	origins := []int64{}
-	if origin != "" {
-		strs := strings.Split(origin, ",")
-		for i := 0; i < len(strs); i++ {
-			num, err := strconv.ParseInt(strs[i], 10, 64)
-			if err != nil {
-				panic(err)
-			}
-			origins = append(origins, num)
-		}
-	}
-	return origins
-}
-
 func ProblemList(origin string, tag string, sort int, isAsc int, currentPage int, perPage int) (map[string]interface{}, error) {
-	origins := getOriginList(origin)
 	//TODO 排序条件 1-编号 2-难度 3-通过率
 	sortKey := "id"
 	isAscKey := "asc"
 	if isAsc == 2 {
 		isAscKey = "desc"
 	}
-	problemList, err := models.ProblemGetProblem(origins, tag, sortKey, isAscKey, currentPage, perPage)
+	problemList, err := models.ProblemGetProblem(origin, tag, sortKey, isAscKey, currentPage, perPage)
 	if err != nil {
 		return nil, errors.New("获取题目失败")
 	}
-	count, err := models.ProblemCountProblem(origins, tag)
+	count, err := models.ProblemCountProblem(origin, tag)
 	if err != nil {
 		return nil, errors.New("获取题目失败")
 	}
@@ -61,8 +43,7 @@ func ProblemGet(id int64) (*models.Problem, error) {
 }
 
 func ProblemRandom(origin string, tag string) (*models.Problem, error) {
-	origins := getOriginList(origin)
-	problemList, err := models.ProblemGetIdsByConds(origins, tag)
+	problemList, err := models.ProblemGetIdsByConds(origin, tag)
 	if err != nil {
 		return nil, errors.New("获取题目失败")
 	}

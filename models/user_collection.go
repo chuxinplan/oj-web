@@ -48,3 +48,17 @@ func UserCollectionGetUserCollection(userId, problemId int64) (*UserCollection, 
 	}
 	return userCollection, nil
 }
+
+func UserCollectionGetByProblemIds(userId int64, problemId []int64) ([]*UserCollection, error) {
+	session := OrmWeb.NewSession()
+	if len(problemId) != 0 {
+		session.In("problem_id", problemId)
+	}
+	userCollectionList := make([]*UserCollection, 0)
+
+	err := session.And("user_id=?", userId).Find(&userCollectionList)
+	if err != nil {
+		return nil, err
+	}
+	return userCollectionList, nil
+}

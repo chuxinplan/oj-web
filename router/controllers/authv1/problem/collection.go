@@ -10,7 +10,7 @@ import (
 )
 
 type CollectionGetParam struct {
-	ProblemId int64 `form:"problem_id" json:"problem_id"`
+	ProblemIds string `form:"problem_ids" json:"problem_ids"`
 }
 
 type CollectionSetParam struct {
@@ -29,8 +29,8 @@ func httpHandlerCollectionGet(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	userId := base.UserId(c)
-	mess, err := problem.CollectionGet(userId, param.ProblemId)
+	//userId := base.UserId(c)
+	mess, err := problem.CollectionGet(1, param.ProblemIds)
 	if err != nil {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))
 		return
@@ -46,8 +46,8 @@ func httpHandlerCollectionSet(c *gin.Context) {
 	if userCollection.Flag != "set" && userCollection.Flag != "cancel" {
 		panic(errors.New("参数不符合"))
 	}
-	userId := base.UserId(c)
-	mess, err := problem.CollectionSet(userId, userCollection.ProblemId, userCollection.Flag)
+	//userId := base.UserId(c)
+	mess, err := problem.CollectionSet(1, userCollection.ProblemId, userCollection.Flag)
 	if err != nil {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))
 		return

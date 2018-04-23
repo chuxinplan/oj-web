@@ -13,7 +13,7 @@ import (
 )
 
 func TestCollectionGet(t *testing.T) {
-	resp, err := http.Get("http://127.0.0.1:8000/authv1/problem/collection/get?problem_id=1")
+	resp, err := http.Get("http://127.0.0.1:9001/authv1/problem/collection/get?problem_ids=1,2,3,4")
 	if err != nil {
 		fmt.Println("GET请求失败: " + err.Error())
 	}
@@ -31,7 +31,7 @@ func TestCollectionGet(t *testing.T) {
 }
 
 func TestCollectionSet(t *testing.T) {
-	resp, err := http.Post("http://127.0.0.1:8000/authv1/problem/collection/set",
+	resp, err := http.Post("http://127.0.0.1:9001/authv1/problem/collection/set",
 		"application/x-www-form-urlencoded",
 		strings.NewReader("problem_id=1&flag=set"))
 	if err != nil {

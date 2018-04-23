@@ -13,7 +13,7 @@ import (
 )
 
 func TestLogin(t *testing.T) {
-	resp, err := http.Post("http://127.0.0.1:8000/apiv1/login",
+	resp, err := http.Post("http://127.0.0.1:9001/apiv1/login",
 		"application/x-www-form-urlencoded",
 		strings.NewReader("email=asdfr.com&password=asdfr"))
 	if err != nil {
@@ -34,7 +34,7 @@ func TestLogin(t *testing.T) {
 }
 
 func TestRegister(t *testing.T) {
-	resp, err := http.Post("http://127.0.0.1:8000/apiv1/register",
+	resp, err := http.Post("http://127.0.0.1:9001/apiv1/register",
 		"application/x-www-form-urlencoded",
 		strings.NewReader("email=ssdfr.com&password=ssdfr"))
 	if err != nil {

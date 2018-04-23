@@ -2,6 +2,8 @@ package problem
 
 import (
 	"errors"
+	"strconv"
+	"strings"
 
 	"github.com/open-fightcoder/oj-web/models"
 )
@@ -27,13 +29,30 @@ func CollectionSet(userId int64, problemId int64, flag string) (bool, error) {
 	return true, nil
 }
 
-func CollectionGet(userId int64, problemId int64) (bool, error) {
-	isCollection, err := models.UserCollectionGetUserCollection(userId, problemId)
+func CollectionGet(userId int64, problemId string) (map[int64]bool, error) {
+	ids := []int64{}
+	if problemId != "" {
+		strs := strings.Split(problemId, ",")
+		for i := 0; i < len(strs); i++ {
+			id, _ := strconv.ParseInt(strs[i], 10, 64)
+			ids = append(ids, id)
+		}
+	}
+	isCollection, err := models.UserCollectionGetByProblemIds(userId, ids)
 	if err != nil {
-		return false, errors.New("获取收藏信息失败")
+		return nil, errors.New("获取收藏信息失败")
 	}
-	if isCollection == nil {
-		return false, nil
+	resMap := make(map[int64]bool)
+	for i := 0; i < len(ids); i++ {
+		resMap[ids[i]] = false
 	}
-	return true, nil
+	for i := 0; i < len(ids); i++ {
+		for j := 0; j < len(isCollection); j++ {
+			if ids[i] == isCollection[j].ProblemId {
+				resMap[ids[i]] = true
+				break
+			}
+		}
+	}
+	return resMap, nil
 }

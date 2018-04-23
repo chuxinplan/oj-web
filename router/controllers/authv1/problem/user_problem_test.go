@@ -12,7 +12,7 @@ import (
 )
 
 func TestUserProblemList(t *testing.T) {
-	resp, err := http.Get("http://127.0.0.1:8000/authv1/problem/userproblem/list?current_page=1&per_page=1")
+	resp, err := http.Get("http://127.0.0.1:9001/authv1/problem/userproblem/list?current_page=1&per_page=1")
 	if err != nil {
 		fmt.Println("GET请求失败: " + err.Error())
 	}

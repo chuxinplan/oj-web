@@ -76,18 +76,31 @@ func ProblemCountByUserId(userId int64) (int64, error) {
 	return count, nil
 }
 
+func getOriginList(origin string) []int64 {
+	originMap := map[string]int64{
+		"HDU":    1,
+		"CodeVs": 2,
+	}
+	origins := []int64{}
+	if origin != "" {
+		strs := strings.Split(origin, ",")
+		for i := 0; i < len(strs); i++ {
+			origins = append(origins, originMap[strs[i]])
+		}
+	}
+	return origins
+}
+
 func getNum(tag string) int {
 	tagArr := map[string]int{
-		"零": 0,
-		"一": 1,
-		"二": 2,
-		"三": 3,
-		"四": 4,
-		"五": 5,
-		"六": 6,
-		"七": 7,
-		"八": 8,
-		"九": 9,
+		"分治":   0,
+		"贪心":   1,
+		"字符串":  2,
+		"动态规划": 3,
+		"搜索":   4,
+		"线性结构": 5,
+		"链表":   6,
+		"堆结构":  7,
 	}
 	num := 0
 	if tag != "" {
@@ -99,10 +112,11 @@ func getNum(tag string) int {
 	return num
 }
 
-func ProblemGetIdsByConds(origins []int64, tag string) ([]*Problem, error) {
+func ProblemGetIdsByConds(origins string, tag string) ([]*Problem, error) {
 	session := OrmWeb.NewSession()
-	if len(origins) != 0 {
-		session.In("user_id", origins)
+	originIds := getOriginList(origins)
+	if origins != "" {
+		session.In("user_id", originIds)
 	}
 	tagNum := getNum(tag)
 	if tagNum != 0 {
@@ -117,10 +131,11 @@ func ProblemGetIdsByConds(origins []int64, tag string) ([]*Problem, error) {
 	return problemList, nil
 }
 
-func ProblemGetProblem(origins []int64, tag string, sortKey string, isAscKey string, currentPage int, perPage int) ([]*Problem, error) {
+func ProblemGetProblem(origins string, tag string, sortKey string, isAscKey string, currentPage int, perPage int) ([]*Problem, error) {
 	session := OrmWeb.NewSession()
-	if len(origins) != 0 {
-		session.In("user_id", origins)
+	originIds := getOriginList(origins)
+	if origins != "" {
+		session.In("user_id", originIds)
 	}
 	tagNum := getNum(tag)
 	if tagNum != 0 {
@@ -140,10 +155,11 @@ func ProblemGetProblem(origins []int64, tag string, sortKey string, isAscKey str
 	return problemList, nil
 }
 
-func ProblemCountProblem(origins []int64, tag string) (int64, error) {
+func ProblemCountProblem(origins string, tag string) (int64, error) {
 	session := OrmWeb.NewSession()
-	if len(origins) != 0 {
-		session.In("user_id", origins)
+	originIds := getOriginList(origins)
+	if origins != "" {
+		session.In("user_id", originIds)
 	}
 	tagNum := getNum(tag)
 	if tagNum != 0 {
