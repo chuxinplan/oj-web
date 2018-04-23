@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shiyicode/gin-framework/managers"
-	"github.com/shiyicode/gin-framework/router/controllers/base"
+	"github.com/open-fightcoder/oj-web/managers"
+	"github.com/open-fightcoder/oj-web/router/controllers/base"
 )
 
 func RegisterAccount(router *gin.RouterGroup) {

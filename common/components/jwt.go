@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/dgrijalva/jwt-go"
-	"github.com/shiyicode/gin-framework/common/g"
+	"github.com/open-fightcoder/oj-web/common/g"
 )
 
 var mySigningKey = "let's to change the world!"

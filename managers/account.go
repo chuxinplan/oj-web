@@ -5,9 +5,9 @@ import (
 	"fmt"
 	"io"
 
+	"github.com/open-fightcoder/oj-web/common/components"
+	"github.com/open-fightcoder/oj-web/models"
 	"github.com/pkg/errors"
-	"github.com/shiyicode/gin-framework/common/components"
-	"github.com/shiyicode/gin-framework/models"
 )
 
 func AccountLogin(email string, password string) (string, error) {

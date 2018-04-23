@@ -6,7 +6,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/go-xorm/core"
 	"github.com/go-xorm/xorm"
-	"github.com/shiyicode/gin-framework/common/g"
+	"github.com/open-fightcoder/oj-web/common/g"
 	log "github.com/sirupsen/logrus"
 )
 

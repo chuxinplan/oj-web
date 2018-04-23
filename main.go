@@ -7,9 +7,9 @@ import (
 
 	"github.com/TV4/graceful"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/shiyicode/gin-framework/common"
-	"github.com/shiyicode/gin-framework/common/g"
-	"github.com/shiyicode/gin-framework/router"
+	"github.com/open-fightcoder/oj-web/common"
+	"github.com/open-fightcoder/oj-web/common/g"
+	"github.com/open-fightcoder/oj-web/router"
 )
 
 func main() {

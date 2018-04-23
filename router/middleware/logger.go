@@ -4,7 +4,7 @@ import (
 	"time"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shiyicode/gin-framework/common/g"
+	"github.com/open-fightcoder/oj-web/common/g"
 )
 
 func Logger() gin.HandlerFunc {

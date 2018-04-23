@@ -3,7 +3,7 @@ package models
 import (
 	"sync"
 
-	"github.com/shiyicode/gin-framework/common"
+	"github.com/open-fightcoder/oj-web/common"
 )
 
 var once sync.Once

@@ -1,4 +1,4 @@
-package apiv1
+package problem
 
 import (
 	"encoding/json"
@@ -12,12 +12,10 @@ import (
 	"github.com/stretchr/testify/assert"
 )
 
-func TestLogin(t *testing.T) {
-	resp, err := http.Post("http://127.0.0.1:8000/apiv1/login",
-		"application/x-www-form-urlencoded",
-		strings.NewReader("email=asdfr.com&password=asdfr"))
+func TestCollectionGet(t *testing.T) {
+	resp, err := http.Get("http://127.0.0.1:8000/authv1/problem/collection/get?problem_id=1")
 	if err != nil {
-		fmt.Println("POST请求失败: " + err.Error())
+		fmt.Println("GET请求失败: " + err.Error())
 	}
 
 	defer resp.Body.Close()
@@ -25,18 +23,17 @@ func TestLogin(t *testing.T) {
 	if err != nil {
 		fmt.Println("读取Response失败: " + err.Error())
 	}
-
 	var respT base.HttpResponse
 	if err := json.Unmarshal(body, &respT); err != nil {
 		fmt.Println("获取Body失败: " + err.Error())
 	}
-	assert.Equal(t, 0, respT.Code, "登录失败！")
+	assert.Equal(t, 0, respT.Code, "收藏失败！")
 }
 
-func TestRegister(t *testing.T) {
-	resp, err := http.Post("http://127.0.0.1:8000/apiv1/register",
+func TestCollectionSet(t *testing.T) {
+	resp, err := http.Post("http://127.0.0.1:8000/authv1/problem/collection/set",
 		"application/x-www-form-urlencoded",
-		strings.NewReader("email=ssdfr.com&password=ssdfr"))
+		strings.NewReader("problem_id=1&flag=set"))
 	if err != nil {
 		fmt.Println("POST请求失败: " + err.Error())
 	}
@@ -51,5 +48,5 @@ func TestRegister(t *testing.T) {
 	if err := json.Unmarshal(body, &respT); err != nil {
 		fmt.Println("获取Body失败: " + err.Error())
 	}
-	assert.Equal(t, 0, respT.Code, "注册失败！")
+	assert.Equal(t, 0, respT.Code, "收藏失败！")
 }

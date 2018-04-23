@@ -5,8 +5,8 @@ import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/shiyicode/gin-framework/common/components"
-	"github.com/shiyicode/gin-framework/router/controllers/base"
+	"github.com/open-fightcoder/oj-web/common/components"
+	"github.com/open-fightcoder/oj-web/router/controllers/base"
 )
 
 func Auth() gin.HandlerFunc {

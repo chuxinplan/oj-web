@@ -9,7 +9,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/open-fightcoder/oj-dispatcher/router/controllers/base"
+	"github.com/open-fightcoder/oj-web/router/controllers/base"
 	"github.com/stretchr/testify/assert"
 )
 
