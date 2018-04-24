@@ -8,7 +8,7 @@ import (
 func TestProblemCreate(t *testing.T) {
 	InitAllInTest()
 
-	problem := &Problem{UserId: 2, Tag: 48, Flag: 10, Title: "hhhhhhhhh", Description: "sssssssss", TimeLimit: 1000, MemoryLimit: 128000}
+	problem := &Problem{UserId: 2, Tag: 10, Title: "六", Description: "六"}
 	if _, err := ProblemCreate(problem); err != nil {
 		t.Error("Create() failed. Error:", err)
 	}

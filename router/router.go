@@ -33,7 +33,6 @@ func initRouter() {
 	router.Use(middleware.MaxAllowed(g.Conf().Run.MaxAllowed))
 
 	authRouter := router.Group("/authv1", middleware.Auth())
-	//authRouter := router.Group("/authv1")
 	authv1.Register(authRouter)
 
 	apiRouter := router.Group("/apiv1")
