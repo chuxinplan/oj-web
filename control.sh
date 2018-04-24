@@ -2,12 +2,10 @@
 workspace=$(cd $(dirname $0) && pwd -P)
 cd $workspace
 
-module="oj-web"
-app=$module
+app="oj-web"
 cfg=cfg/cfg.toml.release
 pidfile=var/app.pid
 logfile=logs/app.log
-
 
 function start() {
 	mkdir -p var &>/dev/null
@@ -24,7 +22,7 @@ function start() {
 	echo "use cfg file: $conf"
 
 	# start new
-	nohup ./$app -c $cfg >>$logfile 2>&1 &
+	nohup $app -c $conf >>$logfile 2>&1 &
 	local lpid=$!
 	sleep 1
 
@@ -64,11 +62,15 @@ function restart() {
 	fi
 }
 
+function reload() {
+    curl -X GET http://127.0.0.1:8000/apiv1/self/reload
+}
+
 function status() {
 	check_pid
 	local running=$?
 	if [ $running -gt 0 ];then
-		echo "running, pid=$(cat $pidfile)"
+		echo -n "running, pid=$(cat $pidfile)"
 		return $running
 	else
 		echo "stoped"
@@ -113,6 +115,8 @@ function check_pid_number() {
 # action:
 #   - start     启动服务
 #   - stop      停止服务
+#   - restart   重启服务
+#   - reload   重新加载
 #   - status    查看状态(stoped, other)
 ######################################################################
 action=$1
@@ -126,11 +130,15 @@ case $action in
 	"restart" )
 		restart
 		;;
+	"reload" )
+	    reload
+	    ;;
 	"status" )
 		status
 		;;
 	* )
 		echo "unknown command [$action]"
+		echo "Usage [start, stop, restart, reload, status]"
 		exit 1
 		;;
 esac
