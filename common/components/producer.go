@@ -5,8 +5,6 @@ import (
 
 	"math/rand"
 
-	"fmt"
-
 	"github.com/bitly/go-nsq"
 	"github.com/open-fightcoder/oj-web/common/g"
 )
@@ -26,7 +24,6 @@ func Send(topic string, sendMess *SendMess) bool {
 	for _, i := range rand.Perm(len(ipList)) {
 		if flag, _ := postNsq(ipList[i], topic, msg); flag == true {
 			result = true
-			fmt.Println("id:", i)
 			break
 		}
 	}
