@@ -38,7 +38,7 @@ func httpHandlerLogin(c *gin.Context) {
 	}
 
 	http.SetCookie(c.Writer, cookie)
-	c.JSON(http.StatusOK, base.Success())
+	c.JSON(http.StatusOK, base.Success(11))
 }
 
 func httpHandlerRegister(c *gin.Context) {
