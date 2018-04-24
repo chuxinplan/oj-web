@@ -7,7 +7,10 @@ app="oj-web"
 cfg=./cfg
 
 function build() {
-	export GOPATH="$GOPATH:$(pwd)"
+	local go="/usr/local/go"
+	export GOROOT="$go"
+        export PATH="$PATH:$GOROOT/bin"
+	export GOPATH="$(pwd)"
 
 	echo "`go version`"
 	go build -o $app

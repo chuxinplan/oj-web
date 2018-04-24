@@ -2,7 +2,7 @@
 workspace=$(cd $(dirname $0) && pwd -P)
 cd $workspace
 
-app="oj-web"
+app=oj-web
 cfg=cfg/cfg.toml.release
 pidfile=var/app.pid
 logfile=logs/app.log
@@ -22,7 +22,7 @@ function start() {
 	echo "use cfg file: $conf"
 
 	# start new
-	nohup $app -c $conf >>$logfile 2>&1 &
+	nohup ./$app -c $cfg >>$logfile 2>&1 &
 	local lpid=$!
 	sleep 1
 
