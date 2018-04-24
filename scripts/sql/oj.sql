@@ -1,5 +1,3 @@
-
-
 CREATE TABLE `problem` (
   `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
   `flag` tinyint(1) unsigned NOT NULL DEFAULT '1' COMMENT '1-普通题目 2-用户题目',
