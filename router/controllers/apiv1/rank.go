@@ -10,6 +10,7 @@ import (
 
 func RegisterRank(router *gin.RouterGroup) {
 	router.GET("get", httpHandlerGet)
+	router.GET("getGroup", httpHandlerGetGroup)
 }
 
 type RankParam struct {
@@ -23,7 +24,21 @@ func httpHandlerGet(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	mess, err := managers.RankGet(param.CurrentPage, param.PerPage)
+	mess, err := managers.RankListGet(param.CurrentPage, param.PerPage)
+	if err != nil {
+		c.JSON(http.StatusOK, base.Fail(err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, base.Success(mess))
+}
+
+func httpHandlerGetGroup(c *gin.Context) {
+	param := RankParam{}
+	err := c.Bind(&param)
+	if err != nil {
+		panic(err)
+	}
+	mess, err := managers.GroupRankGet(param.CurrentPage, param.PerPage)
 	if err != nil {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))
 		return
