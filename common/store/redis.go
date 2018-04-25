@@ -1,26 +1,30 @@
 package store
 
 import (
-	"fmt"
 	"sync"
 
 	"github.com/go-redis/redis"
+	"github.com/open-fightcoder/oj-web/common/g"
 )
 
 var client *redis.Client
 var once sync.Once
 
-func InitRedis() *redis.Client {
+func InitRedis() (*redis.Client, error) {
 	once.Do(func() {
-		client := redis.NewClient(&redis.Options{
-			Addr:     "localhost:6379",
-			Password: "", // no password set
-			DB:       0,  // use default DB
+		cfg := g.Conf().Redis
+		client = redis.NewClient(&redis.Options{
+			Addr:     cfg.Address,
+			Password: cfg.Password,
+			DB:       cfg.Database,
 		})
-		pong, err := client.Ping().Result()
-		fmt.Println(pong, err)
 	})
-	return client
+	_, err := client.Ping().Result()
+	if err != nil {
+		//write log
+		return nil, err
+	}
+	return client, nil
 }
 
 func CloseRedis() {

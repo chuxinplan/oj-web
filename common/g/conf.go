@@ -15,6 +15,7 @@ type Config struct {
 	Mysql MysqlConfig `toml:"mysql"`
 	Jwt   JwtConfig   `toml:"jwt"`
 	Nsq   NsqConfig   `toml:"nsq"`
+	Redis RedisConfig `toml:"redis"`
 }
 
 type RunConfig struct {
@@ -36,6 +37,12 @@ type MysqlConfig struct {
 	MaxOpen int    `toml:"maxOpen"`
 	Debug   bool   `toml:"debug"`
 	WebAddr string `toml:"webAddr"`
+}
+
+type RedisConfig struct {
+	Address  string `toml:"address"`
+	Password string `toml:"password"`
+	Database int    `toml:"database"`
 }
 
 type JwtConfig struct {
