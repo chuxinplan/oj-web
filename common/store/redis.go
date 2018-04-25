@@ -7,24 +7,22 @@ import (
 	"github.com/open-fightcoder/oj-web/common/g"
 )
 
-var client *redis.Client
+var RedisClient *redis.Client
 var once sync.Once
 
-func InitRedis() (*redis.Client, error) {
+func InitRedis() {
 	once.Do(func() {
 		cfg := g.Conf().Redis
-		client = redis.NewClient(&redis.Options{
+		RedisClient = redis.NewClient(&redis.Options{
 			Addr:     cfg.Address,
 			Password: cfg.Password,
 			DB:       cfg.Database,
 		})
 	})
-	_, err := client.Ping().Result()
+	_, err := RedisClient.Ping().Result()
 	if err != nil {
 		//write log
-		return nil, err
 	}
-	return client, nil
 }
 
 func CloseRedis() {

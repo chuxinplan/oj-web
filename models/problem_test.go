@@ -46,9 +46,9 @@ func TestProblemGetById(t *testing.T) {
 
 func TestProblemGetProblem(t *testing.T) {
 	InitAllInTest()
-	getProblem, _ := ProblemGetProblem("", "", "id", "asc", 1, 10)
+	getProblem, _ := ProblemGetProblem("", "", "id", "asc", 2, 10)
 	for i := 0; i < len(getProblem); i++ {
-		fmt.Println(*getProblem[i])
+		fmt.Println(getProblem[i].Id, getProblem[i].Title)
 	}
 }
 
