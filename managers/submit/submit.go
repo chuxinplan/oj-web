@@ -3,6 +3,8 @@ package submit
 import (
 	"errors"
 
+	"time"
+
 	"github.com/open-fightcoder/oj-web/models"
 )
 
@@ -24,6 +26,33 @@ func SubmitList(problemId int64, userName string, status int, lang string, curre
 	return submitMess, nil
 }
 
-func SubmitCommon() {
-
+func SubmitCommon(problemId int64, userId int64, language string, code string) (map[string]interface{}, error) {
+	submit := &models.Submit{ProblemId: problemId, UserId: userId, Language: language, Code: code, SubmitTime: time.Now().Unix()}
+	id, err := models.SubmitCreate(submit)
+	if err != nil {
+		return nil, errors.New("提交失败")
+	}
+	submitMess := map[string]interface{}{
+		"submit_id": id,
+		"flag":      1,
+	}
+	return submitMess, nil
+}
+func SubmitTest(userId int64, language string, input string, code string) (map[string]interface{}, error) {
+	submitTest := &models.SubmitTest{Input: input, UserId: userId, Language: language, Code: code, SubmitTime: time.Now().Unix()}
+	id, err := models.SubmitTestCreate(submitTest)
+	if err != nil {
+		return nil, errors.New("提交失败")
+	}
+	submitMess := map[string]interface{}{
+		"submit_id": id,
+		"flag":      2,
+	}
+	return submitMess, nil
+}
+func SubmitGetCommon(SubmitId int64) (*models.Submit, error) {
+	return models.SubmitGetById(SubmitId)
+}
+func SubmitGetTest(SubmitId int64) (*models.SubmitTest, error) {
+	return models.SubmitTestGetById(SubmitId)
 }
