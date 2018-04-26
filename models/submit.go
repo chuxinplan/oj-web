@@ -58,3 +58,25 @@ func SubmitGetByProblemId(problemId int64, currentPage int, perPage int) ([]*Sub
 	}
 	return submitList, nil
 }
+
+func SubmitGetByConds(problemId int64, userId int64, status int, lang string, currentPage int, perPage int) ([]*Submit, error) {
+	session := OrmWeb.NewSession()
+	if problemId != 0 {
+		session.And("problem_id = ?", problemId)
+	}
+	if userId != 0 {
+		session.And("user_id = ?", userId)
+	}
+	if status != 0 {
+		session.And("result = ?", status)
+	}
+	if lang != "" {
+		session.And("language = ?", lang)
+	}
+	submitList := make([]*Submit, 0)
+	err := session.Limit(perPage, (currentPage-1)*perPage).Find(&submitList)
+	if err != nil {
+		return nil, err
+	}
+	return submitList, nil
+}
