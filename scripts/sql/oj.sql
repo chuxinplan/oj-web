@@ -32,7 +32,7 @@ CREATE TABLE `user_code` (
 	`user_id` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
 	`save_code` varchar(100) NOT NULL DEFAULT '' COMMENT '保存代码',
 	PRIMARY KEY (`id`),
-  	UNIQUE KEY `uniq_user` (`user_id`,`problem_id`)
+  UNIQUE KEY `uniq_user` (`user_id`,`problem_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `user_collection` (
@@ -60,5 +60,24 @@ CREATE TABLE `account` (
   `github_id` varchar(40) DEFAULT NULL COMMENT '用于GITHUB第三方登录',
   `weichat_id` varchar(40) DEFAULT NULL COMMENT '用于微信第三方登录',
   PRIMARY KEY (`id`),
-  KEY `email` (`email`)
+  KEY `idx_email` (`idx_email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `user` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `account_id` bigint(20) NOT NULL COMMENT '账号Id',
+  `user_name` varchar(20) NOT NULL COMMENT '用户名',
+  `nick_name` varchar(40) NOT NULL COMMENT '昵称',
+  `sex` varchar(30) NOT NULL DEFAULT '' COMMENT '性别',
+  `avator` varchar(50) NOT NULL DEFAULT '' COMMENT '头像',
+  `blog` varchar(100) NOT NULL DEFAULT '' COMMENT '博客地址',
+  `git` varchar(100) NOT NULL DEFAULT '' COMMENT 'Git地址',
+  `description` varchar(200) NOT NULL DEFAULT '' COMMENT '个人描述',
+  `birthday` varchar(80) NOT NULL DEFAULT '' COMMENT '生日',
+  `daily_address` varchar(100) NOT NULL DEFAULT '' COMMENT '日常所在地：省、市',
+  `stat_school` varchar(60) NOT NULL DEFAULT '' COMMENT '当前就学状态(小学及以下、中学学生、大学学生、非在校生)',
+  `school_name` varchar(100) NOT NULL DEFAULT '' COMMENT '学校名称',
+  PRIMARY KEY (`id`),
+  KEY `idx_account_id` (`idx_account_id`),
+  UNIQUE KEY `uniq_user_name` (`user_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
