@@ -22,8 +22,8 @@ func httpHandlerGetList(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	userId := base.UserId(c)
-	mess, err := managers.PersonRankGet(userId, param.IsWeek)
+	//userId := base.UserId(c)
+	mess, err := managers.PersonRankGet(1, param.IsWeek)
 	if err != nil {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))
 		return

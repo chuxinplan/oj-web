@@ -30,7 +30,8 @@ CREATE TABLE `user_code` (
 	`id` bigint(20) unsigned NOT NULL AUTO_INCREMENT COMMENT 'ID',
 	`problem_id` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '题目ID',
 	`user_id` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '用户ID',
-	`save_code` varchar(100) NOT NULL DEFAULT '' COMMENT '保存代码',
+	`save_code` varchar(1000) NOT NULL DEFAULT '' COMMENT '保存代码',
+	`language` varchar(50) NOT NULL DEFAULT '' COMMENT '代码语言',
 	PRIMARY KEY (`id`),
   UNIQUE KEY `uniq_user` (`user_id`,`problem_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

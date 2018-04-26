@@ -17,6 +17,7 @@ func InitRedis() {
 			Addr:     cfg.Address,
 			Password: cfg.Password,
 			DB:       cfg.Database,
+			PoolSize: cfg.PoolSize,
 		})
 	})
 	_, err := RedisClient.Ping().Result()
@@ -26,5 +27,5 @@ func InitRedis() {
 }
 
 func CloseRedis() {
-
+	RedisClient.Close()
 }

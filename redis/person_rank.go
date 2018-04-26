@@ -29,7 +29,11 @@ func PersonWeekRankGet(userId int64) ([]string, error) {
 		return nil, res.Err()
 	}
 	index := res.Val()
-	result := RedisClient.ZRange("person_week_rank", index-2, index+2)
+	start := index - 2
+	if start < 0 {
+		start = 0
+	}
+	result := RedisClient.ZRange("person_week_rank", start, index+2)
 	if result.Err() != nil {
 		return nil, result.Err()
 	}
@@ -58,7 +62,11 @@ func PersonMonthRankGet(userId int64) ([]string, error) {
 		return nil, res.Err()
 	}
 	index := res.Val()
-	result := RedisClient.ZRange("person_month_rank", index-2, index+2)
+	start := index - 2
+	if start < 0 {
+		start = 0
+	}
+	result := RedisClient.ZRange("person_month_rank", start, index+2)
 	if result.Err() != nil {
 		return nil, result.Err()
 	}

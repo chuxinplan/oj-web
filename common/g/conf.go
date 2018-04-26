@@ -43,6 +43,7 @@ type RedisConfig struct {
 	Address  string `toml:"address"`
 	Password string `toml:"password"`
 	Database int    `toml:"database"`
+	PoolSize int    `toml:"poolSize"`
 }
 
 type JwtConfig struct {

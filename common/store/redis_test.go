@@ -13,5 +13,4 @@ func TestList(t *testing.T) {
 	//test = client.ZAdd("java", redis.Z{Score: 20, Member: 2})
 	//client.HSet("1", "java", test)
 	//nn := client.HGet("1", "java")
-
 }

@@ -8,6 +8,7 @@ import (
 func Register(router *gin.RouterGroup) {
 	RegisterSelf(router)
 	RegisterAccount(router)
+	RegisterRank(router)
 
 	problemRouter := router.Group("/problem")
 	problem.RegisterProblem(problemRouter)

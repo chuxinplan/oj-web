@@ -13,4 +13,6 @@ func Register(router *gin.RouterGroup) {
 	problem.RegisterUserProblem(problemRouter)
 
 	RegisterAccount(router)
+	rankRouter := router.Group("/rank")
+	RegisterRank(rankRouter)
 }
