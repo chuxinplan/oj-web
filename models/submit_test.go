@@ -59,8 +59,15 @@ func TestSubmitGetByProblemId(t *testing.T) {
 func TestSubmitGetByConds(t *testing.T) {
 	InitAllInTest()
 
-	submit, _ := SubmitGetByConds(0, 0, 0, "", 2, 2)
+	submit, _ := SubmitGetByConds(2, 0, 0, "", 1, 2)
 	for _, v := range submit {
 		fmt.Println(v)
 	}
+}
+
+func TestCountByConds(t *testing.T) {
+	InitAllInTest()
+
+	count, _ := CountByConds(2, 1, 0, "")
+	fmt.Println(count)
 }

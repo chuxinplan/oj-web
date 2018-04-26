@@ -80,3 +80,24 @@ func SubmitGetByConds(problemId int64, userId int64, status int, lang string, cu
 	}
 	return submitList, nil
 }
+
+func CountByConds(problemId int64, userId int64, status int, lang string) (int64, error) {
+	session := OrmWeb.NewSession()
+	if problemId != 0 {
+		session.And("problem_id = ?", problemId)
+	}
+	if userId != 0 {
+		session.And("user_id = ?", userId)
+	}
+	if status != 0 {
+		session.And("result = ?", status)
+	}
+	if lang != "" {
+		session.And("language = ?", lang)
+	}
+	count, err := session.Count(&Submit{})
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}

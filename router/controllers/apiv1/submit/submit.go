@@ -1,10 +1,10 @@
-package problem
+package submit
 
 import (
 	"net/http"
 
 	"github.com/gin-gonic/gin"
-	"github.com/open-fightcoder/oj-web/managers/problem"
+	"github.com/open-fightcoder/oj-web/managers/submit"
 	"github.com/open-fightcoder/oj-web/router/controllers/base"
 )
 
@@ -27,7 +27,7 @@ func httpHandlerSubmitList(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	mess, err := problem.SubmitList(param.Origin, param.Tag, param.Sort, param.IsAsc, param.CurrentPage, param.PerPage)
+	mess, err := submit.SubmitList(param.ProblemId, param.UserName, param.Status, param.Lang, param.CurrentPage, param.PerPage)
 	if err != nil {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))
 		return
