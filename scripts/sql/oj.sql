@@ -60,7 +60,7 @@ CREATE TABLE `account` (
   `github_id` varchar(40) DEFAULT NULL COMMENT '用于GITHUB第三方登录',
   `weichat_id` varchar(40) DEFAULT NULL COMMENT '用于微信第三方登录',
   PRIMARY KEY (`id`),
-  KEY `idx_email` (`idx_email`)
+  KEY `idx_email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 CREATE TABLE `user` (
@@ -78,6 +78,6 @@ CREATE TABLE `user` (
   `stat_school` varchar(60) NOT NULL DEFAULT '' COMMENT '当前就学状态(小学及以下、中学学生、大学学生、非在校生)',
   `school_name` varchar(100) NOT NULL DEFAULT '' COMMENT '学校名称',
   PRIMARY KEY (`id`),
-  KEY `idx_account_id` (`idx_account_id`),
+  KEY `idx_account_id` (`account_id`),
   UNIQUE KEY `uniq_user_name` (`user_name`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
