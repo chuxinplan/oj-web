@@ -25,6 +25,7 @@ func PersonWeekRankUpdate(increment int, userId int64) error {
 
 func PersonWeekRankGet(userId int64) ([]string, error) {
 	res := RedisClient.ZRank("person_week_rank", strconv.FormatInt(userId, 10))
+	//错误处理:在Redis ZSet中不存在UserId的情况
 	if res.Err() != nil {
 		return nil, res.Err()
 	}
