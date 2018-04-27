@@ -37,3 +37,4 @@ secretAccessKey = "LetsToChangeTheWorld"
 secure = false
 imgBucket = "image"
 codeBucket = "code"
+caseBucket = "case"
