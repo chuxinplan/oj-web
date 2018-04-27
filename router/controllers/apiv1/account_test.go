@@ -36,7 +36,7 @@ func TestLogin(t *testing.T) {
 func TestRegister(t *testing.T) {
 	resp, err := http.Post("http://127.0.0.1:9001/apiv1/register",
 		"application/x-www-form-urlencoded",
-		strings.NewReader("email=ssdfr.com&password=ssdfr"))
+		strings.NewReader("email=asdfr.com&password=asdfr"))
 	if err != nil {
 		fmt.Println("POST请求失败: " + err.Error())
 	}

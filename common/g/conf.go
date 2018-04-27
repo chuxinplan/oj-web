@@ -14,6 +14,9 @@ type Config struct {
 	Log   LogConfig   `toml:"log"`
 	Mysql MysqlConfig `toml:"mysql"`
 	Jwt   JwtConfig   `toml:"jwt"`
+	Nsq   NsqConfig   `toml:"nsq"`
+	Redis RedisConfig `toml:"redis"`
+	Minio MinioConfig `toml:"minio"`
 }
 
 type RunConfig struct {
@@ -37,9 +40,29 @@ type MysqlConfig struct {
 	WebAddr string `toml:"webAddr"`
 }
 
+type RedisConfig struct {
+	Address  string `toml:"address"`
+	Password string `toml:"password"`
+	Database int    `toml:"database"`
+	PoolSize int    `toml:"poolSize"`
+}
+
 type JwtConfig struct {
 	EncodeMethod     string `toml:"encodeMethod"`
 	MaxEffectiveTime int64  `toml:"maxEffectiveTime"`
+}
+
+type NsqConfig struct {
+	Address []string `toml:"address"`
+}
+
+type MinioConfig struct {
+	Endpoint        string `toml:"endpoint"`
+	AccessKeyID     string `toml:"accessKeyID"`
+	SecretAccessKey string `toml:"secretAccessKey"`
+	Secure          bool   `toml:"secure"`
+	ImgBucket       string `toml:"imgBucket"`
+	CodeBucket      string `toml:"codeBucket"`
 }
 
 var (

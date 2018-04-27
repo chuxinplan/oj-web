@@ -12,7 +12,7 @@ import (
 )
 
 func TestList(t *testing.T) {
-	resp, err := http.Get("http://127.0.0.1:9001/apiv1/problem/list?origin=1,2,3&tag=三&sort=2&is_asc=1&current_page=1&per_page=10")
+	resp, err := http.Get("http://127.0.0.1:9001/apiv1/problem/list?sort=1&is_asc=1&current_page=2&per_page=10")
 	if err != nil {
 		fmt.Println("POST请求失败: " + err.Error())
 	}

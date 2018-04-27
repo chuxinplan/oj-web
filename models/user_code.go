@@ -9,6 +9,7 @@ type UserCode struct {
 	ProblemId int64  `form:"problem_id" json:"problem_id"` //题目ID
 	UserId    int64  `form:"user_id" json:"user_id"`       //用户ID
 	SaveCode  string `form:"saveCode" json:"saveCode"`     //保存代码
+	Language  string `form:"language" json:"language"`     //代码语言
 }
 
 func UserCodeCreate(userCode *UserCode) (int64, error) {
