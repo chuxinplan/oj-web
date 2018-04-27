@@ -11,8 +11,8 @@ import (
 func RegisterSubmit(router *gin.RouterGroup) {
 	router.POST("common", httpHandlerSubmitCommon)
 	router.POST("test", httpHandlerSubmitTest)
-	router.POST("getcommon", httpHandlerSubmitGetCommon)
-	router.POST("gettest", httpHandlerSubmitGetTest)
+	router.GET("getcommon", httpHandlerSubmitGetCommon)
+	router.GET("gettest", httpHandlerSubmitGetTest)
 }
 
 type CommonParam struct {
