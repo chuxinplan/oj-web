@@ -62,3 +62,34 @@ CREATE TABLE `account` (
   PRIMARY KEY (`id`),
   KEY `email` (`email`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `user` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `account_id` bigint(20) NOT NULL COMMENT '账号Id',
+  `user_name` varchar(20) NOT NULL COMMENT '用户名',
+  `nick_name` varchar(40) NOT NULL COMMENT '昵称',
+  `sex` varchar(30) NOT NULL DEFAULT '' COMMENT '性别',
+  `avator` varchar(50) NOT NULL DEFAULT '' COMMENT '头像',
+  `blog` varchar(100) NOT NULL DEFAULT '' COMMENT '博客地址',
+  `git` varchar(100) NOT NULL DEFAULT '' COMMENT 'Git地址',
+  `description` varchar(200) NOT NULL DEFAULT '' COMMENT '个人描述',
+  `birthday` varchar(80) NOT NULL DEFAULT '' COMMENT '生日',
+  `daily_address` varchar(100) NOT NULL DEFAULT '' COMMENT '日常所在地：省、市',
+  `stat_school` varchar(60) NOT NULL DEFAULT '' COMMENT '当前就学状态(小学及以下、中学学生、大学学生、非在校生)',
+  `school_name` varchar(100) NOT NULL DEFAULT '' COMMENT '学校名称',
+  PRIMARY KEY (`id`),
+  KEY `idx_account_id` (`account_id`),
+  UNIQUE KEY `uniq_user_name` (`user_name`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `group` (
+  `id` BIGINT(20) PRIMARY KEY AUTO_INCREMENT COMMENT '团队ID',
+  `name` VARCHAR(50) NOT NULL COMMENT '团队名称',
+  `description` VARCHAR(200) NOT NULL COMMENT '团队描述',
+  `avator`VARCHAR(50) NOT NULL COMMENT '团队头像'
+)ENGINE=InnoDB DEFAULT  CHARSET=utf8;
+
+CREATE TABLE `group_member` (
+  `id` BIGINT(20) PRIMARY KEY COMMENT '用户ID',
+  `gid` BIGINT(20) NOT NULL COMMENT '团队ID'
+)ENGINE=Inn0DB DEFAULT  CHARSET =utf8
