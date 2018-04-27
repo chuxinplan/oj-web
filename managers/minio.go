@@ -67,6 +67,15 @@ func SaveCode(code string) (string, error) {
 	return str, nil
 }
 
+func UpdateCode(path string, code string) error {
+	cfg := g.Conf()
+	_, err := MinioClient.PutObject(cfg.Minio.CodeBucket, path, strings.NewReader(code), -1, minio.PutObjectOptions{ContentType: "application/octet-stream"})
+	if err != nil {
+		return errors.New("更新失败")
+	}
+	return nil
+}
+
 func RemoveCode(name string) error {
 	cfg := g.Conf()
 	err := MinioClient.RemoveObject(cfg.Minio.CodeBucket, name)

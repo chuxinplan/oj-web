@@ -40,6 +40,7 @@ func TestCodeGet(t *testing.T) {
 		if err := json.Unmarshal(body, &respT); err != nil {
 			fmt.Println("获取Body失败: " + err.Error())
 		}
+		fmt.Println(string(body))
 		assert.Equal(t, 0, respT.Code, "退出失败！")
 	}
 }
@@ -60,7 +61,7 @@ func TestCodeSet(t *testing.T) {
 	if assert.Equal(t, 200, resp.StatusCode, "鉴权失败！") {
 		resp, err = client.Post("http://127.0.0.1:9001/authv1/problem/code/set",
 			"application/x-www-form-urlencoded",
-			strings.NewReader("problem_id=1&save_code=aaaaa&language=aaaaa"))
+			strings.NewReader("problem_id=2&save_code=hhhhhhhhhhhhhhhhhhhhhhhhhshshshhshsh&language=aaaaa"))
 		if err != nil {
 			fmt.Println("POST请求失败: " + err.Error())
 		}

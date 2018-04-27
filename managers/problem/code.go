@@ -12,8 +12,12 @@ func CodeGet(userId int64, problemId int64) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, errors.New("Get code error!")
 	}
+	code, err := managers.GetCode(userCode.SaveCode)
+	if err != nil {
+		return nil, err
+	}
 	codeMess := map[string]interface{}{
-		"code":     managers.GetCode(userCode.SaveCode),
+		"code":     code,
 		"language": userCode.Language,
 	}
 	return codeMess, nil
@@ -25,15 +29,18 @@ func CodeSet(problemId int64, userId int64, saveCode string, language string) er
 		return err
 	}
 	var errorRet error
-	codePath, err := managers.SaveCode(saveCode)
-	if err != nil {
-		return err
-	}
 	if code == nil {
+		codePath, err := managers.SaveCode(saveCode)
+		if err != nil {
+			return err
+		}
 		userCode := &models.UserCode{ProblemId: problemId, UserId: userId, SaveCode: codePath, Language: language}
 		_, errorRet = models.UserCodeCreate(userCode)
 	} else {
-		code.SaveCode = codePath
+		err := managers.UpdateCode(code.SaveCode, saveCode)
+		if err != nil {
+			return err
+		}
 		code.Language = language
 		errorRet = models.UserCodeUpdate(code)
 	}
