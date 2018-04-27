@@ -16,7 +16,11 @@ type Submit struct {
 }
 
 func SubmitCreate(submit *Submit) (int64, error) {
-	return OrmWeb.Insert(submit)
+	_, err := OrmWeb.Insert(submit) //第一个参数为影响的行数
+	if err != nil {
+		return 0, err
+	}
+	return submit.Id, nil
 }
 
 func SubmitRemove(id int64) error {

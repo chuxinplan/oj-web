@@ -50,9 +50,34 @@ func SubmitTest(userId int64, language string, input string, code string) (map[s
 	}
 	return submitMess, nil
 }
-func SubmitGetCommon(SubmitId int64) (*models.Submit, error) {
-	return models.SubmitGetById(SubmitId)
+func SubmitGetCommon(SubmitId int64) (map[string]interface{}, error) {
+	submit, err := models.SubmitGetById(SubmitId)
+	if err != nil {
+		return nil, errors.New("获取失败")
+	}
+	submitMess := map[string]interface{}{
+		"status":      submit.Result,
+		"memory_cost": submit.RunningMemory,
+		"time_cost":   submit.RunningTime,
+		"lang":        submit.Language,
+		"code":        submit.Code,
+		"time":        submit.SubmitTime,
+	}
+	return submitMess, nil
 }
-func SubmitGetTest(SubmitId int64) (*models.SubmitTest, error) {
-	return models.SubmitTestGetById(SubmitId)
+func SubmitGetTest(SubmitId int64) (map[string]interface{}, error) {
+	submit, err := models.SubmitTestGetById(SubmitId)
+	if err != nil {
+		return nil, errors.New("获取失败")
+	}
+	submitMess := map[string]interface{}{
+		"status":      submit.Result,
+		"memory_cost": submit.RunningMemory,
+		"time_cost":   submit.RunningTime,
+		"lang":        submit.Language,
+		"code":        submit.Code,
+		"output":      submit.ResultDes,
+		"time":        submit.SubmitTime,
+	}
+	return submitMess, nil
 }

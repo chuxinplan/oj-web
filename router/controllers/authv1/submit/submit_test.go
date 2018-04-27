@@ -77,6 +77,7 @@ func TestSubmitTest(t *testing.T) {
 
 			fmt.Println("获取Body失败: " + err.Error())
 		}
+		fmt.Println(string(body))
 		assert.Equal(t, 0, respT.Code, "提交失败！")
 	}
 }
@@ -109,6 +110,7 @@ func TestSubmitGetCommon(t *testing.T) {
 
 			fmt.Println("获取Body失败: " + err.Error())
 		}
+		fmt.Println((string(body)))
 		assert.Equal(t, 0, respT.Code, "获取失败！")
 	}
 }

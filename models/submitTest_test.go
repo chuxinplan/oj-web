@@ -1,6 +1,8 @@
 package models
 
-import "testing"
+import (
+	"testing"
+)
 
 func TestSubmitTestCreate(t *testing.T) {
 	InitAllInTest()

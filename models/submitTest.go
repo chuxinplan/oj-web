@@ -16,7 +16,11 @@ type SubmitTest struct {
 }
 
 func SubmitTestCreate(submitTest *SubmitTest) (int64, error) {
-	return OrmWeb.Insert(submitTest)
+	_, err := OrmWeb.Insert(submitTest) //第一个参数为影响的行数
+	if err != nil {
+		return 0, err
+	}
+	return submitTest.Id, nil
 }
 
 func SubmitTestRemove(id int64) error {
