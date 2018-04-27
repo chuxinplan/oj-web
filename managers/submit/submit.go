@@ -11,16 +11,32 @@ import (
 
 func SubmitList(problemId int64, userName string, status int, lang string, currentPage int, perPage int) (map[string]interface{}, error) {
 	//TODO 根据userName->userId
-	submits, err := models.SubmitGetByConds(problemId, 1, status, lang, currentPage, perPage)
+	submits, err := models.SubmitGetByConds(problemId, 0, status, lang, currentPage, perPage)
 	if err != nil {
 		return nil, errors.New("查询失败")
 	}
-	count, err := models.CountByConds(problemId, 1, status, lang)
+	count, err := models.CountByConds(problemId, 0, status, lang)
 	if err != nil {
 		return nil, errors.New("查询失败")
+	}
+	var submitLists []map[string]interface{}
+	for i := 0; i < len(submits); i++ {
+		submitTime := time.Unix(submits[i].SubmitTime, 0).Format("2006-01-02 15:04:05")
+		projects := make(map[string]interface{})
+		//TODO
+		projects["problem_name"] = "测试"
+		projects["user_id"] = 1
+		projects["user_name"] = "哈哈"
+		projects["status"] = submits[i].Result
+		projects["memory_cost"] = submits[i].RunningMemory
+		projects["time_cost"] = submits[i].RunningTime
+		projects["lang"] = submits[i].Language
+		projects["submit_id"] = submits[i].Id
+		projects["time"] = submitTime
+		submitLists = append(submitLists, projects)
 	}
 	submitMess := map[string]interface{}{
-		"list":         submits,
+		"list":         submitLists,
 		"current_page": currentPage,
 		"total":        count,
 	}
