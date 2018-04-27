@@ -60,7 +60,7 @@ func TestCodeSet(t *testing.T) {
 	if assert.Equal(t, 200, resp.StatusCode, "鉴权失败！") {
 		resp, err = client.Post("http://127.0.0.1:9001/authv1/problem/code/set",
 			"application/x-www-form-urlencoded",
-			strings.NewReader("problem_id=1&save_code=asdfr&language=JAVA"))
+			strings.NewReader("problem_id=1&save_code=aaaaa&language=aaaaa"))
 		if err != nil {
 			fmt.Println("POST请求失败: " + err.Error())
 		}

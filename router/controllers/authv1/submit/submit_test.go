@@ -96,7 +96,7 @@ func TestSubmitGetCommon(t *testing.T) {
 
 	defer resp.Body.Close()
 	if assert.Equal(t, 200, resp.StatusCode, "鉴权失败！") {
-		resp, err = client.Get("http://127.0.0.1:9001/authv1/submit/getcommon?submit_id=2")
+		resp, err = client.Get("http://127.0.0.1:9001/authv1/submit/getcommon?submit_id=1")
 		if err != nil {
 			fmt.Println("GET请求失败: " + err.Error())
 		}
@@ -129,7 +129,7 @@ func TestSubmitGetTest(t *testing.T) {
 
 	defer resp.Body.Close()
 	if assert.Equal(t, 200, resp.StatusCode, "鉴权失败！") {
-		resp, err = client.Get("http://127.0.0.1:9001/authv1/submit/gettest?submit_id=2")
+		resp, err = client.Get("http://127.0.0.1:9001/authv1/submit/gettest?submit_id=1")
 		if err != nil {
 			fmt.Println("GET请求失败: " + err.Error())
 		}
@@ -142,6 +142,7 @@ func TestSubmitGetTest(t *testing.T) {
 		if err := json.Unmarshal(body, &respT); err != nil {
 			fmt.Println("获取Body失败: " + err.Error())
 		}
+		fmt.Println(string(body))
 		assert.Equal(t, 0, respT.Code, "获取失败！")
 	}
 }

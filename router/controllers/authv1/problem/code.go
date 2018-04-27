@@ -3,8 +3,6 @@ package problem
 import (
 	"net/http"
 
-	"fmt"
-
 	"github.com/gin-gonic/gin"
 	"github.com/open-fightcoder/oj-web/managers/problem"
 	"github.com/open-fightcoder/oj-web/router/controllers/base"
@@ -46,7 +44,6 @@ func httpHandlerCodeSet(c *gin.Context) {
 		panic(err)
 	}
 	userId := base.UserId(c)
-	fmt.Println("userId ==>", userId)
 	err = problem.CodeSet(userCode.ProblemId, userId, userCode.SaveCode, userCode.Language)
 	if err != nil {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))

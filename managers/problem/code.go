@@ -6,20 +6,31 @@ import (
 	"github.com/open-fightcoder/oj-web/models"
 )
 
-func CodeGet(userId int64, problemId int64) (string, error) {
-	code := ""
+func CodeGet(userId int64, problemId int64) (map[string]interface{}, error) {
 	userCode, err := models.UserCodeGetUserCode(userId, problemId)
 	if err != nil {
-		return "", errors.New("Get code error!")
+		return nil, errors.New("Get code error!")
 	}
-	if userCode != nil {
-		code = userCode.SaveCode
+	codeMess := map[string]interface{}{
+		"code":     userCode.SaveCode,
+		"language": userCode.Language,
 	}
-	return code, nil
+	return codeMess, nil
 }
 
 func CodeSet(problemId int64, userId int64, saveCode string, language string) error {
-	userCode := &models.UserCode{ProblemId: problemId, UserId: userId, SaveCode: saveCode, Language: language}
-	_, err := models.UserCodeCreate(userCode)
-	return err
+	code, err := models.UserCodeGetUserCode(userId, problemId)
+	if err != nil {
+		return err
+	}
+	var errorRet error
+	if code == nil {
+		userCode := &models.UserCode{ProblemId: problemId, UserId: userId, SaveCode: saveCode, Language: language}
+		_, errorRet = models.UserCodeCreate(userCode)
+	} else {
+		code.SaveCode = saveCode
+		code.Language = language
+		errorRet = models.UserCodeUpdate(code)
+	}
+	return errorRet
 }

@@ -61,7 +61,7 @@ func SubmitGetCommon(SubmitId int64) (map[string]interface{}, error) {
 		"time_cost":   submit.RunningTime,
 		"lang":        submit.Language,
 		"code":        submit.Code,
-		"time":        submit.SubmitTime,
+		"time":        time.Unix(submit.SubmitTime, 0).Format("2006-01-02 15:04:05"),
 	}
 	return submitMess, nil
 }
@@ -70,6 +70,7 @@ func SubmitGetTest(SubmitId int64) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, errors.New("获取失败")
 	}
+	//problem,err := models.
 	submitMess := map[string]interface{}{
 		"status":      submit.Result,
 		"memory_cost": submit.RunningMemory,
@@ -77,7 +78,7 @@ func SubmitGetTest(SubmitId int64) (map[string]interface{}, error) {
 		"lang":        submit.Language,
 		"code":        submit.Code,
 		"output":      submit.ResultDes,
-		"time":        submit.SubmitTime,
+		"time":        time.Unix(submit.SubmitTime, 0).Format("2006-01-02 15:04:05"),
 	}
 	return submitMess, nil
 }
