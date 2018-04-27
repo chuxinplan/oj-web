@@ -70,7 +70,6 @@ func SubmitGetTest(SubmitId int64) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, errors.New("获取失败")
 	}
-	//problem,err := models.
 	submitMess := map[string]interface{}{
 		"status":      submit.Result,
 		"memory_cost": submit.RunningMemory,
