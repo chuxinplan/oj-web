@@ -29,7 +29,7 @@ func TestSubmitCommon(t *testing.T) {
 	if assert.Equal(t, 200, resp.StatusCode, "鉴权失败！") {
 		resp, err = client.Post("http://127.0.0.1:9001/authv1/submit/common",
 			"application/x-www-form-urlencoded",
-			strings.NewReader("problem_id=5&user_id=6&language=JAVA&code=aaaa"))
+			strings.NewReader("problem_id=5&user_id=6&language=JAVA&code=aasssssssssaa"))
 		if err != nil {
 			fmt.Println("POST请求失败: " + err.Error())
 		}
@@ -63,7 +63,7 @@ func TestSubmitTest(t *testing.T) {
 	if assert.Equal(t, 200, resp.StatusCode, "鉴权失败！") {
 		resp, err = client.Post("http://127.0.0.1:9001/authv1/submit/test",
 			"application/x-www-form-urlencoded",
-			strings.NewReader("user_id=1&language=2&input=3&code=4"))
+			strings.NewReader("user_id=1&language=2&input=3&code=aaaaaaaaaaaaaaassssssss"))
 		if err != nil {
 			fmt.Println("POST请求失败: " + err.Error())
 		}

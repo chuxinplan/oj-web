@@ -5,6 +5,7 @@ import (
 
 	"time"
 
+	"github.com/open-fightcoder/oj-web/managers"
 	"github.com/open-fightcoder/oj-web/models"
 )
 
@@ -27,7 +28,11 @@ func SubmitList(problemId int64, userName string, status int, lang string, curre
 }
 
 func SubmitCommon(problemId int64, userId int64, language string, code string) (map[string]interface{}, error) {
-	submit := &models.Submit{ProblemId: problemId, UserId: userId, Language: language, Code: code, SubmitTime: time.Now().Unix()}
+	codePath, err := managers.SaveCode(code)
+	if err != nil {
+		return nil, err
+	}
+	submit := &models.Submit{ProblemId: problemId, UserId: userId, Language: language, Code: codePath, SubmitTime: time.Now().Unix()}
 	id, err := models.SubmitCreate(submit)
 	if err != nil {
 		return nil, errors.New("提交失败")
@@ -39,7 +44,11 @@ func SubmitCommon(problemId int64, userId int64, language string, code string) (
 	return submitMess, nil
 }
 func SubmitTest(userId int64, language string, input string, code string) (map[string]interface{}, error) {
-	submitTest := &models.SubmitTest{Input: input, UserId: userId, Language: language, Code: code, SubmitTime: time.Now().Unix()}
+	codePath, err := managers.SaveCode(code)
+	if err != nil {
+		return nil, err
+	}
+	submitTest := &models.SubmitTest{Input: input, UserId: userId, Language: language, Code: codePath, SubmitTime: time.Now().Unix()}
 	id, err := models.SubmitTestCreate(submitTest)
 	if err != nil {
 		return nil, errors.New("提交失败")
@@ -55,12 +64,16 @@ func SubmitGetCommon(SubmitId int64) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, errors.New("获取失败")
 	}
+	code, err := managers.GetCode(submit.Code)
+	if err != nil {
+		return nil, err
+	}
 	submitMess := map[string]interface{}{
 		"status":      submit.Result,
 		"memory_cost": submit.RunningMemory,
 		"time_cost":   submit.RunningTime,
 		"lang":        submit.Language,
-		"code":        submit.Code,
+		"code":        code,
 		"time":        time.Unix(submit.SubmitTime, 0).Format("2006-01-02 15:04:05"),
 	}
 	return submitMess, nil
@@ -70,12 +83,16 @@ func SubmitGetTest(SubmitId int64) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, errors.New("获取失败")
 	}
+	code, err := managers.GetCode(submit.Code)
+	if err != nil {
+		return nil, err
+	}
 	submitMess := map[string]interface{}{
 		"status":      submit.Result,
 		"memory_cost": submit.RunningMemory,
 		"time_cost":   submit.RunningTime,
 		"lang":        submit.Language,
-		"code":        submit.Code,
+		"code":        code,
 		"output":      submit.ResultDes,
 		"time":        time.Unix(submit.SubmitTime, 0).Format("2006-01-02 15:04:05"),
 	}
