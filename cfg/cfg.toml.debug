@@ -31,7 +31,7 @@ database = 0                    # use default DB
 poolSize = 5
 
 [minio]
-endpoint = "10.0.1.211:9000"
+endpoint = "xupt1.fightcoder.com:9000"
 accessKeyID = "FightCoder"
 secretAccessKey = "LetsToChangeTheWorld"
 secure = false
