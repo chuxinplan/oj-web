@@ -26,6 +26,14 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/a8m/mark",
+			"repository": "https://github.com/a8m/mark",
+			"vcs": "git",
+			"revision": "44f2db6188458162890ca13980819247418d8e45",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/andybalholm/cascadia",
 			"repository": "https://github.com/andybalholm/cascadia",
 			"vcs": "git",
@@ -70,6 +78,14 @@
 			"repository": "https://github.com/gin-gonic/gin",
 			"vcs": "git",
 			"revision": "6ad7b9c9d382844036334ad061b832e56269e14f",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/go-ini/ini",
+			"repository": "https://github.com/go-ini/ini",
+			"vcs": "git",
+			"revision": "bda519ae5f4cbc60d391ff8610711627a08b86ae",
 			"branch": "master",
 			"notests": true
 		},
@@ -188,6 +204,30 @@
 			"notests": true
 		},
 		{
+			"importpath": "github.com/minio/minio-go",
+			"repository": "https://github.com/minio/minio-go",
+			"vcs": "git",
+			"revision": "c6108c47ba5d86548404ebf9e51c5ca18769fe79",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/minio/sio",
+			"repository": "https://github.com/minio/sio",
+			"vcs": "git",
+			"revision": "6a41828a60f0ec95a159ce7921ca3dd566ebd7e3",
+			"branch": "master",
+			"notests": true
+		},
+		{
+			"importpath": "github.com/mitchellh/go-homedir",
+			"repository": "https://github.com/mitchellh/go-homedir",
+			"vcs": "git",
+			"revision": "b8bc1bf767474819792c23f32d8286a45736f1c6",
+			"branch": "master",
+			"notests": true
+		},
+		{
 			"importpath": "github.com/pkg/errors",
 			"repository": "https://github.com/pkg/errors",
 			"vcs": "git",
@@ -248,6 +288,33 @@
 			"notests": true
 		},
 		{
+			"importpath": "golang.org/x/crypto/argon2",
+			"repository": "https://go.googlesource.com/crypto",
+			"vcs": "git",
+			"revision": "b49d69b5da943f7ef3c9cf91c8777c1f78a0cc3c",
+			"branch": "master",
+			"path": "/argon2",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/crypto/blake2b",
+			"repository": "https://go.googlesource.com/crypto",
+			"vcs": "git",
+			"revision": "b49d69b5da943f7ef3c9cf91c8777c1f78a0cc3c",
+			"branch": "master",
+			"path": "blake2b",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/crypto/ssh/terminal",
+			"repository": "https://go.googlesource.com/crypto",
+			"vcs": "git",
+			"revision": "b49d69b5da943f7ef3c9cf91c8777c1f78a0cc3c",
+			"branch": "master",
+			"path": "/ssh/terminal",
+			"notests": true
+		},
+		{
 			"importpath": "golang.org/x/net/context",
 			"repository": "https://go.googlesource.com/net",
 			"vcs": "git",
@@ -263,6 +330,24 @@
 			"revision": "8d16fa6dc9a85c1cd3ed24ad08ff21cf94f10888",
 			"branch": "master",
 			"path": "/html",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/net/idna",
+			"repository": "https://go.googlesource.com/net",
+			"vcs": "git",
+			"revision": "5f9ae10d9af5b1c89ae6904293b14b064d4ada23",
+			"branch": "master",
+			"path": "idna",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/net/lex/httplex",
+			"repository": "https://go.googlesource.com/net",
+			"vcs": "git",
+			"revision": "5f9ae10d9af5b1c89ae6904293b14b064d4ada23",
+			"branch": "master",
+			"path": "/lex/httplex",
 			"notests": true
 		},
 		{
@@ -284,12 +369,39 @@
 			"notests": true
 		},
 		{
+			"importpath": "golang.org/x/sys/windows",
+			"repository": "https://go.googlesource.com/sys",
+			"vcs": "git",
+			"revision": "bb9c189858d91f42db229b04d45a4c3d23a7662a",
+			"branch": "master",
+			"path": "/windows",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/text/collate",
+			"repository": "https://go.googlesource.com/text",
+			"vcs": "git",
+			"revision": "7922cc490dd5a7dbaa7fd5d6196b49db59ac042f",
+			"branch": "master",
+			"path": "collate",
+			"notests": true
+		},
+		{
 			"importpath": "golang.org/x/text/encoding",
 			"repository": "https://go.googlesource.com/text",
 			"vcs": "git",
 			"revision": "7922cc490dd5a7dbaa7fd5d6196b49db59ac042f",
 			"branch": "master",
 			"path": "encoding",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/text/internal/colltab",
+			"repository": "https://go.googlesource.com/text",
+			"vcs": "git",
+			"revision": "7922cc490dd5a7dbaa7fd5d6196b49db59ac042f",
+			"branch": "master",
+			"path": "internal/colltab",
 			"notests": true
 		},
 		{
@@ -329,6 +441,24 @@
 			"notests": true
 		},
 		{
+			"importpath": "golang.org/x/text/internal/triegen",
+			"repository": "https://go.googlesource.com/text",
+			"vcs": "git",
+			"revision": "7922cc490dd5a7dbaa7fd5d6196b49db59ac042f",
+			"branch": "master",
+			"path": "internal/triegen",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/text/internal/ucd",
+			"repository": "https://go.googlesource.com/text",
+			"vcs": "git",
+			"revision": "7922cc490dd5a7dbaa7fd5d6196b49db59ac042f",
+			"branch": "master",
+			"path": "internal/ucd",
+			"notests": true
+		},
+		{
 			"importpath": "golang.org/x/text/internal/utf8internal",
 			"repository": "https://go.googlesource.com/text",
 			"vcs": "git",
@@ -356,6 +486,15 @@
 			"notests": true
 		},
 		{
+			"importpath": "golang.org/x/text/secure/bidirule",
+			"repository": "https://go.googlesource.com/text",
+			"vcs": "git",
+			"revision": "7922cc490dd5a7dbaa7fd5d6196b49db59ac042f",
+			"branch": "master",
+			"path": "/secure/bidirule",
+			"notests": true
+		},
+		{
 			"importpath": "golang.org/x/text/transform",
 			"repository": "https://go.googlesource.com/text",
 			"vcs": "git",
@@ -365,12 +504,39 @@
 			"notests": true
 		},
 		{
+			"importpath": "golang.org/x/text/unicode/bidi",
+			"repository": "https://go.googlesource.com/text",
+			"vcs": "git",
+			"revision": "7922cc490dd5a7dbaa7fd5d6196b49db59ac042f",
+			"branch": "master",
+			"path": "unicode/bidi",
+			"notests": true
+		},
+		{
 			"importpath": "golang.org/x/text/unicode/cldr",
 			"repository": "https://go.googlesource.com/text",
 			"vcs": "git",
 			"revision": "7922cc490dd5a7dbaa7fd5d6196b49db59ac042f",
 			"branch": "master",
 			"path": "unicode/cldr",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/text/unicode/norm",
+			"repository": "https://go.googlesource.com/text",
+			"vcs": "git",
+			"revision": "7922cc490dd5a7dbaa7fd5d6196b49db59ac042f",
+			"branch": "master",
+			"path": "unicode/norm",
+			"notests": true
+		},
+		{
+			"importpath": "golang.org/x/text/unicode/rangetable",
+			"repository": "https://go.googlesource.com/text",
+			"vcs": "git",
+			"revision": "7922cc490dd5a7dbaa7fd5d6196b49db59ac042f",
+			"branch": "master",
+			"path": "unicode/rangetable",
 			"notests": true
 		},
 		{

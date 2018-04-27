@@ -29,3 +29,11 @@ address = "127.0.0.1:6379"      # redis address
 password = ""                   # no password set
 database = 0                    # use default DB
 poolSize = 5
+
+[minio]
+endpoint = "10.0.1.211:9000"
+accessKeyID = "FightCoder"
+secretAccessKey = "LetsToChangeTheWorld"
+secure = false
+imgBucket = "image"
+codeBucket = "code"

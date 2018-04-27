@@ -16,6 +16,7 @@ type Config struct {
 	Jwt   JwtConfig   `toml:"jwt"`
 	Nsq   NsqConfig   `toml:"nsq"`
 	Redis RedisConfig `toml:"redis"`
+	Minio MinioConfig `toml:"minio"`
 }
 
 type RunConfig struct {
@@ -53,6 +54,15 @@ type JwtConfig struct {
 
 type NsqConfig struct {
 	Address []string `toml:"address"`
+}
+
+type MinioConfig struct {
+	Endpoint        string `toml:"endpoint"`
+	AccessKeyID     string `toml:"accessKeyID"`
+	SecretAccessKey string `toml:"secretAccessKey"`
+	Secure          bool   `toml:"secure"`
+	ImgBucket       string `toml:"imgBucket"`
+	CodeBucket      string `toml:"codeBucket"`
 }
 
 var (
