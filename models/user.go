@@ -20,30 +20,26 @@ type User struct {
 	SchoolName   string `form:"schoolName" json:"schoolName"`     //学校名称
 }
 
-//增加
-func (this User) Create(user *User) (int64, error) {
-	_, err := OrmWeb.Insert(user) //第一个参数为影响的行数
+func Create(user *User) (int64, error) {
+	_, err := OrmWeb.Insert(user)
 	if err != nil {
 		return 0, err
 	}
 	return user.Id, nil
 }
 
-//删除
-func (this User) Remove(id int64) error {
+func Remove(id int64) error {
 	user := User{}
 	_, err := OrmWeb.Id(id).Delete(user)
 	return err
 }
 
-//修改
-func (this User) Update(user *User) error {
+func Update(user *User) error {
 	_, err := OrmWeb.AllCols().ID(user.Id).Update(user)
 	return err
 }
 
-//查询
-func (this User) GetById(id int64) (*User, error) {
+func GetById(id int64) (*User, error) {
 	user := new(User)
 	has, err := OrmWeb.Id(id).Get(user) //第一个为 bool 类型，表示是否查找到记录
 
@@ -56,7 +52,7 @@ func (this User) GetById(id int64) (*User, error) {
 	return user, nil
 }
 
-func (this User) GetByAccountId(accountId int64) (*User, error) {
+func GetByAccountId(accountId int64) (*User, error) {
 	user := new(User)
 	has, err := OrmWeb.Where("account_id = ?", accountId).Get(user)
 	if err != nil {
@@ -68,7 +64,7 @@ func (this User) GetByAccountId(accountId int64) (*User, error) {
 	return user, nil
 }
 
-func (this User) QueryByName(nickname string) ([]*User, error) {
+func QueryByName(nickname string) ([]*User, error) {
 	userList := make([]*User, 0)
 	err := OrmWeb.Where("nick_name like ?", "%"+nickname+"%").Find(&userList)
 	if err != nil {

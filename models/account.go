@@ -15,7 +15,11 @@ type Account struct {
 }
 
 func AccountAdd(account *Account) (int64, error) {
-	return OrmWeb.Insert(account)
+	_, err := OrmWeb.Insert(account)
+	if err != nil {
+		return 0, err
+	}
+	return account.Id, nil
 }
 
 func AccountRemove(id int64) error {

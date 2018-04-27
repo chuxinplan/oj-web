@@ -15,7 +15,7 @@ import (
 func TestLogin(t *testing.T) {
 	resp, err := http.Post("http://127.0.0.1:9001/apiv1/login",
 		"application/x-www-form-urlencoded",
-		strings.NewReader("email=asdfr.com&password=asdfr"))
+		strings.NewReader("email=rrrr&password=rrrr"))
 	if err != nil {
 		fmt.Println("POST请求失败: " + err.Error())
 	}
@@ -36,7 +36,7 @@ func TestLogin(t *testing.T) {
 func TestRegister(t *testing.T) {
 	resp, err := http.Post("http://127.0.0.1:9001/apiv1/register",
 		"application/x-www-form-urlencoded",
-		strings.NewReader("email=asdfr.com&password=asdfr"))
+		strings.NewReader("email=rrrr&password=rrrr"))
 	if err != nil {
 		fmt.Println("POST请求失败: " + err.Error())
 	}

@@ -13,7 +13,7 @@ import (
 func AccountLogin(email string, password string) (string, error) {
 	account, err := models.AccountGetByEmail(email)
 	if err != nil {
-		return "", fmt.Errorf("get account failure : %s ", err.Error())
+		return "", errors.New("登录失败")
 	}
 	if account == nil {
 		return "", errors.New("Email is not exist")
@@ -21,8 +21,11 @@ func AccountLogin(email string, password string) (string, error) {
 	if account.Password != md5Encode(password) {
 		return "", errors.New("Password is wrong")
 	}
-
-	token, err := components.CreateToken(int64(23))
+	user, err := models.GetByAccountId(account.Id)
+	if err != nil || user == nil {
+		return "", errors.New("登录失败")
+	}
+	token, err := components.CreateToken(user.Id)
 	if err != nil {
 		return "", err
 	}
