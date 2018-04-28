@@ -56,3 +56,27 @@ func AccountGetByEmail(email string) (*Account, error) {
 	}
 	return account, nil
 }
+
+func AccountGetQQOpenId(QQId string) (*Account, error) {
+	account := new(Account)
+	has, err := OrmWeb.Where("qq_id=?", QQId).Get(account)
+	if err != nil {
+		return nil, err
+	}
+	if !has {
+		return nil, nil
+	}
+	return account, nil
+}
+
+func AccountGetGithubOpenId(GithubId string) (*Account, error) {
+	account := new(Account)
+	has, err := OrmWeb.Where("github_id=?", GithubId).Get(account)
+	if err != nil {
+		return nil, err
+	}
+	if !has {
+		return nil, nil
+	}
+	return account, nil
+}
