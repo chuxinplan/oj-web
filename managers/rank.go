@@ -11,7 +11,7 @@ func RankListGet(currentPage int, perPage int) ([]string, error) {
 }
 
 func PersonRankGet(userId int64, isWeek int) ([]map[string]interface{}, error) {
-	var idList []string
+	var idList []map[string]interface{}
 	var err error
 	if isWeek == 1 {
 		idList, err = redis.PersonWeekRankGet(userId)
@@ -28,9 +28,10 @@ func PersonRankGet(userId int64, isWeek int) ([]map[string]interface{}, error) {
 		projects["user_id"] = v
 		projects["nick_name"] = 1
 		projects["avator"] = "哈哈"
-		projects["ac_num"] = submits[i].Result
+		projects["ac_num"] = 11
 		rankLists = append(rankLists, projects)
 	}
+	return nil, nil
 }
 
 func GroupRankGet(currentPage int, perPage int) ([]string, error) {

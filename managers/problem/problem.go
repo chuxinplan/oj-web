@@ -31,7 +31,7 @@ func ProblemList(origin string, tag string, sort int, isAsc int, currentPage int
 	return problemMess, nil
 }
 
-func ProblemGet(id int64) (*models.Problem, error) {
+func ProblemGet(id int64) (map[string]interface{}, error) {
 	problem, err := models.ProblemGetById(id)
 	if err != nil {
 		return nil, errors.New("获取题目失败")
@@ -39,10 +39,26 @@ func ProblemGet(id int64) (*models.Problem, error) {
 	//TODO 用户未登录,userId为空的情况
 	//TODO 从Redis中去获取ac_rate
 	//TODO 获取用户昵称等信息
-	return problem, nil
+	problemMess := map[string]interface{}{
+		"id":            problem.Id,
+		"user_id":       problem.UserId,
+		"nick_name":     "TODO",
+		"is_collection": true,
+		"ac_rate":       11,
+		"time_limit":    problem.TimeLimit,
+		"memory_limit":  problem.MemoryLimit,
+		"title":         problem.Title,
+		"description":   problem.Description,
+		"input_des":     problem.InputDes,
+		"output_des":    problem.OutputDes,
+		"input_case":    problem.InputCase,
+		"output_case":   problem.OutputCase,
+		"hint":          problem.Hint,
+	}
+	return problemMess, nil
 }
 
-func ProblemRandom(origin string, tag string) (*models.Problem, error) {
+func ProblemRandom(origin string, tag string) (map[string]interface{}, error) {
 	problemList, err := models.ProblemGetIdsByConds(origin, tag)
 	if err != nil {
 		return nil, errors.New("获取题目失败")
