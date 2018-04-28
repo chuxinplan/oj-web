@@ -11,6 +11,6 @@ import (
 func TestList(t *testing.T) {
 	g.LoadConfig("../../cfg/cfg.toml.debug")
 	InitRedis()
-	isExit := RedisClient.ZLexCount("person_week_rank", "[6", "[6")
+	isExit := RedisClient.ZScore("person_week_rank", "10")
 	fmt.Println(isExit.Val())
 }

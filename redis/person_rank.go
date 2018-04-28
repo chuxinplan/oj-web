@@ -5,8 +5,6 @@ import (
 
 	"errors"
 
-	"fmt"
-
 	"github.com/go-redis/redis"
 	. "github.com/open-fightcoder/oj-web/common/store"
 )
@@ -34,10 +32,9 @@ func PersonWeekRankGet(userId int64) ([]map[string]interface{}, error) {
 	}
 	size := sizeRet.Val()
 	idStr := strconv.FormatInt(userId, 10)
-	isExitRet := RedisClient.ZLexCount("person_week_rank", "["+idStr, "["+idStr)
+	isExitRet := RedisClient.ZScore("person_week_rank", idStr)
 
 	if isExitRet.Err() != nil {
-		fmt.Println(isExitRet.Err())
 		return nil, errors.New("获取失败")
 	}
 	if isExitRet.Val() > 0 {
@@ -49,11 +46,9 @@ func PersonWeekRankGet(userId int64) ([]map[string]interface{}, error) {
 		} else {
 			res := RedisClient.ZRevRank("person_week_rank", idStr)
 			if res.Err() != nil {
-				fmt.Println(res.Err())
 				return nil, errors.New("获取失败")
 			}
 			index := res.Val()
-			fmt.Println("index ", index)
 			if index < 2 {
 				start = 0
 				end = 4
@@ -62,14 +57,11 @@ func PersonWeekRankGet(userId int64) ([]map[string]interface{}, error) {
 				end = size - 1
 			} else {
 				start = index - 2
-				end = size + 2
+				end = index + 2
 			}
 		}
-		fmt.Println("start ", start)
-		fmt.Println("end ", end)
 		result := RedisClient.ZRevRange("person_week_rank", start, end)
 		if result.Err() != nil {
-			fmt.Println(result.Err())
 			return nil, errors.New("获取失败")
 		}
 		var rankLists []map[string]interface{}
