@@ -3,7 +3,7 @@ package store
 import (
 	"testing"
 
-	"strconv"
+	"fmt"
 
 	"github.com/open-fightcoder/oj-web/common/g"
 )
@@ -11,6 +11,6 @@ import (
 func TestList(t *testing.T) {
 	g.LoadConfig("../../cfg/cfg.toml.debug")
 	InitRedis()
-	RedisClient.ZRank("person_week_rank", strconv.FormatInt(11111, 10))
-
+	isExit := RedisClient.ZLexCount("person_week_rank", "[6", "[6")
+	fmt.Println(isExit.Val())
 }

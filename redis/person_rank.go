@@ -3,6 +3,8 @@ package redis
 import (
 	"strconv"
 
+	"errors"
+
 	"github.com/go-redis/redis"
 	. "github.com/open-fightcoder/oj-web/common/store"
 )
@@ -23,7 +25,20 @@ func PersonWeekRankUpdate(increment int, userId int64) error {
 	return nil
 }
 
-func PersonWeekRankGet(userId int64) ([]string, error) {
+func PersonWeekRankGet(userId int64) ([]map[string]interface{}, error) {
+	//判断zset中是否存在该userId
+	idStr := strconv.FormatInt(userId, 10)
+	isExitRet := RedisClient.ZLexCount("person_week_rank", "["+idStr, "["+idStr)
+	if isExitRet.Err() != nil {
+		return nil, errors.New("获取失败")
+	}
+	if isExitRet.Val() > 0 {
+		//存在，获取zset下标
+		//取5条记录，包括userId和AC数
+	} else {
+		return nil, errors.New("尚未提交，暂无排名")
+	}
+
 	res := RedisClient.ZRank("person_week_rank", strconv.FormatInt(userId, 10))
 	//错误处理:在Redis ZSet中不存在UserId的情况
 	if res.Err() != nil {
