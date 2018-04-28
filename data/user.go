@@ -15,14 +15,14 @@ func UserRegister(userName string, email string, password string) (int64, error)
 	if err != nil {
 		return 0, errors.New("注册失败")
 	}
-	has, err := session.Where("email = ? for update", email).Get(&models.Account{})
+	has, err := session.Where("email = ? ", email).ForUpdate().Get(&models.Account{})
 	if err != nil {
 		return 0, errors.New("注册失败")
 	}
 	if has {
 		return 0, errors.New("邮箱已存在")
 	}
-	has, err = session.Where("user_name = ? for update", userName).Get(&models.User{})
+	has, err = session.Where("user_name = ? ", userName).ForUpdate().Get(&models.User{})
 	if err != nil {
 		return 0, errors.New("注册失败")
 	}

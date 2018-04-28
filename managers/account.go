@@ -6,6 +6,7 @@ import (
 	"io"
 
 	"github.com/open-fightcoder/oj-web/common/components"
+	"github.com/open-fightcoder/oj-web/data"
 	"github.com/open-fightcoder/oj-web/models"
 	"github.com/pkg/errors"
 )
@@ -33,23 +34,8 @@ func AccountLogin(email string, password string) (string, error) {
 }
 
 func AccountRegister(userName string, email string, password string) (int64, error) {
-	account, err := models.AccountGetByEmail(email)
-	if err != nil {
-		return 0, fmt.Errorf("get account failure : %s ", err.Error())
-	}
-	if account != nil {
-		return 0, errors.New("Email is exist")
-	}
-	account = &models.Account{Email: email, Password: md5Encode(password)}
-	accountId, err := models.AccountAdd(account)
-	if err != nil {
-		return 0, errors.New("注册失败")
-	}
-	insertId, err := models.Create(&models.User{AccountId: accountId, UserName: userName})
-	if err != nil {
-		return 0, errors.New("注册失败")
-	}
-	return insertId, nil
+	//TODO 邮箱参数校验,userName校验
+	return data.UserRegister(userName, email, md5Encode(password))
 }
 
 func md5Encode(password string) string {
