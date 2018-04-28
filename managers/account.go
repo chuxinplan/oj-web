@@ -32,7 +32,7 @@ func AccountLogin(email string, password string) (string, error) {
 	return token, nil
 }
 
-func AccountRegister(email, password string) (int64, error) {
+func AccountRegister(userName string, email string, password string) (int64, error) {
 	account, err := models.AccountGetByEmail(email)
 	if err != nil {
 		return 0, fmt.Errorf("get account failure : %s ", err.Error())
@@ -41,9 +41,13 @@ func AccountRegister(email, password string) (int64, error) {
 		return 0, errors.New("Email is exist")
 	}
 	account = &models.Account{Email: email, Password: md5Encode(password)}
-	insertId, err := models.AccountAdd(account)
+	accountId, err := models.AccountAdd(account)
 	if err != nil {
-		return 0, fmt.Errorf("add account failure : %s ", err.Error())
+		return 0, errors.New("注册失败")
+	}
+	insertId, err := models.Create(&models.User{AccountId: accountId, UserName: userName})
+	if err != nil {
+		return 0, errors.New("注册失败")
 	}
 	return insertId, nil
 }

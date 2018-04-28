@@ -14,13 +14,19 @@ func RegisterAccount(router *gin.RouterGroup) {
 	router.POST("register", httpHandlerRegister)
 }
 
-type AccountParam struct {
+type AccountLogin struct {
 	Email    string `form:"email" json:"email"`
 	Password string `form:"password" json:"password"`
 }
 
+type AccountRegister struct {
+	Email    string `form:"email" json:"email"`
+	Password string `form:"password" json:"password"`
+	UserName string `form:"user_name" json:"user_name"`
+}
+
 func httpHandlerLogin(c *gin.Context) {
-	account := AccountParam{}
+	account := AccountLogin{}
 	err := c.Bind(&account)
 	if err != nil {
 		panic(err)
@@ -42,12 +48,12 @@ func httpHandlerLogin(c *gin.Context) {
 }
 
 func httpHandlerRegister(c *gin.Context) {
-	account := AccountParam{}
+	account := AccountRegister{}
 	err := c.Bind(&account)
 	if err != nil {
 		panic(err)
 	}
-	userId, err := managers.AccountRegister(account.Email, account.Password)
+	userId, err := managers.AccountRegister(account.UserName, account.Email, account.Password)
 	if err != nil {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))
 		return
