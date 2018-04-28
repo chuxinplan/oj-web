@@ -1,7 +1,11 @@
 package managers
 
 import (
+	"strconv"
+
+	"github.com/open-fightcoder/oj-web/models"
 	"github.com/open-fightcoder/oj-web/redis"
+	"github.com/pkg/errors"
 )
 
 func RankListGet(currentPage int, perPage int) ([]string, error) {
@@ -20,12 +24,17 @@ func PersonRankGet(userId int64, isWeek int) ([]map[string]interface{}, error) {
 		return nil, err
 	}
 	var rankLists []map[string]interface{}
-	for i, v := range userList {
+	for _, v := range userList {
+		userId, _ := strconv.ParseInt(v["user_id"].(string), 10, 64)
+		user, err := models.GetById(userId)
+		if err != nil {
+			return nil, errors.New("获取失败")
+		}
 		projects := make(map[string]interface{})
-		projects["rank_num"] = i + 1
+		projects["rank_num"] = v["rank_num"]
 		projects["user_id"] = v["user_id"]
-		projects["nick_name"] = 1
-		projects["avator"] = "哈哈"
+		projects["nick_name"] = user.NickName
+		projects["avator"] = user.Avator
 		projects["ac_num"] = v["ac_num"]
 		rankLists = append(rankLists, projects)
 	}

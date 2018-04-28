@@ -68,6 +68,8 @@ func PersonWeekRankGet(userId int64) ([]map[string]interface{}, error) {
 		for _, v := range result.Val() {
 			projects := make(map[string]interface{})
 			scoreRes := RedisClient.ZScore("person_week_rank", v)
+			rankId := RedisClient.ZRevRank("person_week_rank", v)
+			projects["rank_num"] = rankId.Val() + 1
 			projects["user_id"] = v
 			projects["ac_num"] = scoreRes.Val()
 			rankLists = append(rankLists, projects)
@@ -95,18 +97,56 @@ func PersonMonthRankUpdate(increment int, userId int64) error {
 }
 
 func PersonMonthRankGet(userId int64) ([]map[string]interface{}, error) {
-	res := RedisClient.ZRank("person_month_rank", strconv.FormatInt(userId, 10))
-	if res.Err() != nil {
-		return nil, res.Err()
+	sizeRet := RedisClient.ZCard("person_month_rank")
+	if sizeRet.Err() != nil {
+		return nil, errors.New("暂无数据")
 	}
-	index := res.Val()
-	start := index - 2
-	if start < 0 {
-		start = 0
+	size := sizeRet.Val()
+	idStr := strconv.FormatInt(userId, 10)
+	isExitRet := RedisClient.ZScore("person_month_rank", idStr)
+
+	if isExitRet.Err() != nil {
+		return nil, errors.New("获取失败")
 	}
-	result := RedisClient.ZRange("person_month_rank", start, index+2)
-	if result.Err() != nil {
-		return nil, result.Err()
+	if isExitRet.Val() > 0 {
+		var start int64
+		var end int64
+		if size <= 5 {
+			start = 0
+			end = 4
+		} else {
+			res := RedisClient.ZRevRank("person_month_rank", idStr)
+			if res.Err() != nil {
+				return nil, errors.New("获取失败")
+			}
+			index := res.Val()
+			if index < 2 {
+				start = 0
+				end = 4
+			} else if index > size-3 {
+				start = size - 5
+				end = size - 1
+			} else {
+				start = index - 2
+				end = index + 2
+			}
+		}
+		result := RedisClient.ZRevRange("person_month_rank", start, end)
+		if result.Err() != nil {
+			return nil, errors.New("获取失败")
+		}
+		var rankLists []map[string]interface{}
+		for _, v := range result.Val() {
+			projects := make(map[string]interface{})
+			scoreRes := RedisClient.ZScore("person_month_rank", v)
+			rankId := RedisClient.ZRevRank("person_month_rank", v)
+			projects["rank_num"] = rankId.Val() + 1
+			projects["user_id"] = v
+			projects["ac_num"] = scoreRes.Val()
+			rankLists = append(rankLists, projects)
+		}
+		return rankLists, nil
+	} else {
+		return nil, errors.New("尚未提交，暂无排名")
 	}
-	return nil, nil
 }
