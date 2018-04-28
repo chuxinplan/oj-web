@@ -47,24 +47,27 @@ func PersonWeekRankGet(userId int64) ([]map[string]interface{}, error) {
 			start = 0
 			end = 4
 		} else {
-			res := RedisClient.ZRank("person_week_rank", idStr)
+			res := RedisClient.ZRevRank("person_week_rank", idStr)
 			if res.Err() != nil {
 				fmt.Println(res.Err())
 				return nil, errors.New("获取失败")
 			}
 			index := res.Val()
+			fmt.Println("index ", index)
 			if index < 2 {
 				start = 0
+				end = 4
+			} else if index > size-3 {
+				start = size - 5
+				end = size - 1
 			} else {
 				start = index - 2
-			}
-			if index > size-3 {
-				end = size - 2
-			} else {
-				end = size
+				end = size + 2
 			}
 		}
-		result := RedisClient.ZRange("person_week_rank", start, end)
+		fmt.Println("start ", start)
+		fmt.Println("end ", end)
+		result := RedisClient.ZRevRange("person_week_rank", start, end)
 		if result.Err() != nil {
 			fmt.Println(result.Err())
 			return nil, errors.New("获取失败")
@@ -74,7 +77,7 @@ func PersonWeekRankGet(userId int64) ([]map[string]interface{}, error) {
 			projects := make(map[string]interface{})
 			scoreRes := RedisClient.ZScore("person_week_rank", v)
 			projects["user_id"] = v
-			projects["ac_num"] = scoreRes
+			projects["ac_num"] = scoreRes.Val()
 			rankLists = append(rankLists, projects)
 		}
 		return rankLists, nil
