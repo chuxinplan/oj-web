@@ -31,7 +31,7 @@ func httpHandlerLogin(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	token, err := managers.AccountLogin(account.Email, account.Password)
+	id, token, err := managers.AccountLogin(account.Email, account.Password)
 	if err != nil {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))
 		return
@@ -44,7 +44,7 @@ func httpHandlerLogin(c *gin.Context) {
 	}
 
 	http.SetCookie(c.Writer, cookie)
-	c.JSON(http.StatusOK, base.Success(11))
+	c.JSON(http.StatusOK, base.Success(id))
 }
 
 func httpHandlerRegister(c *gin.Context) {
