@@ -60,6 +60,6 @@ func PersonRankGet(userId int64, isWeek int) ([]map[string]interface{}, error) {
 	return rankLists, nil
 }
 
-func GroupRankGet(currentPage int, perPage int) ([]string, error) {
+func GroupRankGet(currentPage int, perPage int) ([]map[string]interface{}, error) {
 	return redis.GroupRankGet(currentPage, perPage)
 }
