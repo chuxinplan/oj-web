@@ -20,4 +20,6 @@ func Register(router *gin.RouterGroup) {
 	submitRouter := router.Group("/submit")
 	submit.RegisterSubmit(submitRouter)
 
+	userRouter := router.Group("/user")
+	RegisterUser(userRouter)
 }

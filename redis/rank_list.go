@@ -40,3 +40,7 @@ func RankListGet(currentPage int, perPage int) ([]map[string]interface{}, error)
 	}
 	return rankLists, nil
 }
+
+func GetAcNumByUserId(userId int64) int {
+
+}

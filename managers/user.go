@@ -23,3 +23,12 @@ func UploadImage(reader io.Reader, userId int64, picType string) error {
 	}
 	return nil
 }
+
+func GetUserProgress(userId int64) (map[string]interface{}, error) {
+	problemMess := map[string]interface{}{
+		"totle_num": 500,
+		"ac_num":    10,
+		"fail_num":  10,
+	}
+	return problemMess, nil
+}
