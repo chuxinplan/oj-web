@@ -4,6 +4,9 @@ import (
 	"math/rand"
 	"time"
 
+	"strings"
+
+	"github.com/open-fightcoder/oj-web/common/g"
 	"github.com/open-fightcoder/oj-web/models"
 	"github.com/pkg/errors"
 )
@@ -31,18 +34,36 @@ func ProblemList(origin string, tag string, sort int, isAsc int, currentPage int
 	return problemMess, nil
 }
 
-func ProblemGet(id int64) (*models.Problem, error) {
+func ProblemGet(id int64) (map[string]interface{}, error) {
 	problem, err := models.ProblemGetById(id)
 	if err != nil {
 		return nil, errors.New("获取题目失败")
 	}
-	//TODO 用户未登录,userId为空的情况
 	//TODO 从Redis中去获取ac_rate
-	//TODO 获取用户昵称等信息
-	return problem, nil
+	userMess, err := models.GetById(problem.UserId)
+	if err != nil {
+		return nil, errors.New("获取题目失败")
+	}
+	problemMess := map[string]interface{}{
+		"id":             problem.Id,
+		"user_id":        problem.UserId,
+		"nick_name":      userMess.NickName,
+		"ac_rate":        11,
+		"time_limit":     problem.TimeLimit,
+		"memory_limit":   problem.MemoryLimit,
+		"title":          problem.Title,
+		"description":    problem.Description,
+		"input_des":      problem.InputDes,
+		"output_des":     problem.OutputDes,
+		"input_case":     problem.InputCase,
+		"output_case":    problem.OutputCase,
+		"hint":           problem.Hint,
+		"language_limit": getLimitLanguage(problem.LanguageLimit),
+	}
+	return problemMess, nil
 }
 
-func ProblemRandom(origin string, tag string) (*models.Problem, error) {
+func ProblemRandom(origin string, tag string) (map[string]interface{}, error) {
 	problemList, err := models.ProblemGetIdsByConds(origin, tag)
 	if err != nil {
 		return nil, errors.New("获取题目失败")
@@ -54,4 +75,19 @@ func ProblemRandom(origin string, tag string) (*models.Problem, error) {
 	}
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	return ProblemGet(ids[r.Intn(size)])
+}
+
+func getLimitLanguage(language string) []string {
+	limitList := g.Conf().Common.LanguageLimit
+	strs := strings.Split(language, ",")
+	retList := make([]string, 0)
+	for _, str := range strs {
+		for _, limit := range limitList {
+			if str == limit {
+				retList = append(retList, str)
+				break
+			}
+		}
+	}
+	return retList
 }

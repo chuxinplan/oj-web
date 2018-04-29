@@ -23,10 +23,25 @@ func RankListUpdate(increment int, userId int64) error {
 	return nil
 }
 
-func RankListGet(currentPage int, perPage int) ([]string, error) {
-	res := RedisClient.ZRange("rank_list", int64((currentPage-1)*perPage), int64(currentPage*perPage-1))
+func RankListGet(currentPage int, perPage int) ([]map[string]interface{}, error) {
+	res := RedisClient.ZRevRange("rank_list", int64((currentPage-1)*perPage), int64(currentPage*perPage-1))
 	if res.Err() != nil {
 		return nil, res.Err()
 	}
-	return res.Val(), nil
+	var rankLists []map[string]interface{}
+	for _, v := range res.Val() {
+		projects := make(map[string]interface{})
+		scoreRes := RedisClient.ZScore("rank_list", v)
+		rankId := RedisClient.ZRevRank("rank_list", v)
+		projects["rank_num"] = rankId.Val() + 1
+		projects["user_id"] = v
+		projects["ac_num"] = scoreRes.Val()
+		rankLists = append(rankLists, projects)
+	}
+	return rankLists, nil
+}
+
+func GetAcNumByUserId(userId int64) (float64, error) {
+	scoreRes := RedisClient.ZScore("rank_list", strconv.FormatInt(userId, 10))
+	return scoreRes.Val(), scoreRes.Err()
 }

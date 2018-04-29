@@ -11,10 +11,15 @@ func Register(router *gin.RouterGroup) {
 	RegisterAccount(router)
 	RegisterRank(router)
 
+	rankRouter := router.Group("/rank")
+	RegisterRank(rankRouter)
+
 	problemRouter := router.Group("/problem")
 	problem.RegisterProblem(problemRouter)
 
 	submitRouter := router.Group("/submit")
 	submit.RegisterSubmit(submitRouter)
 
+	userRouter := router.Group("/user")
+	RegisterUser(userRouter)
 }

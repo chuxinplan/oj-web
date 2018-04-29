@@ -12,6 +12,9 @@ func CodeGet(userId int64, problemId int64) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, errors.New("Get code error!")
 	}
+	if userCode == nil {
+		return make(map[string]interface{}), nil
+	}
 	code, err := managers.GetCode(userCode.SaveCode)
 	if err != nil {
 		return nil, err

@@ -10,7 +10,7 @@ import (
 
 func RegisterRank(router *gin.RouterGroup) {
 	router.GET("get", httpHandlerGet)
-	router.GET("getGroup", httpHandlerGetGroup)
+	router.GET("getgroup", httpHandlerGetGroup)
 }
 
 type RankParam struct {

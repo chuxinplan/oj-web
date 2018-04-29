@@ -15,7 +15,11 @@ type Account struct {
 }
 
 func AccountAdd(account *Account) (int64, error) {
-	return OrmWeb.Insert(account)
+	_, err := OrmWeb.Insert(account)
+	if err != nil {
+		return 0, err
+	}
+	return account.Id, nil
 }
 
 func AccountRemove(id int64) error {
@@ -44,6 +48,30 @@ func AccountGetById(id int64) (*Account, error) {
 func AccountGetByEmail(email string) (*Account, error) {
 	account := new(Account)
 	has, err := OrmWeb.Where("email=?", email).Get(account)
+	if err != nil {
+		return nil, err
+	}
+	if !has {
+		return nil, nil
+	}
+	return account, nil
+}
+
+func AccountGetQQOpenId(QQId string) (*Account, error) {
+	account := new(Account)
+	has, err := OrmWeb.Where("qq_id=?", QQId).Get(account)
+	if err != nil {
+		return nil, err
+	}
+	if !has {
+		return nil, nil
+	}
+	return account, nil
+}
+
+func AccountGetGithubOpenId(GithubId string) (*Account, error) {
+	account := new(Account)
+	has, err := OrmWeb.Where("github_id=?", GithubId).Get(account)
 	if err != nil {
 		return nil, err
 	}

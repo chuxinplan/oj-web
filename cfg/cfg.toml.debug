@@ -38,3 +38,6 @@ secure = false
 imgBucket = "image"
 codeBucket = "code"
 caseBucket = "case"
+
+[common]
+languageLimit = ["C++", "JAVA", "GO"]
