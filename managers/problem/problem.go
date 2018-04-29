@@ -4,6 +4,9 @@ import (
 	"math/rand"
 	"time"
 
+	"strings"
+
+	"github.com/open-fightcoder/oj-web/common/g"
 	"github.com/open-fightcoder/oj-web/models"
 	"github.com/pkg/errors"
 )
@@ -42,19 +45,20 @@ func ProblemGet(id int64) (map[string]interface{}, error) {
 		return nil, errors.New("获取题目失败")
 	}
 	problemMess := map[string]interface{}{
-		"id":           problem.Id,
-		"user_id":      problem.UserId,
-		"nick_name":    userMess.NickName,
-		"ac_rate":      11,
-		"time_limit":   problem.TimeLimit,
-		"memory_limit": problem.MemoryLimit,
-		"title":        problem.Title,
-		"description":  problem.Description,
-		"input_des":    problem.InputDes,
-		"output_des":   problem.OutputDes,
-		"input_case":   problem.InputCase,
-		"output_case":  problem.OutputCase,
-		"hint":         problem.Hint,
+		"id":             problem.Id,
+		"user_id":        problem.UserId,
+		"nick_name":      userMess.NickName,
+		"ac_rate":        11,
+		"time_limit":     problem.TimeLimit,
+		"memory_limit":   problem.MemoryLimit,
+		"title":          problem.Title,
+		"description":    problem.Description,
+		"input_des":      problem.InputDes,
+		"output_des":     problem.OutputDes,
+		"input_case":     problem.InputCase,
+		"output_case":    problem.OutputCase,
+		"hint":           problem.Hint,
+		"language_limit": getLimitLanguage(problem.LanguageLimit),
 	}
 	return problemMess, nil
 }
@@ -71,4 +75,19 @@ func ProblemRandom(origin string, tag string) (map[string]interface{}, error) {
 	}
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	return ProblemGet(ids[r.Intn(size)])
+}
+
+func getLimitLanguage(language string) []string {
+	limitList := g.Conf().Common.LanguageLimit
+	strs := strings.Split(language, ",")
+	retList := make([]string, 0)
+	for _, str := range strs {
+		for _, limit := range limitList {
+			if str == limit {
+				retList = append(retList, str)
+				break
+			}
+		}
+	}
+	return retList
 }
