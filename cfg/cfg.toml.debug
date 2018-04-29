@@ -40,4 +40,4 @@ codeBucket = "code"
 caseBucket = "case"
 
 [common]
-languageLimit = ["C++", "JAVA", "GO"]
+languageLimit = ["c++", "java", "go"]
