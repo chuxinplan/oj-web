@@ -17,6 +17,10 @@ func RegisterAccount(router *gin.RouterGroup) {
 	router.POST("register", httpHandlerRegister)
 }
 
+type LoginTypeParam struct {
+	Type string `form:"type" json:"type"`
+}
+
 type AccountSimpleLogin struct {
 	Email    string `form:"email" json:"email"`
 	Password string `form:"password" json:"password"`
@@ -34,7 +38,12 @@ type AccountRegister struct {
 }
 
 func httpHandlerLogin(c *gin.Context) {
-	loginType := c.Query("type")
+	param := LoginTypeParam{}
+	err := c.Bind(&param)
+	if err != nil {
+		panic(err)
+	}
+	loginType := param.Type
 	var state int
 	var msg string
 	var userId int64

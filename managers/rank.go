@@ -42,7 +42,7 @@ func PersonRankGet(userId int64, isWeek int) ([]map[string]interface{}, error) {
 	if err != nil {
 		return nil, err
 	}
-	var rankLists []map[string]interface{}
+	rankLists := make([]map[string]interface{}, 0)
 	for _, v := range userList {
 		userId, _ := strconv.ParseInt(v["user_id"].(string), 10, 64)
 		user, err := models.GetById(userId)
