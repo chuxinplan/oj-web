@@ -72,7 +72,7 @@ func PersonWeekRankGet(userId int64) ([]map[string]interface{}, error) {
 		}
 		return rankLists, nil
 	} else {
-		return nil, errors.New("尚未提交，暂无排名")
+		return nil, nil
 	}
 }
 
@@ -139,6 +139,6 @@ func PersonMonthRankGet(userId int64) ([]map[string]interface{}, error) {
 		}
 		return rankLists, nil
 	} else {
-		return nil, errors.New("尚未提交，暂无排名")
+		return nil, nil
 	}
 }

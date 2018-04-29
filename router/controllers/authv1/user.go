@@ -9,14 +9,22 @@ import (
 )
 
 func RegisterUser(router *gin.RouterGroup) {
-	router.POST("uploadImage", httpHandlerUploadImage)
+	router.POST("uploadimage", httpHandlerUploadImage)
+}
+
+type UserImageParam struct {
+	PicType string `form:"pic_type" json:"pic_type"`
 }
 
 func httpHandlerUploadImage(c *gin.Context) {
-	picType := c.Query("picType")
+	param := UserImageParam{}
+	err := c.Bind(&param)
+	if err != nil {
+		panic(err)
+	}
 	file, _, _ := c.Request.FormFile("upload")
 	userId := base.UserId(c)
-	err := managers.UploadImage(file, userId, picType)
+	err = managers.UploadImage(file, userId, param.PicType)
 	if err != nil {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))
 		return
