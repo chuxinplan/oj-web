@@ -9,6 +9,6 @@ import (
 
 func TestList(t *testing.T) {
 	g.LoadConfig("../../cfg/cfg.toml.debug")
-	flag := Send("test", &SendMess{"as", 1})
+	flag := Send("vjudger", &SendMess{"", 2})
 	fmt.Println(flag)
 }
