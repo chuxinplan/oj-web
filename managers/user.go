@@ -4,6 +4,7 @@ import (
 	"io"
 
 	"github.com/open-fightcoder/oj-web/models"
+	"github.com/open-fightcoder/oj-web/redis"
 	"github.com/pkg/errors"
 )
 
@@ -25,10 +26,14 @@ func UploadImage(reader io.Reader, userId int64, picType string) error {
 }
 
 func GetUserProgress(userId int64) (map[string]interface{}, error) {
+	acNum, err := redis.GetAcNumByUserId(userId)
+	if err != nil {
+		return nil, errors.New("获取失败")
+	}
 	problemMess := map[string]interface{}{
-		"totle_num": 500,
-		"ac_num":    10,
-		"fail_num":  10,
+		"pre_num":  500,
+		"ac_num":   acNum,
+		"fail_num": 10,
 	}
 	return problemMess, nil
 }

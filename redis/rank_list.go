@@ -41,6 +41,7 @@ func RankListGet(currentPage int, perPage int) ([]map[string]interface{}, error)
 	return rankLists, nil
 }
 
-func GetAcNumByUserId(userId int64) int {
-
+func GetAcNumByUserId(userId int64) (float64, error) {
+	scoreRes := RedisClient.ZScore("rank_list", strconv.FormatInt(userId, 10))
+	return scoreRes.Val(), scoreRes.Err()
 }
