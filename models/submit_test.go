@@ -68,6 +68,16 @@ func TestSubmitGetByConds(t *testing.T) {
 func TestCountByConds(t *testing.T) {
 	InitAllInTest()
 
-	count, _ := CountByConds(2, 1, 0, "")
+	count, _ := SubmitCountByConds(0, 123456, 0, "")
 	fmt.Println(count)
+}
+
+func TestSubmitCountByResult(t *testing.T) {
+	InitAllInTest()
+
+	res, _ := SubmitCountByResult(123456)
+	fmt.Println(res)
+	for _, v := range res {
+		fmt.Println(string(v["result"][:]), string(v["count"][:]))
+	}
 }

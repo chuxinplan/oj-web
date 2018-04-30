@@ -15,7 +15,7 @@ func SubmitList(problemId int64, userName string, status int, lang string, curre
 	if err != nil {
 		return nil, errors.New("查询失败")
 	}
-	count, err := models.CountByConds(problemId, 0, status, lang)
+	count, err := models.SubmitCountByConds(problemId, 0, status, lang)
 	if err != nil {
 		return nil, errors.New("查询失败")
 	}

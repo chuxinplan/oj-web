@@ -1,6 +1,10 @@
 package models
 
-import . "github.com/open-fightcoder/oj-web/common/store"
+import (
+	"strconv"
+
+	. "github.com/open-fightcoder/oj-web/common/store"
+)
 
 type Submit struct {
 	Id            int64  `form:"id" json:"id"`
@@ -85,7 +89,7 @@ func SubmitGetByConds(problemId int64, userId int64, status int, lang string, cu
 	return submitList, nil
 }
 
-func CountByConds(problemId int64, userId int64, status int, lang string) (int64, error) {
+func SubmitCountByConds(problemId int64, userId int64, status int, lang string) (int64, error) {
 	session := OrmWeb.NewSession()
 	if problemId != 0 {
 		session.And("problem_id = ?", problemId)
@@ -104,4 +108,13 @@ func CountByConds(problemId int64, userId int64, status int, lang string) (int64
 		return 0, err
 	}
 	return count, nil
+}
+
+func SubmitCountByResult(userId int64) ([]map[string][]byte, error) {
+	sql := "select result, count(*) as count from submit where user_id = " + strconv.FormatInt(userId, 10) + " group by result"
+	submitList, err := OrmWeb.Query(sql)
+	if err != nil {
+		return nil, err
+	}
+	return submitList, nil
 }
