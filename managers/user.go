@@ -3,9 +3,7 @@ package managers
 import (
 	"io"
 
-	"encoding/binary"
-
-	"math"
+	"strconv"
 
 	"github.com/open-fightcoder/oj-web/models"
 	"github.com/open-fightcoder/oj-web/redis"
@@ -87,41 +85,53 @@ func GetUserCount(userName string) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, errors.New("获取失败")
 	}
-	problemMess := make(map[string]interface{})
-	problemMess["sub_num"] = total
-	problemMess["all_num"] = 500
+	problemMess := map[string]interface{}{
+		"wa_rate":    0,
+		"ce_rate":    0,
+		"te_rate":    0,
+		"me_rate":    0,
+		"oe_rate":    0,
+		"re_rate":    0,
+		"se_rate":    0,
+		"ac_num":     11,
+		"all_num":    500,
+		"sub_num":    total,
+		"ac_sub_num": 0,
+		"ac_rate":    0,
+	}
+
 	for _, val := range resMap {
-		sum := math.Float32frombits(binary.LittleEndian.Uint32(val["count"][:]))
-		rate := sum / float32(total)
+		sum, _ := strconv.ParseFloat(string(val["count"][:]), 64)
+		rate := float64(sum) / float64(total)
+		rateFormat := strconv.FormatFloat(rate, 'f', 2, 64)
 		switch string(val["result"][:]) {
 		case "4":
 			problemMess["ac_sub_num"] = sum
-			problemMess["ac_rate"] = rate
+			problemMess["ac_rate"] = rateFormat
 			break
 		case "5":
-			problemMess["wa_rate"] = rate
+			problemMess["wa_rate"] = rateFormat
 			break
 		case "6":
-			problemMess["ce_rate"] = rate
+			problemMess["ce_rate"] = rateFormat
 			break
 		case "7":
-			problemMess["te_rate"] = rate
+			problemMess["te_rate"] = rateFormat
 			break
 		case "8":
-			problemMess["me_rate"] = rate
+			problemMess["me_rate"] = rateFormat
 			break
 		case "9":
-			problemMess["oe_rate"] = rate
+			problemMess["oe_rate"] = rateFormat
 			break
 		case "10":
-			problemMess["re_rate"] = rate
+			problemMess["re_rate"] = rateFormat
 			break
 		case "11":
-			problemMess["se_rate"] = rate
+			problemMess["se_rate"] = rateFormat
 			break
 		}
 	}
 	//TODO 统计该UserId下所有AC且ProblemId不重复的数量
-	problemMess["ac_num"] = 11
 	return problemMess, nil
 }
