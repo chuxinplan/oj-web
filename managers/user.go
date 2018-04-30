@@ -86,18 +86,14 @@ func GetUserCount(userName string) (map[string]interface{}, error) {
 		return nil, errors.New("获取失败")
 	}
 	problemMess := map[string]interface{}{
-		"wa_rate":    0,
-		"ce_rate":    0,
-		"te_rate":    0,
-		"me_rate":    0,
-		"oe_rate":    0,
-		"re_rate":    0,
-		"se_rate":    0,
-		"ac_num":     11,
-		"all_num":    500,
-		"sub_num":    total,
-		"ac_sub_num": 0,
-		"ac_rate":    0,
+		"wa_rate": 0,
+		"ce_rate": 0,
+		"te_rate": 0,
+		"me_rate": 0,
+		"oe_rate": 0,
+		"re_rate": 0,
+		"se_rate": 0,
+		"ac_rate": 0,
 	}
 
 	for _, val := range resMap {
@@ -106,7 +102,6 @@ func GetUserCount(userName string) (map[string]interface{}, error) {
 		rateFormat := strconv.FormatFloat(rate, 'f', 2, 64)
 		switch string(val["result"][:]) {
 		case "4":
-			problemMess["ac_sub_num"] = sum
 			problemMess["ac_rate"] = rateFormat
 			break
 		case "5":
@@ -132,6 +127,5 @@ func GetUserCount(userName string) (map[string]interface{}, error) {
 			break
 		}
 	}
-	//TODO 统计该UserId下所有AC且ProblemId不重复的数量
 	return problemMess, nil
 }
