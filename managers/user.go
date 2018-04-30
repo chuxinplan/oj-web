@@ -25,8 +25,19 @@ func UploadImage(reader io.Reader, userId int64, picType string) error {
 	return nil
 }
 
-func GetUserProgress(userId int64) (map[string]interface{}, error) {
-	acNum, err := redis.GetAcNumByUserId(userId)
+func GetUserMess(userName string) (*models.User, error) {
+	return models.GetByUserName(userName)
+}
+
+func GetUserProgress(userName string) (map[string]interface{}, error) {
+	user, err := models.GetByUserName(userName)
+	if err != nil {
+		return nil, errors.New("获取失败")
+	}
+	if user == nil {
+		return nil, errors.New("用户名不存在")
+	}
+	acNum, err := redis.GetAcNumByUserId(user.Id)
 	if err != nil {
 		return nil, errors.New("获取失败")
 	}

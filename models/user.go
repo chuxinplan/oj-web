@@ -52,6 +52,19 @@ func GetById(id int64) (*User, error) {
 	return user, nil
 }
 
+func GetByUserName(userName string) (*User, error) {
+	user := new(User)
+	has, err := OrmWeb.Where("user_name = ?", userName).Get(user)
+
+	if err != nil {
+		return nil, err
+	}
+	if !has {
+		return nil, nil
+	}
+	return user, nil
+}
+
 func GetByAccountId(accountId int64) (*User, error) {
 	user := new(User)
 	has, err := OrmWeb.Where("account_id = ?", accountId).Get(user)

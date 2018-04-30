@@ -10,19 +10,34 @@ import (
 
 func RegisterUser(router *gin.RouterGroup) {
 	router.GET("progress", httpHandlerUserProgress)
+	router.GET("getmess", httpHandlerUserGetMess)
 }
 
-type UserImageParam struct {
-	UserId int64 `form:"user_id" json:"user_id"`
+type UserParam struct {
+	UserName string `form:"user_name" json:"user_name"`
 }
 
-func httpHandlerUserProgress(c *gin.Context) {
-	param := UserImageParam{}
+func httpHandlerUserGetMess(c *gin.Context) {
+	param := UserParam{}
 	err := c.Bind(&param)
 	if err != nil {
 		panic(err)
 	}
-	mess, err := managers.GetUserProgress(param.UserId)
+	mess, err := managers.GetUserMess(param.UserName)
+	if err != nil {
+		c.JSON(http.StatusOK, base.Fail(err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, base.Success(mess))
+}
+
+func httpHandlerUserProgress(c *gin.Context) {
+	param := UserParam{}
+	err := c.Bind(&param)
+	if err != nil {
+		panic(err)
+	}
+	mess, err := managers.GetUserProgress(param.UserName)
 	if err != nil {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))
 		return

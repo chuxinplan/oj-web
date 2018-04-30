@@ -78,3 +78,10 @@ func TestUserGetByAccountId(t *testing.T) {
 	//	t.Error("GetByAccountId() failed:", "%v != %v", user, getUser)
 	//}
 }
+
+func TestUserGetByUserName(t *testing.T) {
+	InitAllInTest()
+
+	getUser, _ := GetByUserName("luwenjing")
+	fmt.Println(getUser)
+}
