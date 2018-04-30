@@ -37,10 +37,7 @@ func GetUserProgress(userName string) (map[string]interface{}, error) {
 	if user == nil {
 		return nil, errors.New("用户名不存在")
 	}
-	acNum, err := redis.GetAcNumByUserId(user.Id)
-	if err != nil {
-		return nil, errors.New("获取失败")
-	}
+	acNum, _ := redis.GetAcNumByUserId(user.Id)
 	problemMess := map[string]interface{}{
 		"pre_num":  500,
 		"ac_num":   acNum,
