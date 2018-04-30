@@ -49,7 +49,7 @@ func SubmitCommon(problemId int64, userId int64, language string, code string) (
 	if err != nil {
 		return nil, err
 	}
-	submit := &models.Submit{ProblemId: problemId, UserId: userId, Language: language, Code: codePath, SubmitTime: time.Now().Unix()}
+	submit := &models.Submit{ProblemId: problemId, Result: 1, UserId: userId, Language: language, Code: codePath, SubmitTime: time.Now().Unix()}
 	id, err := models.SubmitCreate(submit)
 	if err != nil {
 		return nil, errors.New("提交失败")
@@ -69,7 +69,7 @@ func SubmitTest(userId int64, language string, input string, code string) (map[s
 	if err != nil {
 		return nil, err
 	}
-	submitTest := &models.SubmitTest{Input: input, UserId: userId, Language: language, Code: codePath, SubmitTime: time.Now().Unix()}
+	submitTest := &models.SubmitTest{Input: input, Result: 1, UserId: userId, Language: language, Code: codePath, SubmitTime: time.Now().Unix()}
 	id, err := models.SubmitTestCreate(submitTest)
 	if err != nil {
 		return nil, errors.New("提交失败")

@@ -17,13 +17,11 @@ func RegisterSubmit(router *gin.RouterGroup) {
 
 type CommonParam struct {
 	ProblemId int64  `form:"problem_id" json:"problem_id"`
-	UserId    int64  `form:"user_id" json:"user_id"`
 	Language  string `form:"language" json:"language"`
 	Code      string `form:"code" json:"code"`
 }
 
 type TestParam struct {
-	UserId   int64  `form:"user_id" json:"user_id"`
 	Language string `form:"language" json:"language"`
 	Input    string `form:"input" json:"input"`
 	Code     string `form:"code" json:"code"`
@@ -39,7 +37,8 @@ func httpHandlerSubmitCommon(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	mess, err := submit.SubmitCommon(param.ProblemId, param.UserId, param.Language, param.Code)
+	userId := base.UserId(c)
+	mess, err := submit.SubmitCommon(param.ProblemId, userId, param.Language, param.Code)
 	if err != nil {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))
 		return
@@ -53,7 +52,8 @@ func httpHandlerSubmitTest(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	mess, err := submit.SubmitTest(param.UserId, param.Language, param.Input, param.Code)
+	userId := base.UserId(c)
+	mess, err := submit.SubmitTest(userId, param.Language, param.Input, param.Code)
 	if err != nil {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))
 		return
