@@ -6,14 +6,30 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
-	"time"
 
 	"errors"
+
+	"time"
 
 	"github.com/minio/minio-go"
 	"github.com/open-fightcoder/oj-web/common/g"
 	. "github.com/open-fightcoder/oj-web/common/store"
 )
+
+func GetSaveCode(name string) (string, error) {
+	cfg := g.Conf()
+	resp, err := http.Get("http://xupt1.fightcoder.com:9001/" + cfg.Minio.SaveCodeBucket + "/" + name)
+	if err != nil {
+		return "", errors.New("获取失败")
+	}
+
+	defer resp.Body.Close()
+	body, err := ioutil.ReadAll(resp.Body)
+	if err != nil {
+		return "", errors.New("获取失败")
+	}
+	return string(body), nil
+}
 
 func GetCode(name string) (string, error) {
 	cfg := g.Conf()
@@ -41,26 +57,58 @@ func GetImgName(userId int64, picType string) string {
 }
 
 func GetCodeName() string {
-	timestamp := time.Now().UnixNano() / 1000000
-
-	str := strconv.FormatInt(timestamp, 10)
+	str := strconv.FormatInt(time.Now().Unix(), 10)
 	return str + ".txt"
 }
 
-func SaveImg(reader io.Reader, userId int64, picType string) (string, error) {
+func SaveCode(code string) (string, error) {
 	cfg := g.Conf()
-	str := GetImgName(userId, picType)
-	_, err := MinioClient.PutObject(cfg.Minio.ImgBucket, str, reader, -1, minio.PutObjectOptions{ContentType: "application/octet-stream"})
+	str := GetCodeName()
+	_, err := MinioClient.PutObject(cfg.Minio.SaveCodeBucket, str, strings.NewReader(code), -1, minio.PutObjectOptions{ContentType: "application/octet-stream"})
 	if err != nil {
 		return "", errors.New("存储失败")
 	}
 	return str, nil
 }
 
-func SaveCode(code string) (string, error) {
+func GetSubmitCodeName(userId int64, language string) string {
+	var languageStr string
+	switch language {
+	case "java":
+		languageStr = ".java"
+		break
+	case "c":
+		languageStr = ".c"
+		break
+	case "c++":
+		languageStr = ".cpp"
+		break
+	case "go":
+		languageStr = ".go"
+		break
+	case "python":
+		languageStr = ".py"
+		break
+	default:
+		languageStr = ".txt"
+	}
+	return strconv.FormatInt(userId, 10) + "_" + strconv.FormatInt(time.Now().Unix(), 10) + languageStr
+}
+
+func SaveSubmitCode(code string, userId int64, language string) (string, error) {
 	cfg := g.Conf()
-	str := GetCodeName()
+	str := GetSubmitCodeName(userId, language)
 	_, err := MinioClient.PutObject(cfg.Minio.CodeBucket, str, strings.NewReader(code), -1, minio.PutObjectOptions{ContentType: "application/octet-stream"})
+	if err != nil {
+		return "", errors.New("存储失败")
+	}
+	return str, nil
+}
+
+func SaveImg(reader io.Reader, userId int64, picType string) (string, error) {
+	cfg := g.Conf()
+	str := GetImgName(userId, picType)
+	_, err := MinioClient.PutObject(cfg.Minio.ImgBucket, str, reader, -1, minio.PutObjectOptions{ContentType: "application/octet-stream"})
 	if err != nil {
 		return "", errors.New("存储失败")
 	}

@@ -5,6 +5,7 @@ import (
 
 	"time"
 
+	"github.com/open-fightcoder/oj-web/common/components"
 	"github.com/open-fightcoder/oj-web/managers"
 	"github.com/open-fightcoder/oj-web/models"
 )
@@ -44,7 +45,7 @@ func SubmitList(problemId int64, userName string, status int, lang string, curre
 }
 
 func SubmitCommon(problemId int64, userId int64, language string, code string) (map[string]interface{}, error) {
-	codePath, err := managers.SaveCode(code)
+	codePath, err := managers.SaveSubmitCode(code, userId, language)
 	if err != nil {
 		return nil, err
 	}
@@ -53,14 +54,18 @@ func SubmitCommon(problemId int64, userId int64, language string, code string) (
 	if err != nil {
 		return nil, errors.New("提交失败")
 	}
+	sendMess := &components.SendMess{"default", id}
+	flag := components.Send("judge", sendMess)
+	if flag == false {
+		return nil, errors.New("提交失败")
+	}
 	submitMess := map[string]interface{}{
 		"submit_id": id,
-		"flag":      1,
 	}
 	return submitMess, nil
 }
 func SubmitTest(userId int64, language string, input string, code string) (map[string]interface{}, error) {
-	codePath, err := managers.SaveCode(code)
+	codePath, err := managers.SaveSubmitCode(code, userId, language)
 	if err != nil {
 		return nil, err
 	}
@@ -69,9 +74,13 @@ func SubmitTest(userId int64, language string, input string, code string) (map[s
 	if err != nil {
 		return nil, errors.New("提交失败")
 	}
+	sendMess := &components.SendMess{"test", id}
+	flag := components.Send("judge", sendMess)
+	if flag == false {
+		return nil, errors.New("提交失败")
+	}
 	submitMess := map[string]interface{}{
 		"submit_id": id,
-		"flag":      2,
 	}
 	return submitMess, nil
 }

@@ -3,12 +3,13 @@ package models
 import (
 	"fmt"
 	"testing"
+	"time"
 )
 
 func TestSubmitCreate(t *testing.T) {
 	InitAllInTest()
 
-	submit := Submit{ProblemId: 3, UserId: 1, Language: "GO", SubmitTime: 123456, RunningTime: 12, RunningMemory: 12, ResultDes: "123456"}
+	submit := Submit{ProblemId: 1, UserId: 2, Language: "GO", SubmitTime: time.Now().Unix(), RunningTime: 12, RunningMemory: 12, ResultDes: "123456"}
 
 	if _, err := SubmitCreate(&submit); err != nil {
 		t.Error("create submit error")
