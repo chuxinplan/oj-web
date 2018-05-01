@@ -7,7 +7,7 @@ import (
 
 
 //组属性
-type Group struct {
+type Team struct {
 	Id          int64  `xorm:"pk autoincr comment('团队ID') BIGINT(20)"`
 	Uid         int64  `xorm:"not null comment('组长ID') BIGINT(20)"`
 	Name        string `xorm:"not null comment('团队名称') unique VARCHAR(50)"`
@@ -15,38 +15,38 @@ type Group struct {
 	Avator      string `xorm:"not null comment('团队头像') VARCHAR(50)"`
 }
 
-func GroupCreate(groupinfo *Group)(int64, error){
-	return OrmWeb.Insert(groupinfo)
+func TeamCreate(teaminfo *Team)(int64, error){
+	return OrmWeb.Insert(teaminfo)
 }
 
-func GroupRemove(id int64) error {
-	_, err := OrmWeb.Id(id).Delete(&Group{})
+func TeamRemove(id int64) error {
+	_, err := OrmWeb.Id(id).Delete(&Team{})
 	return err
 }
 
-func GroupUpdate(groupinfo *Group) error {
-	_, err := OrmWeb.AllCols().ID(groupinfo.Id).Update(groupinfo)
+func TeamUpdate(teaminfo *Team) error {
+	_, err := OrmWeb.AllCols().ID(teaminfo.Id).Update(teaminfo)
 	return err
 }
 
-func GroupGetbyId(id int64)(*Group, error) {
-	groupinfo := new(Group)
+func TeamGetbyId(id int64)(*Team, error) {
+	teaminfo := new(Team)
 
-	has, err := OrmWeb.Id(id).Get(groupinfo)
+	has, err := OrmWeb.Id(id).Get(teaminfo)
 	if err != nil {
 		return nil, err
 	}
 	if !has {
 		return nil, nil
 	}
-	return groupinfo, nil
+	return teaminfo, nil
 }
 
-func GroupGetbyName(name string) (*Group, error)  {
+func TeamGetbyName(name string) (*Team, error)  {
 
-	groupinfo := new(Group)
+	teaminfo := new(Team)
 
-	has, err := OrmWeb.Where("name=?", name).Get(groupinfo)
+	has, err := OrmWeb.Where("name=?", name).Get(teaminfo)
 	if err != nil {
 		return nil, err
 	}
@@ -54,5 +54,5 @@ func GroupGetbyName(name string) (*Group, error)  {
 		return nil, nil
 	}
 
-	return groupinfo, nil
+	return teaminfo, nil
 }

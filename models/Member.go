@@ -5,24 +5,24 @@ import (
 )
 
 //成员属性
-type GroupMember struct {
-	Id int64 	//id
-	Uid int64	//用户id
-	Gid int64	//组id
+type TeamMember struct {
+	Id  int64 `xorm:"pk autoincr comment('ID') BIGINT(20)"`
+	Uid int64 `xorm:"not null comment('用户ID') BIGINT(20)"`
+	Gid int64 `xorm:"not null comment('团队ID') BIGINT(20)"`
 }
 
 
-func MemberAdd(groupmember *GroupMember) (int64, error) {
+func MemberAdd(groupmember *TeamMember) (int64, error) {
 	return OrmWeb.Insert(groupmember)
 }
 
 func MemberRemove(id int64)error {
-	_, err := OrmWeb.Id(id).Delete(&GroupMember{})
+	_, err := OrmWeb.Id(id).Delete(&TeamMember{})
 	return err
 }
 
-func MemberGetById(id int64) (*GroupMember, error) {
-	member := new(GroupMember)
+func MemberGetById(id int64) (*TeamMember, error) {
+	member := new(TeamMember)
 
 	has, err := OrmWeb.Id(id).Get(member)
 	if err != nil {
@@ -35,8 +35,8 @@ func MemberGetById(id int64) (*GroupMember, error) {
 
 }
 
-func MembersQueryByUid(uid int64) (*[]GroupMember, error) {
-	var groupmember []GroupMember
+func MembersQueryByUid(uid int64) (*[]TeamMember, error) {
+	var groupmember []TeamMember
 
 	//不知道可不可以返回一个序列
 	has, err := OrmWeb.Where("uid=?", uid).Get(groupmember)
@@ -52,12 +52,12 @@ func MembersQueryByUid(uid int64) (*[]GroupMember, error) {
 
 
 
-func MembersQueryByGid(gid int64)(*[]GroupMember, error) {
+func MembersQueryByGid(gid int64)(*[]TeamMember, error) {
 
-	var groupmember []GroupMember
+	var groupmember []TeamMember
 
 	//不知道可不可以返回一个序列
-	has, err := OrmWeb.Where("gid=?", gid).Get(groupmember)
+	has, err := OrmWeb.Where("gid=?", gid).Get(&groupmember)
 	if err != nil {
 		return nil, err
 	}

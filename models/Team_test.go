@@ -5,44 +5,44 @@ import (
 	"fmt"
 )
 
-func TestGroupCreate(t *testing.T) {
+func TestTeamCreate(t *testing.T) {
 	InitAllInTest()
 
-	groupinfo := &Group{Avator:"touxaing", Description:"test", Uid:001, Name:"Sequin"}
-	if _, err := GroupCreate(groupinfo); err != nil{
-		t.Error("creat Group failed", err)
+	groupinfo := &Team{Avator:"touxaing", Description:"test", Uid:001, Name:"Sequin"}
+	if _, err := TeamCreate(groupinfo); err != nil{
+		t.Error("creat Team failed", err)
 	}
 }
 
-func TestGroupGetbyName(t *testing.T) {
+func TestTeamGetbyName(t *testing.T) {
 
 	InitAllInTest()
-	ans, err := GroupGetbyName("Sequin")
+	ans, err := TeamGetbyName("Sequin")
 	if err != nil {
 		t.Error("get group by name failed", err)
 	}
 	fmt.Println(ans)
 }
 
-func TestGroupGetbyId(t *testing.T) {
+func TestTeamGetbyId(t *testing.T) {
 	InitAllInTest()
-	if _, err := GroupGetbyId(1); err != nil {
+	if _, err := TeamGetbyId(1); err != nil {
 		t.Error("get group by id failed", err)
 	}
 }
 
-func TestGroupUpdate(t *testing.T) {
+func TestTeamUpdate(t *testing.T) {
 	InitAllInTest()
-	groupinfo := &Group{Avator:"", Description:"haha", Uid:002, Name:"SequinYF"}
+	groupinfo := &Team{Avator:"", Description:"haha", Uid:002, Name:"SequinYF"}
 
-	if err := GroupUpdate(groupinfo); err != nil {
+	if err := TeamUpdate(groupinfo); err != nil {
 		t.Error("update group failed", err)
 	}
 }
 
-func TestGroupGetbyName2(t *testing.T) {
+func TestTeamGetbyName2(t *testing.T) {
 	InitAllInTest()
-	ans, err := GroupGetbyName("SequinYF")
+	ans, err := TeamGetbyName("SequinYF")
 	if err != nil {
 		t.Error("get group by name failed", err)
 	}
@@ -50,9 +50,9 @@ func TestGroupGetbyName2(t *testing.T) {
 	fmt.Println(ans)
 }
 
-func TestGroupRemove(t *testing.T) {
+func TestTeamRemove(t *testing.T) {
 	InitAllInTest()
-	if err := GroupRemove(1); err != nil {
+	if err := TeamRemove(1); err != nil {
 		t.Error("remove group 1 failed", err)
 	}
 }
