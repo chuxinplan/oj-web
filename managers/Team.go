@@ -6,7 +6,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-type Group struct {
+type Team struct {
 	Id int64		//id
 	Uid int64		//组长id
 	Name string		//名称
@@ -17,19 +17,19 @@ type Group struct {
 
 
 
-func GroupCreat(name, avator, description string, uid int64) (int64, error) {
+func TeamCreat(name, avator, description string, uid int64) (int64, error) {
 
 	//判断是否存在
-	group, err := models.GroupGetbyName(name)
+	group, err := models.TeamGetbyName(name)
 	if err != nil {
-		return 0, fmt.Errorf("get Group failure : %s ", err.Error())
+		return 0, fmt.Errorf("get Team failure : %s ", err.Error())
 	}
 	if group != nil {
-		return 0, errors.New("Group is exist")
+		return 0, errors.New("Team is exist")
 	}
 	//创建
-	groupinfo := &models.GroupInfo{Name:name, Uid:uid, Avator:avator, Description:description }
-	createId, err := models.GroupCreate(groupinfo)
+	groupinfo := &models.Team{Name:name, Uid:uid, Avator:avator, Description:description }
+	createId, err := models.TeamCreate(groupinfo)
 	if err != nil {
 		return 0, fmt.Errorf("add group failure : %s ", err.Error())
 	}
@@ -40,12 +40,12 @@ func GroupCreat(name, avator, description string, uid int64) (int64, error) {
 func MemberAdd(gid, uid, owner int64) (string, error) {
 
 	//判断组是否存在
-	group, err := models.GroupGetbyId(gid)
+	group, err := models.TeamGetbyId(gid)
 	if err != nil {
-		return "", fmt.Errorf("get Group failure : %s ", err.Error())
+		return "", fmt.Errorf("get Team failure : %s ", err.Error())
 	}
 	if group == nil {
-		return "", errors.New("Group not exist")
+		return "", errors.New("Team not exist")
 	}
 
 	if group.Uid != owner {
@@ -60,11 +60,11 @@ func MemberAdd(gid, uid, owner int64) (string, error) {
 		return "", fmt.Errorf("get member failure : %s ", err.Error())
 	}
 	if id != 0 {
-		return "", errors.New( "Member is already in the Group")
+		return "", errors.New( "Member is already in the Team")
 	}
 
 	//添加
-	groupmember := new(models.GroupMember)
+	groupmember := new(models.TeamMember)
 	groupmember.Gid = gid
 	groupmember.Uid = uid
 	_, err = models.MemberAdd(groupmember)
@@ -75,14 +75,14 @@ func MemberAdd(gid, uid, owner int64) (string, error) {
 }
 
 
-func GroupRemove(id, owner int64) error{
+func TeamRemove(id, owner int64) error{
 	//判断组是否存在
-	group, err := models.GroupGetbyId(id)
+	group, err := models.TeamGetbyId(id)
 	if err != nil {
-		return fmt.Errorf("get Group failure : %s ", err.Error())
+		return fmt.Errorf("get Team failure : %s ", err.Error())
 	}
 	if group == nil {
-		return errors.New("Group not exist")
+		return errors.New("Team not exist")
 	}
 	if group.Uid != owner {
 		return errors.New("Permition deny")
@@ -103,7 +103,7 @@ func GroupRemove(id, owner int64) error{
 	}
 
 	//删除组
-	err = models.GroupRemove(id)
+	err = models.TeamRemove(id)
 	if err != nil {
 		return fmt.Errorf("delete group failure : %s ", err.Error())
 	}
@@ -114,12 +114,12 @@ func GroupRemove(id, owner int64) error{
 func MemberRemove(uid, gid, user int64) error {
 
 	//判断组是否存在
-	group, err := models.GroupGetbyId(gid)
+	group, err := models.TeamGetbyId(gid)
 	if err != nil {
-		return fmt.Errorf("get Group failure : %s ", err.Error())
+		return fmt.Errorf("get Team failure : %s ", err.Error())
 	}
 	if group == nil {
-		return errors.New("Group not exist")
+		return errors.New("Team not exist")
 	}
 
 
@@ -148,18 +148,18 @@ func MemberRemove(uid, gid, user int64) error {
 }
 
 
-func GetGroup(id int64) (*Group, error) {
+func GetTeam(id int64) (*Team, error) {
 	//判断组是否存在
-	groupinfo, err := models.GroupGetbyId(id)
+	groupinfo, err := models.TeamGetbyId(id)
 	if err != nil {
-		return nil, fmt.Errorf("get Group failure : %s ", err.Error())
+		return nil, fmt.Errorf("get Team failure : %s ", err.Error())
 	}
 	if groupinfo == nil {
-		return nil, errors.New("Group not exist")
+		return nil, errors.New("Team not exist")
 	}
 
 
-	group := &Group{-1, groupinfo.Uid,groupinfo.Name, groupinfo.Description, groupinfo.Avator, nil}
+	group := &Team{-1, groupinfo.Uid,groupinfo.Name, groupinfo.Description, groupinfo.Avator, nil}
 
 	//获得成员
 	members, err := models.MembersQueryByGid(id)
@@ -182,7 +182,7 @@ func GetGroup(id int64) (*Group, error) {
 func MemberCheckByUid(uid, gid int64) (int64, error) {
 	groupmember, err := models.MembersQueryByUid(uid)
 	if err != nil {
-		return 0,  fmt.Errorf("get Group failure : %s ", err.Error())
+		return 0,  fmt.Errorf("get Team failure : %s ", err.Error())
 	}
 
 	for _, member := range *groupmember {
@@ -191,7 +191,7 @@ func MemberCheckByUid(uid, gid int64) (int64, error) {
 		}
 	}
 
-	return 0,errors.New("no Group")
+	return 0,errors.New("no Team")
 
 }
 
@@ -199,7 +199,7 @@ func MemberCheckByUid(uid, gid int64) (int64, error) {
 func MemberCheckByGid(uid, gid int64) (int64, error) {
 	groupmember, err := models.MembersQueryByGid(gid)
 	if err != nil {
-		return 0,  fmt.Errorf("get Group failure : %s ", err.Error())
+		return 0,  fmt.Errorf("get Team failure : %s ", err.Error())
 	}
 
 	for _, member := range *groupmember {
@@ -208,19 +208,19 @@ func MemberCheckByGid(uid, gid int64) (int64, error) {
 		}
 	}
 
-	return 0,errors.New("no Group")
+	return 0,errors.New("no Team")
 
 }
 
-func GroupUpdate(id, owner int64, name, avator, description string) (string, error) {
+func TeamUpdate(id, owner int64, name, avator, description string) (string, error) {
 
 	//判断组是否存在
-	group, err := models.GroupGetbyId(id)
+	group, err := models.TeamGetbyId(id)
 	if err != nil {
-		return "", fmt.Errorf("get Group failure : %s ", err.Error())
+		return "", fmt.Errorf("get Team failure : %s ", err.Error())
 	}
 	if group == nil {
-		return "", errors.New("Group not exist")
+		return "", errors.New("Team not exist")
 	}
 	if group.Uid != owner {
 		return "", errors.New("Permition deny")
@@ -236,9 +236,9 @@ func GroupUpdate(id, owner int64, name, avator, description string) (string, err
 		group.Description = description
 	}
 
-	err = models.GroupUpdate(group)
+	err = models.TeamUpdate(group)
 	if err != nil {
-		return "", fmt.Errorf("get Group failure : %s ", err.Error())
+		return "", fmt.Errorf("get Team failure : %s ", err.Error())
 	}
 
 	return "done", err
