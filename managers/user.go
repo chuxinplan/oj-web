@@ -11,6 +11,7 @@ import (
 
 type SubmitCount struct {
 	Accepted            int64 `json:"accepted"`
+	FailNum             int64 `json:"fail_num"`
 	WrongAnswer         int64 `json:"wrong_answer"`
 	CompilationError    int64 `json:"compilation_error"`
 	TimeLimitExceeded   int64 `json:"time_limit_exceeded"`
@@ -70,11 +71,23 @@ func GetUserProgress(userName string) (map[string]interface{}, error) {
 	if user == nil {
 		return nil, errors.New("用户名不存在")
 	}
-	acNum, _ := redis.GetAcNumByUserId(user.Id)
+	jsonStr, err := redis.SubmitCountGet(user.Id)
+	if err != nil {
+		return nil, errors.New("获取失败")
+	}
+	problemTotal, err := redis.ProblemNumGet()
+	if err != nil {
+		return nil, errors.New("获取失败")
+	}
+	var submitCount SubmitCount
+	err = json.Unmarshal([]byte(jsonStr), &submitCount)
+	if err != nil {
+		return nil, errors.New("获取失败")
+	}
 	problemMess := map[string]interface{}{
-		"pre_num":  500,
-		"ac_num":   acNum,
-		"fail_num": 10,
+		"pre_num":  problemTotal,
+		"ac_num":   submitCount.Accepted,
+		"fail_num": submitCount.FailNum,
 	}
 	return problemMess, nil
 }

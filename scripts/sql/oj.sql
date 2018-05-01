@@ -115,3 +115,13 @@ CREATE TABLE `submit_test` (
   KEY `user_id` (`user_id`),
   KEY `result` (`result`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `user_count` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `user_id` bigint(20) NOT NULL COMMENT '提交用户ID',
+  `rank_num` int(11) DEFAULT NULL COMMENT '排名',
+  `submit_num` int(11) DEFAULT NULL COMMENT '提交数',
+  `date_time` bigint(20) NOT NULL COMMENT '时间',
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
