@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"io"
 
+	"time"
+
 	"github.com/open-fightcoder/oj-web/models"
 	"github.com/open-fightcoder/oj-web/redis"
 	"github.com/pkg/errors"
@@ -36,6 +38,53 @@ func UploadImage(reader io.Reader, userId int64, picType string) error {
 		return errors.New("上传失败")
 	}
 	return nil
+}
+
+func GetUserRecentSubmit(userName string) ([]map[string]interface{}, error) {
+	user, err := models.GetByUserName(userName)
+	if err != nil {
+		return nil, errors.New("获取失败")
+	}
+	if user == nil {
+		return nil, errors.New("用户名不存在")
+	}
+	mess, err := models.UserCountGetRecentMess(user.Id)
+	if err != nil {
+		return nil, errors.New("查询失败")
+	}
+	var messLists []map[string]interface{}
+	for _, v := range mess {
+		submitTime := time.Unix(v.DateTime, 0).Format("2006-01-02")
+		projects := make(map[string]interface{})
+		projects["submit_num"] = v.SubmitNum
+		projects["date"] = submitTime
+		messLists = append(messLists, projects)
+	}
+	return messLists, nil
+}
+
+func GetUserRecentRank(userName string) ([]map[string]interface{}, error) {
+	user, err := models.GetByUserName(userName)
+	if err != nil {
+		return nil, errors.New("获取失败")
+	}
+	if user == nil {
+		return nil, errors.New("用户名不存在")
+	}
+
+	mess, err := models.UserCountGetRecentMess(user.Id)
+	if err != nil {
+		return nil, errors.New("查询失败")
+	}
+	var messLists []map[string]interface{}
+	for _, v := range mess {
+		submitTime := time.Unix(v.DateTime, 0).Format("2006-01-02")
+		projects := make(map[string]interface{})
+		projects["rank_num"] = v.RankNum
+		projects["date"] = submitTime
+		messLists = append(messLists, projects)
+	}
+	return messLists, nil
 }
 
 func GetUserMess(userName string) (map[string]interface{}, error) {

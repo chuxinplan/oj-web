@@ -1,6 +1,7 @@
 package models
 
 import (
+	"fmt"
 	"testing"
 	"time"
 )
@@ -8,7 +9,7 @@ import (
 func TestUserCountAdd(t *testing.T) {
 	InitAllInTest()
 
-	userCount := &UserCount{1, 1, 1, 1, time.Now().Unix()}
+	userCount := &UserCount{7, 1, 1, 1, time.Now().Unix()}
 	if _, err := UserCountAdd(userCount); err != nil {
 		t.Error("Add() failed.Error:", err)
 	}
@@ -41,5 +42,14 @@ func TestUserCountGetById(t *testing.T) {
 
 	if *getUserCount != *userCount {
 		t.Error("GetById() failed:", userCount, "!=", getUserCount)
+	}
+}
+
+func TestUserCountGetRecentMess(t *testing.T) {
+	InitAllInTest()
+
+	userCount, _ := UserCountGetRecentMess(1)
+	for _, v := range userCount {
+		fmt.Println(v)
 	}
 }

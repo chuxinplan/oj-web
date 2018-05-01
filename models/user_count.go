@@ -38,3 +38,12 @@ func UserCountGetById(id int64) (*UserCount, error) {
 	}
 	return userCount, nil
 }
+
+func UserCountGetRecentMess(userId int64) ([]*UserCount, error) {
+	userCountList := make([]*UserCount, 0)
+	err := OrmWeb.Where("user_id=?", userId).And("date_time >= unix_timestamp(now())-2592000").Find(&userCountList)
+	if err != nil {
+		return nil, err
+	}
+	return userCountList, nil
+}
