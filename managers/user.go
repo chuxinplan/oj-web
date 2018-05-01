@@ -1,14 +1,24 @@
 package managers
 
 import (
+	"encoding/json"
 	"io"
-
-	"strconv"
 
 	"github.com/open-fightcoder/oj-web/models"
 	"github.com/open-fightcoder/oj-web/redis"
 	"github.com/pkg/errors"
 )
+
+type SubmitCount struct {
+	Accepted            int64 `json:"accepted"`
+	WrongAnswer         int64 `json:"wrong_answer"`
+	CompilationError    int64 `json:"compilation_error"`
+	TimeLimitExceeded   int64 `json:"time_limit_exceeded"`
+	MemoryLimitExceeded int64 `json:"memory_limit_exceeded"`
+	OutputLimitExceeded int64 `json:"output_limit_exceeded"`
+	RuntimeError        int64 `json:"runtime_error"`
+	SystemError         int64 `json:"system_error"`
+}
 
 func UploadImage(reader io.Reader, userId int64, picType string) error {
 	path, err := SaveImg(reader, userId, picType)
@@ -77,55 +87,24 @@ func GetUserCount(userName string) (map[string]interface{}, error) {
 	if user == nil {
 		return nil, errors.New("用户名不存在")
 	}
-	total, err := models.SubmitCountByConds(0, user.Id, 0, "")
+	jsonStr, err := redis.SubmitCountGet(user.Id)
 	if err != nil {
 		return nil, errors.New("获取失败")
 	}
-	resMap, err := models.SubmitCountByResult(user.Id)
+	var submitCount SubmitCount
+	err = json.Unmarshal([]byte(jsonStr), &submitCount)
 	if err != nil {
 		return nil, errors.New("获取失败")
 	}
 	problemMess := map[string]interface{}{
-		"wa_rate": 0,
-		"ce_rate": 0,
-		"te_rate": 0,
-		"me_rate": 0,
-		"oe_rate": 0,
-		"re_rate": 0,
-		"se_rate": 0,
-		"ac_rate": 0,
-	}
-
-	for _, val := range resMap {
-		sum, _ := strconv.ParseFloat(string(val["count"][:]), 64)
-		rate := float64(sum) / float64(total)
-		rateFormat := strconv.FormatFloat(rate, 'f', 2, 64)
-		switch string(val["result"][:]) {
-		case "4":
-			problemMess["ac_rate"] = rateFormat
-			break
-		case "5":
-			problemMess["wa_rate"] = rateFormat
-			break
-		case "6":
-			problemMess["ce_rate"] = rateFormat
-			break
-		case "7":
-			problemMess["te_rate"] = rateFormat
-			break
-		case "8":
-			problemMess["me_rate"] = rateFormat
-			break
-		case "9":
-			problemMess["oe_rate"] = rateFormat
-			break
-		case "10":
-			problemMess["re_rate"] = rateFormat
-			break
-		case "11":
-			problemMess["se_rate"] = rateFormat
-			break
-		}
+		"wa_num": submitCount.WrongAnswer,
+		"ce_num": submitCount.CompilationError,
+		"te_num": submitCount.TimeLimitExceeded,
+		"me_num": submitCount.MemoryLimitExceeded,
+		"oe_num": submitCount.OutputLimitExceeded,
+		"re_num": submitCount.RuntimeError,
+		"se_num": submitCount.SystemError,
+		"ac_num": submitCount.Accepted,
 	}
 	return problemMess, nil
 }
