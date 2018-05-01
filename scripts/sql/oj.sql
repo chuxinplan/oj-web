@@ -121,7 +121,8 @@ CREATE TABLE `user_count` (
   `user_id` bigint(20) NOT NULL COMMENT '提交用户ID',
   `rank_num` int(11) DEFAULT NULL COMMENT '排名',
   `submit_num` int(11) DEFAULT NULL COMMENT '提交数',
-  `date_time` bigint(20) NOT NULL COMMENT '时间',
+  `date_time` varchar(50) NOT NULL DEFAULT '' COMMENT '时间',
   PRIMARY KEY (`id`),
-  KEY `user_id` (`user_id`)
+  KEY `idx_user_id` (`user_id`),
+  UNIQUE KEY `uniq_user` (`user_id`,`date_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

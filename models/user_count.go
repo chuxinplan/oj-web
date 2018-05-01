@@ -9,7 +9,7 @@ type UserCount struct {
 	UserId    int64
 	RankNum   int
 	SubmitNum int
-	DateTime  int64
+	DateTime  string
 }
 
 func UserCountAdd(userCount *UserCount) (int64, error) {
@@ -41,7 +41,7 @@ func UserCountGetById(id int64) (*UserCount, error) {
 
 func UserCountGetRecentMess(userId int64) ([]*UserCount, error) {
 	userCountList := make([]*UserCount, 0)
-	err := OrmWeb.Where("user_id=?", userId).And("date_time >= unix_timestamp(now())-2592000").Find(&userCountList)
+	err := OrmWeb.Where("user_id=?", userId).And("unix_timestamp(date_time) >= unix_timestamp(now())-2592000").Find(&userCountList)
 	if err != nil {
 		return nil, err
 	}

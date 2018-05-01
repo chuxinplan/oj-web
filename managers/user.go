@@ -4,8 +4,6 @@ import (
 	"encoding/json"
 	"io"
 
-	"time"
-
 	"github.com/open-fightcoder/oj-web/models"
 	"github.com/open-fightcoder/oj-web/redis"
 	"github.com/pkg/errors"
@@ -54,10 +52,9 @@ func GetUserRecentSubmit(userName string) ([]map[string]interface{}, error) {
 	}
 	var messLists []map[string]interface{}
 	for _, v := range mess {
-		submitTime := time.Unix(v.DateTime, 0).Format("2006-01-02")
 		projects := make(map[string]interface{})
 		projects["submit_num"] = v.SubmitNum
-		projects["date"] = submitTime
+		projects["date"] = v.DateTime
 		messLists = append(messLists, projects)
 	}
 	return messLists, nil
@@ -78,10 +75,9 @@ func GetUserRecentRank(userName string) ([]map[string]interface{}, error) {
 	}
 	var messLists []map[string]interface{}
 	for _, v := range mess {
-		submitTime := time.Unix(v.DateTime, 0).Format("2006-01-02")
 		projects := make(map[string]interface{})
 		projects["rank_num"] = v.RankNum
-		projects["date"] = submitTime
+		projects["date"] = v.DateTime
 		messLists = append(messLists, projects)
 	}
 	return messLists, nil
