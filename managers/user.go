@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"io"
 
+	"strings"
+
 	"github.com/open-fightcoder/oj-web/models"
 	"github.com/open-fightcoder/oj-web/redis"
 	"github.com/pkg/errors"
@@ -120,7 +122,7 @@ func GetUserMess(userName string) (map[string]interface{}, error) {
 		"git":           user.Git,
 		"description":   user.Description,
 		"birthday":      user.Birthday,
-		"daily_address": user.DailyAddress,
+		"daily_address": strings.Split(user.DailyAddress, ","),
 		"stat_school":   user.StatSchool,
 		"school_name":   user.SchoolName,
 	}
