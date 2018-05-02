@@ -55,7 +55,12 @@ func SubmitCommon(problemId int64, userId int64, language string, code string) (
 		return nil, errors.New("提交失败")
 	}
 	sendMess := &components.SendMess{"default", id}
-	flag := components.Send("judge", sendMess)
+	var flag bool
+	if userId < 3 {
+		flag = components.Send("judge", sendMess)
+	} else {
+		flag = components.Send("vjudger", sendMess)
+	}
 	if flag == false {
 		return nil, errors.New("提交失败")
 	}
