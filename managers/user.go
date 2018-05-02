@@ -21,6 +21,25 @@ type SubmitCount struct {
 	SystemError         int64 `json:"system_error"`
 }
 
+func UpdateUserMess(userId int64, userName string, NickName string, Sex string, Blog string, Git string, Description string, Birthday string, DailyAddress string, StatSchool string, SchoolName string) error {
+	user, err := models.GetByUserName(userName)
+	if err != nil {
+		return errors.New("获取失败")
+	}
+	if user == nil {
+		return errors.New("用户名不存在")
+	}
+	if user.Id != userId {
+		return errors.New("无权修改该用户信息")
+	}
+	userMess := &models.User{user.Id, user.AccountId, user.UserName, NickName, Sex, user.Avator, Blog, Git, Description, Birthday, DailyAddress, StatSchool, SchoolName}
+	err = models.Update(userMess)
+	if err != nil {
+		return errors.New("更新失败")
+	}
+	return nil
+}
+
 func UploadImage(reader io.Reader, userId int64, picType string) error {
 	path, err := SaveImg(reader, userId, picType)
 	if err != nil {
