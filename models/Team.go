@@ -38,7 +38,7 @@ func TeamGetbyId(id int64)(*Team, error) {
 		return nil, err
 	}
 	if !has {
-		return nil, nil
+		return nil, err
 	}
 	return teaminfo, nil
 }

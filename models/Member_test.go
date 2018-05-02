@@ -2,8 +2,6 @@ package models
 
 import (
 	"testing"
-
-	"fmt"
 )
 
 func TestMemberAdd(t *testing.T) {

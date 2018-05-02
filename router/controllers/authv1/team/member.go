@@ -10,6 +10,8 @@ import (
 type Member struct {
 	Gid int64	`form:"gid" json:"gid"`
 	Uid int64	`form:"uid" json:"uid"`
+	Gname string `form:"gname" json:"gname"`
+	Uname string `form:"uname" json:"uname"`
 }
 
 func RegisterMember(router *gin.RouterGroup)  {

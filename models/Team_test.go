@@ -29,7 +29,7 @@ func TestTeamGetbyName(t *testing.T) {
 
 func TestTeamGetbyId(t *testing.T) {
 	InitAllInTest()
-	ans, err := TeamGetbyId(6);
+	ans, err := TeamGetbyId(0);
 	if  err != nil {
 		t.Error("get group by id failed", err)
 	}

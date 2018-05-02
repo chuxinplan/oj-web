@@ -6,15 +6,6 @@ import (
 	"fmt"
 )
 
-type Team struct {
-	Id int64		//id
-	Uid int64		//组长id
-	Name string		//名称
-	Description string		//描述
-	Avator string	//头像
-	Member_id []int64	//成员🆔
-}
-
 
 
 func TeamCreat(name, avator, description string, uid int64) (int64, error) {
@@ -163,7 +154,7 @@ func MemberRemove(uid, gid, user int64) error {
 }
 
 
-func GetTeam(id int64) (*Team, error) {
+func GetTeam(id int64) (*map[string]interface{}, error) {
 	//判断组是否存在
 	groupinfo, err := models.TeamGetbyId(id)
 	if err != nil {
@@ -174,20 +165,28 @@ func GetTeam(id int64) (*Team, error) {
 	}
 
 
-	group := &Team{-1, groupinfo.Uid,groupinfo.Name, groupinfo.Description, groupinfo.Avator, nil}
-
 	//获得成员
 	members, err:= models.MembersQueryByGid(id)
+	fmt.Println(members)
 	if err != nil {
 		return nil, fmt.Errorf("get members failure : %s ", err.Error())
 	}
 
-
+	var member_id []int64
 	for _, node := range *members {
-		group.Member_id = append(group.Member_id, node.Uid)
+		member_id = append(member_id, node.Uid)
 	}
 
-	return group, err
+	team := map[string]interface{}{
+		"id": groupinfo.Id,
+		"uid":groupinfo.Uid,
+		"name":groupinfo.Name,
+		"description":groupinfo.Description,
+		"avator":groupinfo.Avator,
+		"Member_id":member_id,
+	}
+
+	return &team, err
 
 }
 
