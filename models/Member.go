@@ -6,9 +6,9 @@ import (
 
 //成员属性
 type TeamMember struct {
-	Id  int64 `xorm:"pk autoincr comment('ID') BIGINT(20)"`
-	Uid int64 `xorm:"not null comment('用户ID') BIGINT(20)"`
-	Gid int64 `xorm:"not null comment('团队ID') BIGINT(20)"`
+	Id int64 	//id
+	Uid int64	//用户id
+	Gid int64	//组id
 }
 
 
@@ -39,7 +39,7 @@ func MembersQueryByUid(uid int64) (*[]TeamMember, error) {
 	var groupmember []TeamMember
 
 	//不知道可不可以返回一个序列
-	has, err := OrmWeb.Where("uid=?", uid).Get(groupmember)
+	has, err := OrmWeb.Where("uid=?", uid).Get(&groupmember)
 	if err != nil {
 		return nil, err
 	}
@@ -52,19 +52,20 @@ func MembersQueryByUid(uid int64) (*[]TeamMember, error) {
 
 
 
-func MembersQueryByGid(gid int64)(*[]TeamMember, error) {
+func MembersQueryByGid(gid int64)(*[]TeamMember, error, bool) {
 
 	var groupmember []TeamMember
 
 	//不知道可不可以返回一个序列
 	has, err := OrmWeb.Where("gid=?", gid).Get(&groupmember)
-	if err != nil {
-		return nil, err
-	}
+
 	if !has {
-		return nil, nil
+		return nil, nil, false
+	}
+	if err != nil {
+		return nil, err, true
 	}
 
-	return &groupmember, err
+	return &groupmember, err, true
 }
 

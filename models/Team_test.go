@@ -17,7 +17,7 @@ func TestTeamCreate(t *testing.T) {
 func TestTeamGetbyName(t *testing.T) {
 
 	InitAllInTest()
-	ans, err := TeamGetbyName("Sequin")
+	ans, err := TeamGetbyName("sequin3")
 	if err != nil {
 		t.Error("get group by name failed", err)
 	}
@@ -26,18 +26,21 @@ func TestTeamGetbyName(t *testing.T) {
 
 func TestTeamGetbyId(t *testing.T) {
 	InitAllInTest()
-	if _, err := TeamGetbyId(1); err != nil {
+	ans, err := TeamGetbyId(6);
+	if  err != nil {
 		t.Error("get group by id failed", err)
 	}
+	fmt.Println(ans)
 }
 
 func TestTeamUpdate(t *testing.T) {
 	InitAllInTest()
-	groupinfo := &Team{Avator:"", Description:"haha", Uid:002, Name:"SequinYF"}
+	groupinfo := &Team{Id:1, Avator:"", Description:"haha", Uid:002, Name:"SequinYF"}
 
 	if err := TeamUpdate(groupinfo); err != nil {
 		t.Error("update group failed", err)
 	}
+
 }
 
 func TestTeamGetbyName2(t *testing.T) {

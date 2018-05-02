@@ -2,6 +2,7 @@ package models
 
 import (
 	"testing"
+	"fmt"
 )
 
 func TestAccountAdd(t *testing.T) {
@@ -43,10 +44,22 @@ func TestAccountGetById(t *testing.T) {
 	}
 }
 
+func TestAccountGetById2(t *testing.T) {
+	InitAllInTest()
+
+
+	getAccount, err := AccountGetById(23)
+	if err != nil {
+		t.Error("GetById() failed:", err.Error())
+	}
+
+	fmt.Println(getAccount)
+}
+
 func TestAccountGetByEmail(t *testing.T) {
 	InitAllInTest()
 
-	account := &Account{Email: "xxx@qq.com", Password: "123", Phone: "1234", QqId: "1"}
+	account := &Account{Email: "axxx@qq.com", Password: "123", Phone: "1234", QqId: "1"}
 	AccountAdd(account)
 
 	getAccount, err := AccountGetByEmail(account.Email)
@@ -57,5 +70,21 @@ func TestAccountGetByEmail(t *testing.T) {
 	if *getAccount != *account {
 		t.Error("GetById() failed:", account, "!=", getAccount)
 	}
+
+	fmt.Println(getAccount)
+
+}
+
+func TestAccountGetByEmail2(t *testing.T) {
+	InitAllInTest()
+
+
+
+	getAccount, err := AccountGetByEmail("sequin@linux.org")
+	if err != nil {
+		t.Error("GetById() failed:", err.Error())
+	}
+
+	fmt.Println(getAccount)
 
 }

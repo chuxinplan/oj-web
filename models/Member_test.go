@@ -2,6 +2,7 @@ package models
 
 import (
 	"testing"
+	"fmt"
 )
 
 func TestMemberAdd(t *testing.T) {
@@ -16,7 +17,7 @@ func TestMemberAdd(t *testing.T) {
 func TestMemberGetById(t *testing.T) {
 	InitAllInTest()
 
-	if _, err := MemberGetById(1); err != nil {
+	if _, err := MemberGetById(23); err != nil {
 		t.Error("get member by id failed", err)
 	}
 }
@@ -24,15 +25,18 @@ func TestMemberGetById(t *testing.T) {
 func TestMembersQueryByGid(t *testing.T) {
 	InitAllInTest()
 
-	if _, err := MembersQueryByGid(1); err != nil {
+	list, err , has := MembersQueryByGid(4)
+	if  err != nil {
 		t.Error("query member by gid failed", err)
 	}
+
+	fmt.Println(list, has)
 }
 
 func TestMembersQueryByUid(t *testing.T) {
 	InitAllInTest()
 
-	if _, err := MembersQueryByUid(1); err != nil {
+	if _, err := MembersQueryByUid(23); err != nil {
 		t.Error("query member by Uid failed", err)
 	}
 }

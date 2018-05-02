@@ -37,6 +37,7 @@ func httpHandlerLogin(c *gin.Context) {
 		HttpOnly: true,
 	}
 
+
 	http.SetCookie(c.Writer, cookie)
 	c.JSON(http.StatusOK, base.Success())
 }
@@ -52,5 +53,6 @@ func httpHandlerRegister(c *gin.Context) {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))
 		return
 	}
+
 	c.JSON(http.StatusOK, base.Success(userId))
 }

@@ -4,7 +4,6 @@ import (
 	"crypto/md5"
 	"fmt"
 	"io"
-
 	"github.com/open-fightcoder/oj-web/common/components"
 	"github.com/open-fightcoder/oj-web/models"
 	"github.com/pkg/errors"

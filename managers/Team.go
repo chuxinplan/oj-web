@@ -37,10 +37,12 @@ func TeamCreat(name, avator, description string, uid int64) (int64, error) {
 	return createId, err
 }
 
-func MemberAdd(gid, uid, owner int64) (string, error) {
+func MemberAdd(gid, uid, user int64) (string, error) {
 
 	//判断组是否存在
 	group, err := models.TeamGetbyId(gid)
+
+	fmt.Println(group)
 	if err != nil {
 		return "", fmt.Errorf("get Team failure : %s ", err.Error())
 	}
@@ -48,7 +50,8 @@ func MemberAdd(gid, uid, owner int64) (string, error) {
 		return "", errors.New("Team not exist")
 	}
 
-	if group.Uid != owner {
+	if group.Uid != user {
+		fmt.Println(user, group.Uid)
 		return "", errors.New("Permition deny")
 	}
 
@@ -56,7 +59,7 @@ func MemberAdd(gid, uid, owner int64) (string, error) {
 
 	//判断用户所属
 	id, err:= MemberCheckByGid(uid, gid)
-	if err != nil {
+	if err == nil {
 		return "", fmt.Errorf("get member failure : %s ", err.Error())
 	}
 	if id != 0 {
@@ -76,6 +79,7 @@ func MemberAdd(gid, uid, owner int64) (string, error) {
 
 
 func TeamRemove(id, owner int64) error{
+
 	//判断组是否存在
 	group, err := models.TeamGetbyId(id)
 	if err != nil {
@@ -89,18 +93,21 @@ func TeamRemove(id, owner int64) error{
 	}
 
 	//得到所有成员
-	members, err := models.MembersQueryByGid(id)
+	members, err, has := models.MembersQueryByGid(id)
 	if err != nil {
 		return fmt.Errorf("get members failure : %s ", err.Error())
 	}
 
 	//删除成员
-	for _, member:= range *members {
-		err = models.MemberRemove(member.Id)
-		if err != nil{
-			return fmt.Errorf("delete member failure : %s ", err.Error())
+	if has {
+		for _, member:= range *members {
+			err = models.MemberRemove(member.Id)
+			if err != nil{
+				return fmt.Errorf("delete member failure : %s ", err.Error())
+			}
 		}
 	}
+
 
 	//删除组
 	err = models.TeamRemove(id)
@@ -162,11 +169,11 @@ func GetTeam(id int64) (*Team, error) {
 	group := &Team{-1, groupinfo.Uid,groupinfo.Name, groupinfo.Description, groupinfo.Avator, nil}
 
 	//获得成员
-	members, err := models.MembersQueryByGid(id)
-	if err != nil {
+	members, err, has:= models.MembersQueryByGid(id)
+	if err != nil && has{
 		return nil, fmt.Errorf("get members failure : %s ", err.Error())
 	}
-	if members == nil {
+	if has {
 		return group, nil
 	}
 
@@ -197,18 +204,20 @@ func MemberCheckByUid(uid, gid int64) (int64, error) {
 
 //判断gid组内有没有uid成员
 func MemberCheckByGid(uid, gid int64) (int64, error) {
-	groupmember, err := models.MembersQueryByGid(gid)
+	groupmember, err, has := models.MembersQueryByGid(gid)
 	if err != nil {
 		return 0,  fmt.Errorf("get Team failure : %s ", err.Error())
 	}
 
-	for _, member := range *groupmember {
-		if member.Uid == uid {
-			return member.Id, nil
+	if has{
+		for _, member := range *groupmember {
+			if member.Uid == uid {
+				return member.Id, nil
+			}
 		}
 	}
 
-	return 0,errors.New("no Team")
+	return 0,errors.New("no member")
 
 }
 
@@ -235,7 +244,6 @@ func TeamUpdate(id, owner int64, name, avator, description string) (string, erro
 	if description != "" {
 		group.Description = description
 	}
-
 	err = models.TeamUpdate(group)
 	if err != nil {
 		return "", fmt.Errorf("get Team failure : %s ", err.Error())
