@@ -8,16 +8,19 @@ import (
 func TestTeamCreate(t *testing.T) {
 	InitAllInTest()
 
-	groupinfo := &Team{Avator:"touxaing", Description:"test", Uid:001, Name:"Sequin"}
-	if _, err := TeamCreate(groupinfo); err != nil{
+	groupinfo := &Team{Avator:"touxaing", Description:"test", Uid:23, Name:"Sequinaa"}
+	ret, err := TeamCreate(groupinfo);
+	if  err != nil{
 		t.Error("creat Team failed", err)
 	}
+
+	fmt.Println(ret)
 }
 
 func TestTeamGetbyName(t *testing.T) {
 
 	InitAllInTest()
-	ans, err := TeamGetbyName("sequin3")
+	ans, err := TeamGetbyName("sequinhaha")
 	if err != nil {
 		t.Error("get group by name failed", err)
 	}

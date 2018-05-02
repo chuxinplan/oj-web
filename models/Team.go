@@ -16,7 +16,8 @@ type Team struct {
 }
 
 func TeamCreate(teaminfo *Team)(int64, error){
-	return OrmWeb.Insert(teaminfo)
+	ret, err := OrmWeb.Insert(teaminfo)
+	return ret, err
 }
 
 func TeamRemove(id int64) error {

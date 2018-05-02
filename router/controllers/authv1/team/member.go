@@ -5,7 +5,6 @@ import (
 	"github.com/open-fightcoder/oj-web/router/controllers/base"
 	"github.com/open-fightcoder/oj-web/managers"
 	"net/http"
-	"fmt"
 )
 
 type Member struct {
@@ -39,14 +38,10 @@ func httpHandlerMemberDel(c *gin.Context)  {
 func httpHandlerMemeberAdd(c *gin.Context)  {
 	parm := Member{}
 
-	fmt.Println(parm)
-
 	err := c.Bind(&parm)
 	if err != nil {
 		panic(err)
 	}
-
-	fmt.Println(parm)
 
 	Userid := base.UserId(c)
 

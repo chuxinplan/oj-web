@@ -2,8 +2,8 @@ package managers
 
 import (
 	"github.com/open-fightcoder/oj-web/models"
-	"fmt"
 	"github.com/pkg/errors"
+	"fmt"
 )
 
 type Team struct {
@@ -31,7 +31,16 @@ func TeamCreat(name, avator, description string, uid int64) (int64, error) {
 	groupinfo := &models.Team{Name:name, Uid:uid, Avator:avator, Description:description }
 	createId, err := models.TeamCreate(groupinfo)
 	if err != nil {
-		return 0, fmt.Errorf("add group failure : %s ", err.Error())
+		return 0, fmt.Errorf("create group failure : %s ", err.Error())
+	}
+
+	groupinfo, _ = models.TeamGetbyName(name)
+
+	member := &models.TeamMember{Uid:uid, Gid:groupinfo.Id}
+	//加入uid
+	_, err = models.MemberAdd(member)
+	if err != nil {
+		return 0, fmt.Errorf("add uid failure : %s ", err.Error())
 	}
 
 	return createId, err
@@ -42,7 +51,7 @@ func MemberAdd(gid, uid, user int64) (string, error) {
 	//判断组是否存在
 	group, err := models.TeamGetbyId(gid)
 
-	fmt.Println(group)
+
 	if err != nil {
 		return "", fmt.Errorf("get Team failure : %s ", err.Error())
 	}
@@ -51,7 +60,6 @@ func MemberAdd(gid, uid, user int64) (string, error) {
 	}
 
 	if group.Uid != user {
-		fmt.Println(user, group.Uid)
 		return "", errors.New("Permition deny")
 	}
 
@@ -93,20 +101,20 @@ func TeamRemove(id, owner int64) error{
 	}
 
 	//得到所有成员
-	members, err, has := models.MembersQueryByGid(id)
+	members, err := models.MembersQueryByGid(id)
 	if err != nil {
 		return fmt.Errorf("get members failure : %s ", err.Error())
 	}
 
 	//删除成员
-	if has {
-		for _, member:= range *members {
-			err = models.MemberRemove(member.Id)
-			if err != nil{
-				return fmt.Errorf("delete member failure : %s ", err.Error())
-			}
+
+	for _, member:= range *members {
+		err = models.MemberRemove(member.Id)
+		if err != nil{
+			return fmt.Errorf("delete member failure : %s ", err.Error())
 		}
 	}
+
 
 
 	//删除组
@@ -169,13 +177,11 @@ func GetTeam(id int64) (*Team, error) {
 	group := &Team{-1, groupinfo.Uid,groupinfo.Name, groupinfo.Description, groupinfo.Avator, nil}
 
 	//获得成员
-	members, err, has:= models.MembersQueryByGid(id)
-	if err != nil && has{
+	members, err:= models.MembersQueryByGid(id)
+	if err != nil {
 		return nil, fmt.Errorf("get members failure : %s ", err.Error())
 	}
-	if has {
-		return group, nil
-	}
+
 
 	for _, node := range *members {
 		group.Member_id = append(group.Member_id, node.Uid)
@@ -204,18 +210,17 @@ func MemberCheckByUid(uid, gid int64) (int64, error) {
 
 //判断gid组内有没有uid成员
 func MemberCheckByGid(uid, gid int64) (int64, error) {
-	groupmember, err, has := models.MembersQueryByGid(gid)
+	groupmember, err := models.MembersQueryByGid(gid)
 	if err != nil {
 		return 0,  fmt.Errorf("get Team failure : %s ", err.Error())
 	}
 
-	if has{
-		for _, member := range *groupmember {
-			if member.Uid == uid {
-				return member.Id, nil
-			}
+	for _, member := range *groupmember {
+		if member.Uid == uid {
+			return member.Id, nil
 		}
 	}
+
 
 	return 0,errors.New("no member")
 

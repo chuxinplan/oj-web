@@ -39,12 +39,11 @@ func MembersQueryByUid(uid int64) (*[]TeamMember, error) {
 	var groupmember []TeamMember
 
 	//不知道可不可以返回一个序列
-	has, err := OrmWeb.Where("uid=?", uid).Get(&groupmember)
+	err := OrmWeb.Table("team_member").Select("*").
+		Where("uid = ?", uid).
+		Find(&groupmember)
 	if err != nil {
 		return nil, err
-	}
-	if !has {
-		return nil, nil
 	}
 
 	return &groupmember, err
@@ -52,20 +51,19 @@ func MembersQueryByUid(uid int64) (*[]TeamMember, error) {
 
 
 
-func MembersQueryByGid(gid int64)(*[]TeamMember, error, bool) {
+func MembersQueryByGid(gid int64)(*[]TeamMember, error) {
 
 	var groupmember []TeamMember
 
 	//不知道可不可以返回一个序列
-	has, err := OrmWeb.Where("gid=?", gid).Get(&groupmember)
+	err := OrmWeb.Table("team_member").Select("*").
+		Where("gid = ?", gid).
+		Find(&groupmember)
 
-	if !has {
-		return nil, nil, false
-	}
 	if err != nil {
-		return nil, err, true
+		return nil, err
 	}
 
-	return &groupmember, err, true
+	return &groupmember, err
 }
 
