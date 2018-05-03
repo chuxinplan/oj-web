@@ -6,6 +6,10 @@ import (
 
 	"strings"
 
+	"strconv"
+
+	"fmt"
+
 	"github.com/open-fightcoder/oj-web/models"
 	"github.com/open-fightcoder/oj-web/redis"
 	"github.com/pkg/errors"
@@ -31,6 +35,7 @@ func UpdateUserMess(userId int64, userName string, NickName string, Sex string, 
 	if user == nil {
 		return errors.New("用户名不存在")
 	}
+	fmt.Println(user.Id, userId)
 	if user.Id != userId {
 		return errors.New("无权修改该用户信息")
 	}
@@ -141,9 +146,13 @@ func GetUserProgress(userName string) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, errors.New("获取失败")
 	}
-	problemTotal, err := redis.ProblemNumGet()
+	totalStr, err := redis.ProblemNumGet()
 	if err != nil {
 		return nil, errors.New("获取失败")
+	}
+	totalInt, err := strconv.Atoi(totalStr)
+	if err != nil {
+		return nil, errors.New("转换失败")
 	}
 	var submitCount SubmitCount
 	err = json.Unmarshal([]byte(jsonStr), &submitCount)
@@ -151,7 +160,7 @@ func GetUserProgress(userName string) (map[string]interface{}, error) {
 		return nil, errors.New("获取失败")
 	}
 	problemMess := map[string]interface{}{
-		"pre_num":  problemTotal,
+		"pre_num":  totalInt,
 		"ac_num":   submitCount.Accepted,
 		"fail_num": submitCount.FailNum,
 	}

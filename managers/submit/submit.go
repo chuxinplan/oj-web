@@ -94,17 +94,23 @@ func SubmitGetCommon(SubmitId int64) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, errors.New("获取失败")
 	}
+	problem, err := models.ProblemGetById(submit.ProblemId)
+	if err != nil {
+		return nil, errors.New("获取失败")
+	}
 	code, err := managers.GetCode(submit.Code)
 	if err != nil {
 		return nil, err
 	}
 	submitMess := map[string]interface{}{
-		"status":      submit.Result,
-		"memory_cost": submit.RunningMemory,
-		"time_cost":   submit.RunningTime,
-		"lang":        submit.Language,
-		"code":        code,
-		"time":        time.Unix(submit.SubmitTime, 0).Format("2006-01-02 15:04:05"),
+		"problem_id":   problem.Id,
+		"problem_name": problem.Title,
+		"status":       submit.Result,
+		"memory_cost":  submit.RunningMemory,
+		"time_cost":    submit.RunningTime,
+		"lang":         submit.Language,
+		"code":         code,
+		"time":         time.Unix(submit.SubmitTime, 0).Format("2006-01-02 15:04:05"),
 	}
 	return submitMess, nil
 }
