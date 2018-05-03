@@ -13,7 +13,7 @@ maxAge = 30     # 文件最大保存时间：30天
 [mysql]
 maxIdle = 5      # 最大空闲连接数
 maxOpen = 10     # 最大打开连接数
-debug = false    # 模式
+debug = true    # 模式
 
 webAddr = "root:123456@tcp(www.fightcoder.com:9000)/fightcoder?charset=utf8&loc=Asia%2FShanghai&parseTime=true&wait_timeout=3600"
 

@@ -70,7 +70,7 @@ CREATE TABLE `user` (
   `user_name` varchar(20) NOT NULL COMMENT '用户名',
   `nick_name` varchar(40) NOT NULL COMMENT '昵称',
   `sex` varchar(30) NOT NULL DEFAULT '' COMMENT '性别',
-  `avator` varchar(50) NOT NULL DEFAULT '' COMMENT '头像',
+  `avator` varchar(100) NOT NULL DEFAULT '' COMMENT '头像',
   `blog` varchar(100) NOT NULL DEFAULT '' COMMENT '博客地址',
   `git` varchar(100) NOT NULL DEFAULT '' COMMENT 'Git地址',
   `description` varchar(200) NOT NULL DEFAULT '' COMMENT '个人描述',
