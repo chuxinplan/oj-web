@@ -47,20 +47,21 @@ func httpHandlerLogin(c *gin.Context) {
 	var state int
 	var msg string
 	var userId int64
+	var userName string
 	if loginType == "qq" || loginType == "github" {
 		account := AccountOtherLogin{}
 		err := c.Bind(&account)
 		if err != nil {
 			panic(err)
 		}
-		state, msg, userId = managers.Login(account.Code, account.State, loginType)
+		state, msg, userId, userName = managers.Login(account.Code, account.State, loginType)
 	} else if loginType == "simple" {
 		account := AccountSimpleLogin{}
 		err := c.Bind(&account)
 		if err != nil {
 			panic(err)
 		}
-		state, msg, userId = managers.Login(account.Email, account.Password, loginType)
+		state, msg, userId, userName = managers.Login(account.Email, account.Password, loginType)
 	} else {
 		panic(errors.New("参数错误"))
 	}
@@ -91,9 +92,11 @@ func httpHandlerLogin(c *gin.Context) {
 		if state == managers.FIRST_LOGIN {
 			result["is_first"] = "true"
 			result["user_id"] = strconv.FormatInt(userId, 10)
+			result["user_name"] = userName
 		} else {
 			result["is_first"] = "false"
 			result["user_id"] = strconv.FormatInt(userId, 10)
+			result["user_name"] = userName
 		}
 		c.JSON(http.StatusOK, base.Success(result))
 	}

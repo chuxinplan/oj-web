@@ -19,7 +19,8 @@ func TestUserCreate(t *testing.T) {
 func TestUserUpdate(t *testing.T) {
 	InitAllInTest()
 
-	user := &User{Id: 1, UserName: "adaad"}
+	user := &User{20, 2, "luwenjing", "哈哈哈", "女", "", "www.csdn.com",
+		"www.github.com", "暂无描述", "1990-03-12", "陕西省,西安市,长安区", "大学本科", "西安邮电大学"}
 	if err := Update(user); err != nil {
 		t.Error("Update() failed. Error:", err)
 	}

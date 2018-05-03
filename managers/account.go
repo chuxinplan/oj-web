@@ -1,9 +1,7 @@
 package managers
 
 import (
-	"crypto/md5"
 	"fmt"
-	"io"
 
 	"io/ioutil"
 	"net/http"
@@ -12,7 +10,7 @@ import (
 	"strconv"
 	"time"
 
-	Jwt "github.com/open-fightcoder/oj-web/common/components"
+	"github.com/open-fightcoder/oj-web/common/components"
 	"github.com/open-fightcoder/oj-web/data"
 	"github.com/open-fightcoder/oj-web/models"
 )
@@ -117,7 +115,7 @@ func getQQOpenId(code string) string {
 	}
 }
 
-func Login(param1, param2, loginType string) (int, string, int64) {
+func Login(param1, param2, loginType string) (int, string, int64, string) {
 	var accountId int64
 	isFirstLogin := false
 
@@ -128,11 +126,11 @@ func Login(param1, param2, loginType string) (int, string, int64) {
 		}
 
 		if account == nil {
-			return EMAIL_NOT_EXIT, "", 0
+			return EMAIL_NOT_EXIT, "", 0, ""
 		} else {
 			passwd := account.Password
-			if passwd != md5Encode(param2) {
-				return PASSWORD_IS_WRONG, "", 0
+			if passwd != components.MD5Encode(param2) {
+				return PASSWORD_IS_WRONG, "", 0, ""
 			}
 		}
 
@@ -167,29 +165,22 @@ func Login(param1, param2, loginType string) (int, string, int64) {
 			accountId = acc.Id
 		}
 	} else {
-		return PARAM_IS_WRONG, "", 0
+		return PARAM_IS_WRONG, "", 0, ""
 	}
 
 	user, err := models.GetByAccountId(accountId)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	token, _ := Jwt.CreateToken(user.Id)
+	token, _ := components.CreateToken(user.Id)
 	if isFirstLogin {
-		return FIRST_LOGIN, token, user.Id
+		return FIRST_LOGIN, token, user.Id, user.UserName
 	} else {
-		return LOGIN, token, user.Id
+		return LOGIN, token, user.Id, user.UserName
 	}
 }
 
 func AccountRegister(userName string, email string, password string) (int64, error) {
 	//TODO 邮箱参数校验,userName校验
-	return data.UserRegister(userName, email, md5Encode(password))
-}
-
-func md5Encode(password string) string {
-	w := md5.New()
-	io.WriteString(w, password)
-	md5str := string(fmt.Sprintf("%x", w.Sum(nil)))
-	return md5str
+	return data.UserRegister(userName, email, components.MD5Encode(password))
 }
