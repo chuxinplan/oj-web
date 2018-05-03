@@ -56,7 +56,8 @@ func SubmitCommon(problemId int64, userId int64, language string, code string) (
 	}
 	sendMess := &components.SendMess{"default", id}
 	var flag bool
-	if userId < 3 {
+	//TODO 预留其他OJ的用户
+	if userId < 0 {
 		flag = components.Send("vjudger", sendMess)
 	} else {
 		flag = components.Send("judge", sendMess)

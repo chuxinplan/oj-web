@@ -67,16 +67,16 @@ func getGithubOpenId(code string) string {
 	}
 }
 
-func getQQOpenId(code string, state string) (string, error) {
+func getQQOpenId(code string, state string) (string, string, error) {
 	accessToken, err := login.QQCallback(code, state)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
 	openId, err := login.GetOpenid(accessToken)
 	if err != nil {
-		return "", err
+		return "", "", err
 	}
-	return openId, nil
+	return accessToken, openId, nil
 }
 
 func Login(param1, param2, loginType string) (int, string, int64, string) {
@@ -100,7 +100,7 @@ func Login(param1, param2, loginType string) (int, string, int64, string) {
 
 		accountId = account.Id
 	} else if loginType == "qq" {
-		openId, err := getQQOpenId(param1, param2)
+		accessToken, openId, err := getQQOpenId(param1, param2)
 		if err != nil {
 			return QQ_LOGIN_ERROR, err.Error(), 0, ""
 		}
@@ -108,8 +108,11 @@ func Login(param1, param2, loginType string) (int, string, int64, string) {
 		account := &models.Account{QqId: openId}
 		if acc == nil {
 			id, _ := models.AccountAdd(account)
-
-			user := &models.User{AccountId: id, NickName: strconv.FormatInt(time.Now().UnixNano(), 10)}
+			qqMess, err := login.GetQQMess(accessToken, openId)
+			if err != nil {
+				return QQ_LOGIN_ERROR, err.Error(), 0, ""
+			}
+			user := &models.User{AccountId: id, NickName: qqMess.NickName, Avator: qqMess.FigureurlQQ}
 			models.Create(user)
 			accountId = id
 			isFirstLogin = true

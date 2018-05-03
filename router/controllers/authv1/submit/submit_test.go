@@ -23,13 +23,13 @@ func TestSubmitCommon(t *testing.T) {
 
 	resp, err := client.Post("http://127.0.0.1:9001/apiv1/login",
 		"application/x-www-form-urlencoded",
-		strings.NewReader("email=asdfr.com&password=asdfr"))
+		strings.NewReader("email=aaa@qq.com&password=111111&type=simple"))
 
 	defer resp.Body.Close()
 	if assert.Equal(t, 200, resp.StatusCode, "鉴权失败！") {
 		resp, err = client.Post("http://127.0.0.1:9001/authv1/submit/common",
 			"application/x-www-form-urlencoded",
-			strings.NewReader("problem_id=5&user_id=6&language=JAVA&code=aasssssssssaa"))
+			strings.NewReader("problem_id=1&user_id=6&language=c++&code=aasssssssssaa"))
 		if err != nil {
 			fmt.Println("POST请求失败: " + err.Error())
 		}
