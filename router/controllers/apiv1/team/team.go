@@ -5,7 +5,6 @@ import (
 	"github.com/open-fightcoder/oj-web/managers"
 	"net/http"
 	"github.com/open-fightcoder/oj-web/router/controllers/base"
-	"fmt"
 )
 
 
@@ -38,5 +37,5 @@ func htttpHandlerTeamGet(c *gin.Context) {
 }
 
 func httpHandlerMember(c *gin.Context) {
-
+	//获得成员个人信息
 }

@@ -12,7 +12,8 @@ type TeamMember struct {
 }
 
 
-func MemberAdd(groupmember *TeamMember) (int64, error) {
+
+func MemberInsert(groupmember *TeamMember) (int64, error) {
 	return OrmWeb.Insert(groupmember)
 }
 
@@ -55,7 +56,6 @@ func MembersQueryByGid(gid int64)(*[]TeamMember, error) {
 
 	var groupmember []TeamMember
 
-	//不知道可不可以返回一个序列
 	err := OrmWeb.Table("team_member").Select("*").
 		Where("gid = ?", gid).
 		Find(&groupmember)

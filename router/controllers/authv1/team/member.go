@@ -12,7 +12,9 @@ type Member struct {
 	Uid int64	`form:"uid" json:"uid"`
 	Gname string `form:"gname" json:"gname"`
 	Uname string `form:"uname" json:"uname"`
+	Stats int `form:"stats" json:"stats"` //申请为true， 添加为flase
 }
+
 
 func RegisterMember(router *gin.RouterGroup)  {
 	router.POST("member/add", httpHandlerMemeberAdd)
@@ -45,9 +47,9 @@ func httpHandlerMemeberAdd(c *gin.Context)  {
 		panic(err)
 	}
 
-	Userid := base.UserId(c)
+	//Userid := base.UserId(c)
 
-	status, err := managers.MemberAdd(parm.Gid, parm.Uid, Userid)
+	status, err := managers.MemberApply(parm.Gid, parm.Uid, parm.Stats)
 	if err != nil {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))
 		return

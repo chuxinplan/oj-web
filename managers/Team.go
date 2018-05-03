@@ -29,7 +29,7 @@ func TeamCreat(name, avator, description string, uid int64) (int64, error) {
 
 	member := &models.TeamMember{Uid:uid, Gid:groupinfo.Id}
 	//加入uid
-	_, err = models.MemberAdd(member)
+	_, err = models.MemberInsert(member)
 	if err != nil {
 		return 0, fmt.Errorf("add uid failure : %s ", err.Error())
 	}
@@ -37,11 +37,10 @@ func TeamCreat(name, avator, description string, uid int64) (int64, error) {
 	return createId, err
 }
 
-func MemberAdd(gid, uid, user int64) (string, error) {
+func MemberApply(gid, uid int64, stats int) (string, error) {
 
 	//判断组是否存在
 	group, err := models.TeamGetbyId(gid)
-
 
 	if err != nil {
 		return "", fmt.Errorf("get Team failure : %s ", err.Error())
@@ -50,31 +49,72 @@ func MemberAdd(gid, uid, user int64) (string, error) {
 		return "", errors.New("Team not exist")
 	}
 
-	if group.Uid != user {
-		return "", errors.New("Permition deny")
-	}
 
-	//是否需要判断用户合法？
+	//判断uid是否合法
 
-	//判断用户所属
-	id, err:= MemberCheckByGid(uid, gid)
-	if err == nil {
-		return "", fmt.Errorf("get member failure : %s ", err.Error())
-	}
-	if id != 0 {
-		return "", errors.New( "Member is already in the Team")
-	}
+	//
 
-	//添加
-	groupmember := new(models.TeamMember)
-	groupmember.Gid = gid
-	groupmember.Uid = uid
-	_, err = models.MemberAdd(groupmember)
+	apply := &models.TeamApply{Uid:uid, Gid:gid, Stat:stats}
+	ans, err := models.ApplyGet(apply)
 	if err != nil {
-		return "" ,fmt.Errorf("add memver failure: %s", err.Error())
+		return "", fmt.Errorf("get apply in sql : %s", err.Error())
 	}
-	return "done", nil
+
+	if ans != nil {
+
+		if ans.Stat == 3 {
+			//数据库显示用户已经通过申请
+			return "You are in Group already!", nil
+
+		}else if ans.Stat == 2 {
+			//用户发起二次申请等待同意
+
+			ans.Stat = stats
+			err = models.ApplyUpdate(ans)
+			if err != nil {
+				return "", fmt.Errorf("updata application failure : %s ", err.Error())
+			}
+
+			return "new application send", nil
+
+		} else if ans.Stat == stats {
+			//用户提交同样的申请
+
+			return "You have already applied", nil
+
+		} else if ans.Stat != stats {
+			//同意申请
+
+			ans.Stat = 3
+			err = models.ApplyUpdate(ans)
+			if err != nil {
+				return "", fmt.Errorf("deal application failure : %s ", err.Error())
+			}
+
+			groupmember := new(models.TeamMember)
+			groupmember.Gid = gid
+			groupmember.Uid = uid
+			_, err = models.MemberInsert(groupmember)
+			if err != nil {
+				return "" ,fmt.Errorf("add member failure: %s", err.Error())
+			}
+			return "done", nil
+		}
+
+	} else {
+		//申请第一次提交
+
+		_, err := models.ApplyInsert(apply)
+		if err != nil {
+			return "", fmt.Errorf("insert application in sql : %s", err.Error())
+		}
+
+		return "Applied!", nil
+	}
+
+	return "", nil
 }
+
 
 
 func TeamRemove(id, owner int64) error{
@@ -98,13 +138,38 @@ func TeamRemove(id, owner int64) error{
 	}
 
 	//删除成员
-
 	for _, member:= range *members {
 		err = models.MemberRemove(member.Id)
 		if err != nil{
 			return fmt.Errorf("delete member failure : %s ", err.Error())
 		}
 	}
+
+	//改变申请记录
+	applys, err := models.ApplyQueryByGid(id)
+	if err != nil {
+		return fmt.Errorf("get applys failure:%s", err.Error())
+	}
+
+	//方案：改变状态
+	applyupdate := &models.TeamApply{Gid:id,Stat:2}
+
+	for _, apply := range *applys {
+		applyupdate.Uid = apply.Uid
+		applyupdate.Id = apply.Id
+		err = models.ApplyUpdate(applyupdate)
+		if err != nil{
+			return fmt.Errorf("set apply failure : %s ", err.Error())
+		}
+	}
+
+	//方案：删除申请
+	//for _, apply := range *applys {
+	//	err = models.ApplyDelete(apply.Id)
+	//	if err != nil {
+	//		return fmt.Errorf("delete apply failure : %s ", err.Error())
+	//	}
+	//}
 
 
 
@@ -149,6 +214,20 @@ func MemberRemove(uid, gid, user int64) error {
 	if err != nil {
 		return fmt.Errorf("delete member failure : %s ", err.Error())
 	}
+
+	//改变申请记录
+	apply := &models.TeamApply{Uid:uid, Gid:gid}
+	applyupdate, err := models.ApplyGet(apply)
+	if err != nil {
+		return fmt.Errorf("get apply in sql : %s", err.Error())
+	}
+
+	applyupdate.Stat = 2
+	err = models.ApplyUpdate(applyupdate)
+	if err != nil {
+		return fmt.Errorf("updata application failure : %s ", err.Error())
+	}
+
 
 	return nil
 }
