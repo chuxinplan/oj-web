@@ -23,7 +23,7 @@ func TestGetList(t *testing.T) {
 
 	resp, err := client.Post("http://127.0.0.1:9001/apiv1/login",
 		"application/x-www-form-urlencoded",
-		strings.NewReader("email=rrrr&password=rrrr"))
+		strings.NewReader("email=luwenjing@163.com&password=111111&type=simple"))
 
 	defer resp.Body.Close()
 	if assert.Equal(t, 200, resp.StatusCode, "鉴权失败！") {

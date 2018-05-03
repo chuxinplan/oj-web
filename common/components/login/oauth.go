@@ -52,7 +52,7 @@ func QQCallback(code string, reqState string) (string, error) {
 		"grant_type":    "authorization_code",
 		"client_id":     "101466300",
 		"client_secret": "0104260a8f8faac3900cbf184bae55f5",
-		"redirect_uri":  url.QueryEscape("http://www.fightcoder.com/#/user/login"),
+		"redirect_uri":  url.QueryEscape("http://www.fightcoder.com/#/problem/open"),
 		"code":          code,
 	}
 	body, err := (&Url{}).get(baseUrl, param)
@@ -106,5 +106,46 @@ func GetOpenid(accessToken string) (string, error) {
 			return "", errors.New("decode response fail")
 		}
 		return mess.OpenId, nil
+	}
+}
+
+type QQMess struct {
+	NickName    string `json:"nickname"`
+	Gender      string `json:"gender"`
+	Province    string `json:"province"`
+	City        string `json:"city"`
+	Year        string `json:"year"`
+	FigureurlQQ string `json:"figureurl_qq_2"`
+}
+type GetMessError struct {
+	Ret int    `json:"ret"`
+	Msg string `json:"msg"`
+}
+
+func GetQQMess(accessToken string, openid string) (*QQMess, error) {
+	baseUrl := "https://graph.qq.com/user/get_user_info"
+	param := map[string]string{
+		"access_token":       accessToken,
+		"oauth_consumer_key": "101466300",
+		"openid":             openid,
+	}
+	body, err := (&Url{}).get(baseUrl, param)
+	if err != nil {
+		return nil, errors.New("get response fail")
+	}
+	mess := &GetMessError{}
+	err = json.Unmarshal([]byte(body), mess)
+	if err != nil {
+		return nil, errors.New("decode response fail")
+	}
+	if mess.Ret == 0 {
+		qqMess := &QQMess{}
+		err = json.Unmarshal([]byte(body), qqMess)
+		if err != nil {
+			return nil, errors.New("decode response fail")
+		}
+		return qqMess, nil
+	} else {
+		return nil, errors.New(mess.Msg)
 	}
 }

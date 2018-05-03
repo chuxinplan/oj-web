@@ -2,19 +2,18 @@ package models
 
 import (
 	"fmt"
-	"strconv"
 	"testing"
 )
 
 func TestUserCreate(t *testing.T) {
 	InitAllInTest()
 
-	for i := 10; i < 20; i++ {
-		user := &User{AccountId: 3, NickName: "fffffffffff", UserName: strconv.Itoa(i)}
-		if _, err := Create(user); err != nil {
-			t.Error("Create() failed. Error:", err)
-		}
+	//for i := 1; i < 20; i++ {
+	user := &User{Id: 7, AccountId: 3, NickName: "fffffffffff", UserName: "aaaa"}
+	if _, err := Create(user); err != nil {
+		t.Error("Create() failed. Error:", err)
 	}
+	//}
 }
 func TestUserUpdate(t *testing.T) {
 	InitAllInTest()

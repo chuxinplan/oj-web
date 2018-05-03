@@ -6,7 +6,8 @@ import (
 )
 
 func TestList(t *testing.T) {
-	accessToken, _ := QQCallback("AB6738E6348B957713C98F5DBC973872", "1111")
-	openId, _ := GetOpenid(accessToken)
-	fmt.Println(openId)
+	//28AA149D4520BAA0EA7A09879B81A3DE
+	//9EC58C000E554465E68F8F51D3D1A1AF
+	mess, err := GetQQMess("28AA149D4BAA0EA7A09879B81A3DE", "9EC58C000E554465E68F8F51D3D1A1AF")
+	fmt.Println(mess, err.Error())
 }

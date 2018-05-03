@@ -40,10 +40,15 @@ func CodeSet(problemId int64, userId int64, saveCode string, language string) er
 		userCode := &models.UserCode{ProblemId: problemId, UserId: userId, SaveCode: codePath, Language: language}
 		_, errorRet = models.UserCodeCreate(userCode)
 	} else {
-		err := managers.UpdateCode(code.SaveCode, saveCode)
+		err := managers.RemoveCode(code.SaveCode)
 		if err != nil {
 			return err
 		}
+		path, err := managers.SaveCode(saveCode)
+		if err != nil {
+			return err
+		}
+		code.SaveCode = path
 		code.Language = language
 		errorRet = models.UserCodeUpdate(code)
 	}

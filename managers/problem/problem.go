@@ -46,8 +46,8 @@ func ProblemGet(id int64) (map[string]interface{}, error) {
 	}
 	problemMess := map[string]interface{}{
 		"id":             problem.Id,
-		"user_id":        problem.UserId,
-		"nick_name":      userMess.NickName,
+		"user_avator":    userMess.Avator,
+		"user_name":      userMess.UserName,
 		"ac_rate":        11,
 		"time_limit":     problem.TimeLimit,
 		"memory_limit":   problem.MemoryLimit,
