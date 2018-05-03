@@ -11,6 +11,7 @@ import (
 	"time"
 
 	"github.com/open-fightcoder/oj-web/common/components"
+	"github.com/open-fightcoder/oj-web/common/components/login"
 	"github.com/open-fightcoder/oj-web/data"
 	"github.com/open-fightcoder/oj-web/models"
 )
@@ -21,7 +22,12 @@ const (
 	PARAM_IS_WRONG    = 2
 	FIRST_LOGIN       = 3
 	LOGIN             = 4
+	QQ_LOGIN_ERROR    = 5
 )
+
+func GetQQUrl() string {
+	return login.QQLogin()
+}
 
 func getGithubOpenId(code string) string {
 	if code == "" {
@@ -61,58 +67,16 @@ func getGithubOpenId(code string) string {
 	}
 }
 
-func getQQOpenId(code string) string {
-	if code == "" {
-		return "-1"
-	} else {
-		url := "https://graph.qq.com/oauth2.0/token?grant_type=authorization_code&client_id=101466300&client_secret=0104260a8f8faac3900cbf184bae55f5&redirect_uri=http%3a%2f%2fxupt4.fightcoder.com%2f%23%2fuser%2flogin&code="
-		url += code
-		resp, err := http.Get(url)
-		if err != nil {
-			panic(err.Error())
-		}
-
-		defer resp.Body.Close()
-		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			panic(err.Error())
-		}
-		strs := strings.Split(string(body), "&")
-		token := strings.Split(strs[0], "=")
-
-		url = "https://graph.qq.com/oauth2.0/me?access_token="
-		resp, err = http.Get(url + token[1])
-		if err != nil {
-			panic(err.Error())
-		}
-
-		defer resp.Body.Close()
-		body, err = ioutil.ReadAll(resp.Body)
-		if err != nil {
-			panic(err.Error())
-		}
-
-		strs = strings.Split(string(body), "\"")
-
-		return strs[7]
-
-		//url = "https://graph.qq.com/user/get_user_info?oauth_consumer_key=101466300&access_token=" + token[1] + "&openid=" + strs[7]
-		//resp, err = http.Get(url)
-		//if err != nil {
-		//	panic(err.Error())
-		//}
-		//
-		//defer resp.Body.Close()
-		//body, err = ioutil.ReadAll(resp.Body)
-		//if err != nil {
-		//	panic(err.Error())
-		//}
-		//mess := &Mess{}
-		//if err = json.Unmarshal(body, mess); err != nil {
-		//	fmt.Println(err.Error())
-		//}
-		//c.JSON(http.StatusOK, this.Success(mess))
+func getQQOpenId(code string, state string) (string, error) {
+	accessToken, err := login.QQCallback(code, state)
+	if err != nil {
+		return "", err
 	}
+	openId, err := login.GetOpenid(accessToken)
+	if err != nil {
+		return "", err
+	}
+	return openId, nil
 }
 
 func Login(param1, param2, loginType string) (int, string, int64, string) {
@@ -136,7 +100,10 @@ func Login(param1, param2, loginType string) (int, string, int64, string) {
 
 		accountId = account.Id
 	} else if loginType == "qq" {
-		openId := getQQOpenId(param1)
+		openId, err := getQQOpenId(param1, param2)
+		if err != nil {
+			return QQ_LOGIN_ERROR, err.Error(), 0, ""
+		}
 		acc, _ := models.AccountGetQQOpenId(openId)
 		account := &models.Account{QqId: openId}
 		if acc == nil {

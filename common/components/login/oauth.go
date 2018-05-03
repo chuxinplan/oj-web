@@ -19,12 +19,12 @@ type ErrorMess struct {
 }
 
 type OpenIdMess struct {
-	ClientId int64  `json:"client_id"`
+	ClientId string `json:"client_id"`
 	OpenId   string `json:"openid"`
 }
 
 //生成state，拼接请求URL
-func qq_login() string {
+func QQLogin() string {
 	randNum := rand.Intn(1000)
 	state := components.MD5Encode(strconv.Itoa(randNum))
 	//TODO 将state添加到Session
@@ -32,27 +32,27 @@ func qq_login() string {
 	param := map[string]string{
 		"response_type": "code",
 		"client_id":     "101466300",
-		"redirect_uri":  url.QueryEscape("http://www.fightcoder.com/#/problem/open"),
+		"redirect_uri":  url.QueryEscape("http://www.fightcoder.com/#/user/login"),
 		"state":         state,
 	}
 	return (&Url{}).combineURL(baseUrl, param)
 }
 
 //返回access_token
-func qq_callback(code string, reqState string) (string, error) {
+func QQCallback(code string, reqState string) (string, error) {
 	//成功：access_token=28AA149D4520BAA0EA7A09879B81A3DE&expires_in=7776000&refresh_token=B9D9DED6BBAC973EDF0FD51B7AF8362F
 	//失败：callback( {"error":100020,"error_description":"code is reused error"} );
 	//TODO Session取出state
-	state := "aaassda"
-	if reqState != state {
-		return "", errors.New("The state does not match. You may be a victim of CSRF.")
-	}
+	//state := "aaassda"
+	//if reqState != state {
+	//	return "", errors.New("The state does not match. You may be a victim of CSRF.")
+	//}
 	baseUrl := "https://graph.qq.com/oauth2.0/token"
 	param := map[string]string{
 		"grant_type":    "authorization_code",
 		"client_id":     "101466300",
 		"client_secret": "0104260a8f8faac3900cbf184bae55f5",
-		"redirect_uri":  url.QueryEscape("http://www.fightcoder.com/#/problem/open"),
+		"redirect_uri":  url.QueryEscape("http://www.fightcoder.com/#/user/login"),
 		"code":          code,
 	}
 	body, err := (&Url{}).get(baseUrl, param)
@@ -76,7 +76,7 @@ func qq_callback(code string, reqState string) (string, error) {
 }
 
 //返回openId
-func get_openid(accessToken string) (string, error) {
+func GetOpenid(accessToken string) (string, error) {
 	//成功：callback( {"client_id":"101466300","openid":"9EC58C000E554465E68F8F51D3D1A1AF"} );
 	//失败：callback( {"error":100013,"error_description":"access token is illegal"} );
 	baseUrl := "https://graph.qq.com/oauth2.0/me"

@@ -15,6 +15,7 @@ import (
 func RegisterAccount(router *gin.RouterGroup) {
 	router.POST("login", httpHandlerLogin)
 	router.POST("register", httpHandlerRegister)
+	router.GET("getqqurl", httpHandlerGetQQUrl)
 }
 
 type LoginTypeParam struct {
@@ -35,6 +36,11 @@ type AccountRegister struct {
 	Email    string `form:"email" json:"email"`
 	Password string `form:"password" json:"password"`
 	UserName string `form:"user_name" json:"user_name"`
+}
+
+func httpHandlerGetQQUrl(c *gin.Context) {
+	url := managers.GetQQUrl()
+	c.JSON(http.StatusOK, base.Success(url))
 }
 
 func httpHandlerLogin(c *gin.Context) {
@@ -77,6 +83,9 @@ func httpHandlerLogin(c *gin.Context) {
 			break
 		case managers.PARAM_IS_WRONG:
 			msg = "Param is wrong!"
+			break
+		case managers.QQ_LOGIN_ERROR:
+			msg = msg
 			break
 		}
 		c.JSON(http.StatusOK, base.Fail(msg))
