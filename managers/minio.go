@@ -18,7 +18,7 @@ import (
 
 func GetSaveCode(name string) (string, error) {
 	cfg := g.Conf()
-	resp, err := http.Get("http://" + cfg.Minio.Endpoint + "/" + cfg.Minio.SaveCodeBucket + "/" + name)
+	resp, err := http.Get("http://" + cfg.Minio.GetBaseUrl + cfg.Minio.SaveCodeBucket + "/" + name)
 	if err != nil {
 		return "", errors.New("获取失败")
 	}
