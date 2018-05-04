@@ -11,7 +11,6 @@ import (
 )
 
 func SubmitList(problemId int64, userName string, status int, lang string, currentPage int, perPage int) (map[string]interface{}, error) {
-	//TODO 根据userName->userId
 	submits, err := models.SubmitGetByConds(problemId, 0, status, lang, currentPage, perPage)
 	if err != nil {
 		return nil, errors.New("查询失败")
@@ -21,18 +20,26 @@ func SubmitList(problemId int64, userName string, status int, lang string, curre
 		return nil, errors.New("查询失败")
 	}
 	var submitLists []map[string]interface{}
-	for i := 0; i < len(submits); i++ {
-		submitTime := time.Unix(submits[i].SubmitTime, 0).Format("2006-01-02 15:04:05")
+	for _, v := range submits {
+		submitTime := time.Unix(v.SubmitTime, 0).Format("2006-01-02 15:04:05")
+		user, err := models.GetById(v.UserId)
+		if err != nil {
+			return nil, errors.New("查询失败")
+		}
+		problem, err := models.ProblemGetById(v.ProblemId)
+		if err != nil {
+			return nil, errors.New("查询失败")
+		}
 		projects := make(map[string]interface{})
-		//TODO
-		projects["problem_name"] = "测试"
-		projects["user_id"] = 1
-		projects["user_name"] = "哈哈"
-		projects["status"] = submits[i].Result
-		projects["memory_cost"] = submits[i].RunningMemory
-		projects["time_cost"] = submits[i].RunningTime
-		projects["lang"] = submits[i].Language
-		projects["submit_id"] = submits[i].Id
+		projects["problem_name"] = problem.Title
+		projects["user_id"] = user.Id
+		projects["user_name"] = user.UserName
+		projects["nick_name"] = user.NickName
+		projects["status"] = v.Result
+		projects["memory_cost"] = v.RunningMemory
+		projects["time_cost"] = v.RunningTime
+		projects["lang"] = v.Language
+		projects["submit_id"] = v.Id
 		projects["time"] = submitTime
 		submitLists = append(submitLists, projects)
 	}
