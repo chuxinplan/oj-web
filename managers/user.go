@@ -209,6 +209,18 @@ func GetUserCount(userName string) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, errors.New("获取失败")
 	}
+	if jsonStr == "" {
+		return map[string]interface{}{
+			"wa_num": 0,
+			"ce_num": 0,
+			"te_num": 0,
+			"me_num": 0,
+			"oe_num": 0,
+			"re_num": 0,
+			"se_num": 0,
+			"ac_num": 0,
+		}, nil
+	}
 	var submitCount SubmitCount
 	err = json.Unmarshal([]byte(jsonStr), &submitCount)
 	if err != nil {
