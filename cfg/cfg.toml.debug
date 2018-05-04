@@ -39,6 +39,7 @@ imgBucket = "image"
 codeBucket = "code"
 saveCodeBucket = "savecode"
 caseBucket = "case"
+getBaseUrl = "xupt1.fightcoder.com:9001/"
 
 [common]
 languageLimit = ["c++", "java", "go"]
