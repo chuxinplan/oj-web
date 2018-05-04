@@ -33,7 +33,7 @@ func GetSaveCode(name string) (string, error) {
 
 func GetCode(name string) (string, error) {
 	cfg := g.Conf()
-	resp, err := http.Get("http://" + cfg.Minio.Endpoint + "/" + cfg.Minio.CodeBucket + "/" + name)
+	resp, err := http.Get("http://" + cfg.Minio.GetBaseUrl + cfg.Minio.CodeBucket + "/" + name)
 	if err != nil {
 		return "", errors.New("获取失败")
 	}

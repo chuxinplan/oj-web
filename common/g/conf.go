@@ -70,6 +70,7 @@ type MinioConfig struct {
 	CodeBucket      string `toml:"codeBucket"`
 	SaveCodeBucket  string `toml:"saveCodeBucket"`
 	CaseBucket      string `toml:"caseBucket"`
+	GetBaseUrl      string `toml:"getBaseUrl"`
 }
 
 var (

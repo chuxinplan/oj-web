@@ -82,7 +82,7 @@ func SubmitGetByConds(problemId int64, userId int64, status int, lang string, cu
 		session.And("language = ?", lang)
 	}
 	submitList := make([]*Submit, 0)
-	err := session.Limit(perPage, (currentPage-1)*perPage).Find(&submitList)
+	err := session.Limit(perPage, (currentPage-1)*perPage).Desc("submit_time").Find(&submitList)
 	if err != nil {
 		return nil, err
 	}
