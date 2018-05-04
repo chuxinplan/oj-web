@@ -92,7 +92,7 @@ CREATE TABLE `submit` (
   `running_time` int(11) DEFAULT NULL COMMENT '耗时(ms)',
   `running_memory` int(11) DEFAULT NULL COMMENT '所占空间',
   `result` int(11) DEFAULT NULL COMMENT '运行结果',
-  `result_des` varchar(500) DEFAULT NULL COMMENT '结果描述',
+  `result_des` varchar(1000) DEFAULT NULL COMMENT '结果描述',
   `code` varchar(200) NOT NULL COMMENT '提交代码',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
