@@ -43,6 +43,7 @@ func TestSubmitCommon(t *testing.T) {
 
 			fmt.Println("获取Body失败: " + err.Error())
 		}
+		fmt.Println(string(body))
 		assert.Equal(t, 0, respT.Code, "提交失败！")
 	}
 }

@@ -100,7 +100,7 @@ func SaveSubmitCode(code string, userId int64, language string) (string, error) 
 	str := GetSubmitCodeName(userId, language)
 	_, err := MinioClient.PutObject(cfg.Minio.CodeBucket, str, strings.NewReader(code), -1, minio.PutObjectOptions{ContentType: "application/octet-stream"})
 	if err != nil {
-		return "", errors.New("存储失败")
+		return "", errors.New(err.Error())
 	}
 	return str, nil
 }
