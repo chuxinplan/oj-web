@@ -11,7 +11,7 @@ CREATE TABLE `problem` (
   `output_des` varchar(2000) NOT NULL DEFAULT '' COMMENT '输出描述',
   `input_case` varchar(2000) NOT NULL DEFAULT '' COMMENT '测试输入',
   `output_case` varchar(1000) NOT NULL DEFAULT '' COMMENT '测试输出',
-  `hint` varchar(1000) DEFAULT NULL COMMENT '题目提示(可以为对样例输入输出的解释)',
+  `hint` varchar(1500) DEFAULT NULL COMMENT '题目提示(可以为对样例输入输出的解释)',
   `time_limit` int(11) NOT NULL DEFAULT '0' COMMENT '时间限制',
   `memory_limit` int(11) NOT NULL DEFAULT '0' COMMENT '内存限制',
   `tag` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '题目标签',
