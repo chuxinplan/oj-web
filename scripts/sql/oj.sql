@@ -6,12 +6,12 @@ CREATE TABLE `problem` (
   `difficulty` varchar(40) NOT NULL DEFAULT '' COMMENT '题目难度',
   `case_data` varchar(200) NOT NULL DEFAULT '' COMMENT '测试数据',
   `title` varchar(100) NOT NULL DEFAULT '' COMMENT '题目标题',
-  `description` varchar(2000) NOT NULL DEFAULT '' COMMENT '题目描述',
+  `description` varchar(7000) NOT NULL DEFAULT '' COMMENT '题目描述',
   `input_des` varchar(2000) NOT NULL DEFAULT '' COMMENT '输入描述',
   `output_des` varchar(2000) NOT NULL DEFAULT '' COMMENT '输出描述',
-  `input_case` varchar(1000) NOT NULL DEFAULT '' COMMENT '测试输入',
+  `input_case` varchar(2000) NOT NULL DEFAULT '' COMMENT '测试输入',
   `output_case` varchar(1000) NOT NULL DEFAULT '' COMMENT '测试输出',
-  `hint` varchar(300) DEFAULT NULL COMMENT '题目提示(可以为对样例输入输出的解释)',
+  `hint` varchar(1000) DEFAULT NULL COMMENT '题目提示(可以为对样例输入输出的解释)',
   `time_limit` int(11) NOT NULL DEFAULT '0' COMMENT '时间限制',
   `memory_limit` int(11) NOT NULL DEFAULT '0' COMMENT '内存限制',
   `tag` bigint(20) unsigned NOT NULL DEFAULT '0' COMMENT '题目标签',
@@ -126,3 +126,19 @@ CREATE TABLE `user_count` (
   KEY `idx_user_id` (`user_id`),
   UNIQUE KEY `uniq_user` (`user_id`,`date_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `team` (
+  `id` BIGINT(20) PRIMARY KEY AUTO_INCREMENT COMMENT '团队ID',
+  `uid` BIGINT(20) NOT NULL COMMENT '组长ID',
+  `name` VARCHAR(50) NOT NULL COMMENT '团队名称',
+  `description` VARCHAR(200) NOT NULL COMMENT '团队描述',
+  `avator`VARCHAR(50) NOT NULL COMMENT '团队头像',
+  UNIQUE KEY `name` (`name`)
+)ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `team_member` (
+  `id` BIGINT(20) PRIMARY KEY AUTO_INCREMENT COMMENT 'ID',
+  `uid` BIGINT(20) NOT NULL COMMENT '用户ID',
+  `gid` BIGINT(20) NOT NULL COMMENT '团队ID',
+  `stat` INTEGER NOT NULL COMMENT  '状态'
+)ENGINE=InnoDB DEFAULT CHARSET =utf8;

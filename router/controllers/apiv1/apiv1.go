@@ -4,6 +4,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/open-fightcoder/oj-web/router/controllers/apiv1/problem"
 	"github.com/open-fightcoder/oj-web/router/controllers/apiv1/submit"
+	"github.com/open-fightcoder/oj-web/router/controllers/apiv1/team"
 )
 
 func Register(router *gin.RouterGroup) {
@@ -22,4 +23,8 @@ func Register(router *gin.RouterGroup) {
 
 	userRouter := router.Group("/user")
 	RegisterUser(userRouter)
+
+	teamRouter := router.Group("/team")
+	team.RegisterTeam(teamRouter)
+
 }
