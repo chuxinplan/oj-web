@@ -15,7 +15,7 @@ func GroupRankAdd(groupId int64) error {
 	return nil
 }
 
-func GroupRankUpdate(increment int, groupId int64) error {
+func GroupRankIncr(increment int, groupId int64) error {
 	res := RedisClient.ZIncrBy("group_rank", float64(increment), strconv.FormatInt(groupId, 10))
 	if res.Err() != nil {
 		return res.Err()
@@ -28,12 +28,11 @@ func GroupRankGet(currentPage int, perPage int) ([]map[string]interface{}, error
 	if res.Err() != nil {
 		return nil, res.Err()
 	}
-	var rankLists []map[string]interface{}
-	for _, v := range res.Val() {
+	rankLists := make([]map[string]interface{}, 0)
+	for i, v := range res.Val() {
 		projects := make(map[string]interface{})
 		scoreRes := RedisClient.ZScore("group_rank", v)
-		rankId := RedisClient.ZRevRank("group_rank", v)
-		projects["rank_num"] = rankId.Val() + 1
+		projects["rank_num"] = i + 1
 		projects["group_id"] = v
 		projects["ac_num"] = scoreRes.Val()
 		rankLists = append(rankLists, projects)
