@@ -10,6 +10,8 @@ import (
 
 	"fmt"
 
+	"time"
+
 	"github.com/open-fightcoder/oj-web/models"
 	"github.com/open-fightcoder/oj-web/redis"
 	"github.com/pkg/errors"
@@ -99,11 +101,20 @@ func GetUserRecentRank(userName string) ([]map[string]interface{}, error) {
 	if err != nil {
 		return nil, errors.New("查询失败")
 	}
-	var messLists []map[string]interface{}
-	for _, v := range mess {
+	messLists := make([]map[string]interface{}, 0)
+	currentTime := time.Now().Unix()
+	for i := 0; i < 30; i++ {
+		timeNum := currentTime - int64(i*86400)
+		timeStr := time.Unix(timeNum, 0).Format("2006-01-02")
 		projects := make(map[string]interface{})
-		projects["rank_num"] = v.RankNum
-		projects["date"] = v.DateTime
+		projects["date"] = timeStr
+		projects["rank_num"] = 0
+		for _, val := range mess {
+			if val.DateTime == timeStr {
+				projects["rank_num"] = val.RankNum
+				break
+			}
+		}
 		messLists = append(messLists, projects)
 	}
 	return messLists, nil
