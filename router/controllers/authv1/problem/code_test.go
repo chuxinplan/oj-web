@@ -23,7 +23,7 @@ func TestCodeGet(t *testing.T) {
 
 	resp, err := client.Post("http://127.0.0.1:9001/apiv1/login",
 		"application/x-www-form-urlencoded",
-		strings.NewReader("email=asdfr.com&password=asdfr"))
+		strings.NewReader("email=rrrr&password=rrrr&type=simple"))
 
 	defer resp.Body.Close()
 	if assert.Equal(t, 200, resp.StatusCode, "鉴权失败！") {
@@ -55,7 +55,7 @@ func TestCodeSet(t *testing.T) {
 
 	resp, err := client.Post("http://127.0.0.1:9001/apiv1/login",
 		"application/x-www-form-urlencoded",
-		strings.NewReader("email=asdfr.com&password=asdfr"))
+		strings.NewReader("email=rrrr&password=rrrr&type=simple"))
 
 	defer resp.Body.Close()
 	if assert.Equal(t, 200, resp.StatusCode, "鉴权失败！") {

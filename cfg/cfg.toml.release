@@ -21,3 +21,25 @@ webAddr = "root:123456@tcp(localhost:9000)/fightcoder?charset=utf8&loc=Asia%2FSh
 [jwt]
 encodeMethod = "HS256" # [HS256, HS384, HS512]
 maxEffectiveTime = 3  # 最大存活时间:天
+
+[nsq]
+address = ["10.0.1.212:9002", "10.0.1.212:9002"]
+
+[redis]
+address = "localhost:6379"      # redis address
+password = ""                   # no password set
+database = 0                    # use default DB
+poolSize = 5
+
+[minio]
+endpoint = "xupt1.fightcoder.com:9000"
+accessKeyID = "FightCoder"
+secretAccessKey = "LetsToChangeTheWorld"
+secure = false
+imgBucket = "image"
+codeBucket = "code"
+saveCodeBucket = "savecode"
+caseBucket = "case"
+
+[common]
+languageLimit = ["C++", "JAVA", "GO"]

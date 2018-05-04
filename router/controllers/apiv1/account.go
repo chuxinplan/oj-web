@@ -15,6 +15,7 @@ import (
 func RegisterAccount(router *gin.RouterGroup) {
 	router.POST("login", httpHandlerLogin)
 	router.POST("register", httpHandlerRegister)
+	router.GET("getqqurl", httpHandlerGetQQUrl)
 }
 
 type LoginTypeParam struct {
@@ -37,6 +38,11 @@ type AccountRegister struct {
 	UserName string `form:"user_name" json:"user_name"`
 }
 
+func httpHandlerGetQQUrl(c *gin.Context) {
+	url := managers.GetQQUrl()
+	c.JSON(http.StatusOK, base.Success(url))
+}
+
 func httpHandlerLogin(c *gin.Context) {
 	param := LoginTypeParam{}
 	err := c.Bind(&param)
@@ -47,20 +53,21 @@ func httpHandlerLogin(c *gin.Context) {
 	var state int
 	var msg string
 	var userId int64
+	var userName string
 	if loginType == "qq" || loginType == "github" {
 		account := AccountOtherLogin{}
 		err := c.Bind(&account)
 		if err != nil {
 			panic(err)
 		}
-		state, msg, userId = managers.Login(account.Code, account.State, loginType)
+		state, msg, userId, userName = managers.Login(account.Code, account.State, loginType)
 	} else if loginType == "simple" {
 		account := AccountSimpleLogin{}
 		err := c.Bind(&account)
 		if err != nil {
 			panic(err)
 		}
-		state, msg, userId = managers.Login(account.Email, account.Password, loginType)
+		state, msg, userId, userName = managers.Login(account.Email, account.Password, loginType)
 	} else {
 		panic(errors.New("参数错误"))
 	}
@@ -77,6 +84,9 @@ func httpHandlerLogin(c *gin.Context) {
 		case managers.PARAM_IS_WRONG:
 			msg = "Param is wrong!"
 			break
+		case managers.QQ_LOGIN_ERROR:
+			msg = msg
+			break
 		}
 		c.JSON(http.StatusOK, base.Fail(msg))
 	} else {
@@ -91,9 +101,11 @@ func httpHandlerLogin(c *gin.Context) {
 		if state == managers.FIRST_LOGIN {
 			result["is_first"] = "true"
 			result["user_id"] = strconv.FormatInt(userId, 10)
+			result["user_name"] = userName
 		} else {
 			result["is_first"] = "false"
 			result["user_id"] = strconv.FormatInt(userId, 10)
+			result["user_name"] = userName
 		}
 		c.JSON(http.StatusOK, base.Success(result))
 	}

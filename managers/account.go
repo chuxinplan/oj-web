@@ -1,9 +1,7 @@
 package managers
 
 import (
-	"crypto/md5"
 	"fmt"
-	"io"
 
 	"io/ioutil"
 	"net/http"
@@ -12,7 +10,8 @@ import (
 	"strconv"
 	"time"
 
-	Jwt "github.com/open-fightcoder/oj-web/common/components"
+	"github.com/open-fightcoder/oj-web/common/components"
+	"github.com/open-fightcoder/oj-web/common/components/login"
 	"github.com/open-fightcoder/oj-web/data"
 	"github.com/open-fightcoder/oj-web/models"
 )
@@ -23,7 +22,12 @@ const (
 	PARAM_IS_WRONG    = 2
 	FIRST_LOGIN       = 3
 	LOGIN             = 4
+	QQ_LOGIN_ERROR    = 5
 )
+
+func GetQQUrl() string {
+	return login.QQLogin()
+}
 
 func getGithubOpenId(code string) string {
 	if code == "" {
@@ -63,61 +67,19 @@ func getGithubOpenId(code string) string {
 	}
 }
 
-func getQQOpenId(code string) string {
-	if code == "" {
-		return "-1"
-	} else {
-		url := "https://graph.qq.com/oauth2.0/token?grant_type=authorization_code&client_id=101466300&client_secret=0104260a8f8faac3900cbf184bae55f5&redirect_uri=http%3a%2f%2fxupt4.fightcoder.com%2f%23%2fuser%2flogin&code="
-		url += code
-		resp, err := http.Get(url)
-		if err != nil {
-			panic(err.Error())
-		}
-
-		defer resp.Body.Close()
-		body, err := ioutil.ReadAll(resp.Body)
-		if err != nil {
-			panic(err.Error())
-		}
-		strs := strings.Split(string(body), "&")
-		token := strings.Split(strs[0], "=")
-
-		url = "https://graph.qq.com/oauth2.0/me?access_token="
-		resp, err = http.Get(url + token[1])
-		if err != nil {
-			panic(err.Error())
-		}
-
-		defer resp.Body.Close()
-		body, err = ioutil.ReadAll(resp.Body)
-		if err != nil {
-			panic(err.Error())
-		}
-
-		strs = strings.Split(string(body), "\"")
-
-		return strs[7]
-
-		//url = "https://graph.qq.com/user/get_user_info?oauth_consumer_key=101466300&access_token=" + token[1] + "&openid=" + strs[7]
-		//resp, err = http.Get(url)
-		//if err != nil {
-		//	panic(err.Error())
-		//}
-		//
-		//defer resp.Body.Close()
-		//body, err = ioutil.ReadAll(resp.Body)
-		//if err != nil {
-		//	panic(err.Error())
-		//}
-		//mess := &Mess{}
-		//if err = json.Unmarshal(body, mess); err != nil {
-		//	fmt.Println(err.Error())
-		//}
-		//c.JSON(http.StatusOK, this.Success(mess))
+func getQQOpenId(code string, state string) (string, string, error) {
+	accessToken, err := login.QQCallback(code, state)
+	if err != nil {
+		return "", "", err
 	}
+	openId, err := login.GetOpenid(accessToken)
+	if err != nil {
+		return "", "", err
+	}
+	return accessToken, openId, nil
 }
 
-func Login(param1, param2, loginType string) (int, string, int64) {
+func Login(param1, param2, loginType string) (int, string, int64, string) {
 	var accountId int64
 	isFirstLogin := false
 
@@ -128,23 +90,29 @@ func Login(param1, param2, loginType string) (int, string, int64) {
 		}
 
 		if account == nil {
-			return EMAIL_NOT_EXIT, "", 0
+			return EMAIL_NOT_EXIT, "", 0, ""
 		} else {
 			passwd := account.Password
-			if passwd != md5Encode(param2) {
-				return PASSWORD_IS_WRONG, "", 0
+			if passwd != components.MD5Encode(param2) {
+				return PASSWORD_IS_WRONG, "", 0, ""
 			}
 		}
 
 		accountId = account.Id
 	} else if loginType == "qq" {
-		openId := getQQOpenId(param1)
+		accessToken, openId, err := getQQOpenId(param1, param2)
+		if err != nil {
+			return QQ_LOGIN_ERROR, err.Error(), 0, ""
+		}
 		acc, _ := models.AccountGetQQOpenId(openId)
 		account := &models.Account{QqId: openId}
 		if acc == nil {
 			id, _ := models.AccountAdd(account)
-
-			user := &models.User{AccountId: id, NickName: strconv.FormatInt(time.Now().UnixNano(), 10)}
+			qqMess, err := login.GetQQMess(accessToken, openId)
+			if err != nil {
+				return QQ_LOGIN_ERROR, err.Error(), 0, ""
+			}
+			user := &models.User{AccountId: id, UserName: strconv.FormatInt(time.Now().Unix(), 10), NickName: qqMess.NickName, Avator: qqMess.FigureurlQQ}
 			models.Create(user)
 			accountId = id
 			isFirstLogin = true
@@ -167,29 +135,22 @@ func Login(param1, param2, loginType string) (int, string, int64) {
 			accountId = acc.Id
 		}
 	} else {
-		return PARAM_IS_WRONG, "", 0
+		return PARAM_IS_WRONG, "", 0, ""
 	}
 
 	user, err := models.GetByAccountId(accountId)
 	if err != nil {
 		fmt.Println(err.Error())
 	}
-	token, _ := Jwt.CreateToken(user.Id)
+	token, _ := components.CreateToken(user.Id)
 	if isFirstLogin {
-		return FIRST_LOGIN, token, user.Id
+		return FIRST_LOGIN, token, user.Id, user.UserName
 	} else {
-		return LOGIN, token, user.Id
+		return LOGIN, token, user.Id, user.UserName
 	}
 }
 
 func AccountRegister(userName string, email string, password string) (int64, error) {
 	//TODO 邮箱参数校验,userName校验
-	return data.UserRegister(userName, email, md5Encode(password))
-}
-
-func md5Encode(password string) string {
-	w := md5.New()
-	io.WriteString(w, password)
-	md5str := string(fmt.Sprintf("%x", w.Sum(nil)))
-	return md5str
+	return data.UserRegister(userName, email, components.MD5Encode(password))
 }

@@ -70,7 +70,7 @@ CREATE TABLE `user` (
   `user_name` varchar(20) NOT NULL COMMENT '用户名',
   `nick_name` varchar(40) NOT NULL COMMENT '昵称',
   `sex` varchar(30) NOT NULL DEFAULT '' COMMENT '性别',
-  `avator` varchar(50) NOT NULL DEFAULT '' COMMENT '头像',
+  `avator` varchar(100) NOT NULL DEFAULT '' COMMENT '头像',
   `blog` varchar(100) NOT NULL DEFAULT '' COMMENT '博客地址',
   `git` varchar(100) NOT NULL DEFAULT '' COMMENT 'Git地址',
   `description` varchar(200) NOT NULL DEFAULT '' COMMENT '个人描述',
@@ -114,4 +114,15 @@ CREATE TABLE `submit_test` (
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
   KEY `result` (`result`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+CREATE TABLE `user_count` (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT COMMENT 'id',
+  `user_id` bigint(20) NOT NULL COMMENT '提交用户ID',
+  `rank_num` int(11) DEFAULT NULL COMMENT '排名',
+  `submit_num` int(11) DEFAULT NULL COMMENT '提交数',
+  `date_time` varchar(50) NOT NULL DEFAULT '' COMMENT '时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_user_id` (`user_id`),
+  UNIQUE KEY `uniq_user` (`user_id`,`date_time`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8;

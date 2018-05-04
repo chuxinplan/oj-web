@@ -5,6 +5,7 @@ import (
 
 	"time"
 
+	"github.com/open-fightcoder/oj-web/common/components"
 	"github.com/open-fightcoder/oj-web/managers"
 	"github.com/open-fightcoder/oj-web/models"
 )
@@ -15,7 +16,7 @@ func SubmitList(problemId int64, userName string, status int, lang string, curre
 	if err != nil {
 		return nil, errors.New("查询失败")
 	}
-	count, err := models.CountByConds(problemId, 0, status, lang)
+	count, err := models.SubmitCountByConds(problemId, 0, status, lang)
 	if err != nil {
 		return nil, errors.New("查询失败")
 	}
@@ -44,34 +45,48 @@ func SubmitList(problemId int64, userName string, status int, lang string, curre
 }
 
 func SubmitCommon(problemId int64, userId int64, language string, code string) (map[string]interface{}, error) {
-	codePath, err := managers.SaveCode(code)
+	codePath, err := managers.SaveSubmitCode(code, userId, language)
 	if err != nil {
 		return nil, err
 	}
-	submit := &models.Submit{ProblemId: problemId, UserId: userId, Language: language, Code: codePath, SubmitTime: time.Now().Unix()}
+	submit := &models.Submit{ProblemId: problemId, Result: 1, UserId: userId, Language: language, Code: codePath, SubmitTime: time.Now().Unix()}
 	id, err := models.SubmitCreate(submit)
 	if err != nil {
 		return nil, errors.New("提交失败")
 	}
-	submitMess := map[string]interface{}{
-		"submit_id": id,
-		"flag":      1,
+	sendMess := &components.SendMess{"default", id}
+	var flag bool
+	//TODO 预留其他OJ的用户
+	if userId < 0 {
+		flag = components.Send("vjudger", sendMess)
+	} else {
+		flag = components.Send("judge", sendMess)
 	}
-	return submitMess, nil
-}
-func SubmitTest(userId int64, language string, input string, code string) (map[string]interface{}, error) {
-	codePath, err := managers.SaveCode(code)
-	if err != nil {
-		return nil, err
-	}
-	submitTest := &models.SubmitTest{Input: input, UserId: userId, Language: language, Code: codePath, SubmitTime: time.Now().Unix()}
-	id, err := models.SubmitTestCreate(submitTest)
-	if err != nil {
+	if flag == false {
 		return nil, errors.New("提交失败")
 	}
 	submitMess := map[string]interface{}{
 		"submit_id": id,
-		"flag":      2,
+	}
+	return submitMess, nil
+}
+func SubmitTest(userId int64, language string, input string, code string) (map[string]interface{}, error) {
+	codePath, err := managers.SaveSubmitCode(code, userId, language)
+	if err != nil {
+		return nil, err
+	}
+	submitTest := &models.SubmitTest{Input: input, Result: 1, UserId: userId, Language: language, Code: codePath, SubmitTime: time.Now().Unix()}
+	id, err := models.SubmitTestCreate(submitTest)
+	if err != nil {
+		return nil, errors.New("提交失败")
+	}
+	sendMess := &components.SendMess{"test", id}
+	flag := components.Send("judge", sendMess)
+	if flag == false {
+		return nil, errors.New("提交失败")
+	}
+	submitMess := map[string]interface{}{
+		"submit_id": id,
 	}
 	return submitMess, nil
 }
@@ -80,17 +95,23 @@ func SubmitGetCommon(SubmitId int64) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, errors.New("获取失败")
 	}
+	problem, err := models.ProblemGetById(submit.ProblemId)
+	if err != nil {
+		return nil, errors.New("获取失败")
+	}
 	code, err := managers.GetCode(submit.Code)
 	if err != nil {
 		return nil, err
 	}
 	submitMess := map[string]interface{}{
-		"status":      submit.Result,
-		"memory_cost": submit.RunningMemory,
-		"time_cost":   submit.RunningTime,
-		"lang":        submit.Language,
-		"code":        code,
-		"time":        time.Unix(submit.SubmitTime, 0).Format("2006-01-02 15:04:05"),
+		"problem_id":   problem.Id,
+		"problem_name": problem.Title,
+		"status":       submit.Result,
+		"memory_cost":  submit.RunningMemory,
+		"time_cost":    submit.RunningTime,
+		"lang":         submit.Language,
+		"code":         code,
+		"time":         time.Unix(submit.SubmitTime, 0).Format("2006-01-02 15:04:05"),
 	}
 	return submitMess, nil
 }

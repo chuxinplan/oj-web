@@ -207,7 +207,7 @@
 			"importpath": "github.com/minio/minio-go",
 			"repository": "https://github.com/minio/minio-go",
 			"vcs": "git",
-			"revision": "c6108c47ba5d86548404ebf9e51c5ca18769fe79",
+			"revision": "aa6cfd6a4adf5ee81ba8ea5307fee8c696023d62",
 			"branch": "master",
 			"notests": true
 		},
