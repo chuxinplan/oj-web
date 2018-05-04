@@ -7,7 +7,7 @@ CREATE TABLE `problem` (
   `case_data` varchar(200) NOT NULL DEFAULT '' COMMENT '测试数据',
   `title` varchar(100) NOT NULL DEFAULT '' COMMENT '题目标题',
   `description` varchar(7000) NOT NULL DEFAULT '' COMMENT '题目描述',
-  `input_des` varchar(2000) NOT NULL DEFAULT '' COMMENT '输入描述',
+  `input_des` varchar(2500) NOT NULL DEFAULT '' COMMENT '输入描述',
   `output_des` varchar(2000) NOT NULL DEFAULT '' COMMENT '输出描述',
   `input_case` varchar(2000) NOT NULL DEFAULT '' COMMENT '测试输入',
   `output_case` varchar(1000) NOT NULL DEFAULT '' COMMENT '测试输出',
