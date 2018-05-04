@@ -4,14 +4,14 @@ import (
 	"testing"
 )
 
-func TestMemberAdd(t *testing.T) {
-	InitAllInTest()
-
-	member := &TeamMember{Uid:1, Gid:1}
-	if _, err := MemberAdd(member); err != nil {
-		t.Error("add member failed", err)
-	}
-}
+//func TestMemberAdd(t *testing.T) {
+//	InitAllInTest()
+//
+//	member := &TeamMember{Uid:1, Gid:1}
+//	if _, err := MemberAdd(member); err != nil {
+//		t.Error("add member failed", err)
+//	}
+//}
 
 func TestMemberGetById(t *testing.T) {
 	InitAllInTest()
@@ -43,5 +43,13 @@ func TestMemberRemove(t *testing.T) {
 
 	if err := MemberRemove(1); err != nil {
 		t.Error("remove member woring")
+	}
+}
+
+func TestMemberGetByGidUid(t *testing.T) {
+	InitAllInTest()
+
+	if _, err := MemberGetByGidUid(1, 10); err != nil {
+		t.Error("remove group 1 failed", err)
 	}
 }

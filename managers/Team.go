@@ -10,7 +10,10 @@ import (
 
 func TeamCreat(name, avator, description string, uid int64) (int64, error) {
 
-	//判断是否存在
+	//判断用户是否合法
+
+
+	//判断组是否存在
 	group, err := models.TeamGetbyName(name)
 	if err != nil {
 		return 0, fmt.Errorf("get Team failure : %s ", err.Error())
@@ -27,93 +30,92 @@ func TeamCreat(name, avator, description string, uid int64) (int64, error) {
 
 	groupinfo, _ = models.TeamGetbyName(name)
 
-	member := &models.TeamMember{Uid:uid, Gid:groupinfo.Id}
+	member := &models.TeamMember{Uid:uid, Gid:groupinfo.Id, Stat:3}
 	//加入uid
 	_, err = models.MemberInsert(member)
 	if err != nil {
 		return 0, fmt.Errorf("add uid failure : %s ", err.Error())
 	}
-
 	return createId, err
 }
 
-func MemberApply(gid, uid int64, stats int) (string, error) {
-
-	//判断组是否存在
-	group, err := models.TeamGetbyId(gid)
-
-	if err != nil {
-		return "", fmt.Errorf("get Team failure : %s ", err.Error())
-	}
-	if group == nil {
-		return "", errors.New("Team not exist")
-	}
-
-
-	//判断uid是否合法
-
-	//
-
-	apply := &models.TeamApply{Uid:uid, Gid:gid, Stat:stats}
-	ans, err := models.ApplyGet(apply)
-	if err != nil {
-		return "", fmt.Errorf("get apply in sql : %s", err.Error())
-	}
-
-	if ans != nil {
-
-		if ans.Stat == 3 {
-			//数据库显示用户已经通过申请
-			return "You are in Group already!", nil
-
-		}else if ans.Stat == 2 {
-			//用户发起二次申请等待同意
-
-			ans.Stat = stats
-			err = models.ApplyUpdate(ans)
-			if err != nil {
-				return "", fmt.Errorf("updata application failure : %s ", err.Error())
-			}
-
-			return "new application send", nil
-
-		} else if ans.Stat == stats {
-			//用户提交同样的申请
-
-			return "You have already applied", nil
-
-		} else if ans.Stat != stats {
-			//同意申请
-
-			ans.Stat = 3
-			err = models.ApplyUpdate(ans)
-			if err != nil {
-				return "", fmt.Errorf("deal application failure : %s ", err.Error())
-			}
-
-			groupmember := new(models.TeamMember)
-			groupmember.Gid = gid
-			groupmember.Uid = uid
-			_, err = models.MemberInsert(groupmember)
-			if err != nil {
-				return "" ,fmt.Errorf("add member failure: %s", err.Error())
-			}
-			return "done", nil
-		}
-
-	} else {
-		//申请第一次提交
-
-		_, err := models.ApplyInsert(apply)
-		if err != nil {
-			return "", fmt.Errorf("insert application in sql : %s", err.Error())
-		}
-
-		return "Applied!", nil
-	}
-
-	return "", nil
-}
+//func MemberaApply(gid, uid int64, stats int) (string, error) {
+//
+//	//判断组是否存在
+//	group, err := models.TeamGetbyId(gid)
+//
+//	if err != nil {
+//		return "", fmt.Errorf("get Team failure : %s ", err.Error())
+//	}
+//	if group == nil {
+//		return "", errors.New("Team not exist")
+//	}
+//
+//
+//	//判断uid是否合法
+//
+//	//
+//
+//	apply := &models.TeamApply{Uid:uid, Gid:gid, Stat:stats}
+//	ans, err := models.ApplyGet(apply)
+//	if err != nil {
+//		return "", fmt.Errorf("get apply in sql : %s", err.Error())
+//	}
+//
+//	if ans != nil {
+//
+//		if ans.Stat == 3 {
+//			//数据库显示用户已经通过申请
+//			return "You are in Group already!", nil
+//
+//		}else if ans.Stat == 2 {
+//			//用户发起二次申请等待同意
+//
+//			ans.Stat = stats
+//			err = models.ApplyUpdate(ans)
+//			if err != nil {
+//				return "", fmt.Errorf("updata application failure : %s ", err.Error())
+//			}
+//
+//			return "new application send", nil
+//
+//		} else if ans.Stat == stats {
+//			//用户提交同样的申请
+//
+//			return "You have already applied", nil
+//
+//		} else if ans.Stat != stats {
+//			//同意申请
+//
+//			ans.Stat = 3
+//			err = models.ApplyUpdate(ans)
+//			if err != nil {
+//				return "", fmt.Errorf("deal application failure : %s ", err.Error())
+//			}
+//
+//			groupmember := new(models.TeamMember)
+//			groupmember.Gid = gid
+//			groupmember.Uid = uid
+//			_, err = models.MemberInsert(groupmember)
+//			if err != nil {
+//				return "" ,fmt.Errorf("add member failure: %s", err.Error())
+//			}
+//			return "done", nil
+//		}
+//
+//	} else {
+//		//申请第一次提交
+//
+//		_, err := models.ApplyInsert(apply)
+//		if err != nil {
+//			return "", fmt.Errorf("insert application in sql : %s", err.Error())
+//		}
+//
+//		return "Applied!", nil
+//	}
+//
+//	return "", nil
+//}
 
 
 
@@ -145,23 +147,23 @@ func TeamRemove(id, owner int64) error{
 		}
 	}
 
-	//改变申请记录
-	applys, err := models.ApplyQueryByGid(id)
-	if err != nil {
-		return fmt.Errorf("get applys failure:%s", err.Error())
-	}
-
-	//方案：改变状态
-	applyupdate := &models.TeamApply{Gid:id,Stat:2}
-
-	for _, apply := range *applys {
-		applyupdate.Uid = apply.Uid
-		applyupdate.Id = apply.Id
-		err = models.ApplyUpdate(applyupdate)
-		if err != nil{
-			return fmt.Errorf("set apply failure : %s ", err.Error())
-		}
-	}
+	////改变申请记录
+	//applys, err := models.ApplyQueryByGid(id)
+	//if err != nil {
+	//	return fmt.Errorf("get applys failure:%s", err.Error())
+	//}
+	//
+	////方案：改变状态
+	//applyupdate := &models.TeamApply{Gid:id,Stat:2}
+	//
+	//for _, apply := range *applys {
+	//	applyupdate.Uid = apply.Uid
+	//	applyupdate.Id = apply.Id
+	//	err = models.ApplyUpdate(applyupdate)
+	//	if err != nil{
+	//		return fmt.Errorf("set apply failure : %s ", err.Error())
+	//	}
+	//}
 
 	//方案：删除申请
 	//for _, apply := range *applys {
@@ -182,7 +184,7 @@ func TeamRemove(id, owner int64) error{
 	return nil
 }
 
-func MemberRemove(uid, gid, user int64) error {
+func MemberRemove(uid, gid , user int64) error {
 
 	//判断组是否存在
 	group, err := models.TeamGetbyId(gid)
@@ -194,6 +196,7 @@ func MemberRemove(uid, gid, user int64) error {
 	}
 
 
+
 	//判断用户是否所属组
 	id, err := MemberCheckByUid(uid, gid)
 	if err != nil {
@@ -202,6 +205,7 @@ func MemberRemove(uid, gid, user int64) error {
 	if id == 0 {
 		return errors.New("the member doesn't belong to the group")
 	}
+
 
 	//判断是否有权限
 	if user != uid && user != group.Uid {
@@ -214,20 +218,6 @@ func MemberRemove(uid, gid, user int64) error {
 	if err != nil {
 		return fmt.Errorf("delete member failure : %s ", err.Error())
 	}
-
-	//改变申请记录
-	apply := &models.TeamApply{Uid:uid, Gid:gid}
-	applyupdate, err := models.ApplyGet(apply)
-	if err != nil {
-		return fmt.Errorf("get apply in sql : %s", err.Error())
-	}
-
-	applyupdate.Stat = 2
-	err = models.ApplyUpdate(applyupdate)
-	if err != nil {
-		return fmt.Errorf("updata application failure : %s ", err.Error())
-	}
-
 
 	return nil
 }
@@ -277,7 +267,7 @@ func MemberCheckByUid(uid, gid int64) (int64, error) {
 	}
 
 	for _, member := range *groupmember {
-		if member.Gid == gid {
+		if member.Gid == gid && member.Stat == 3 {
 			return member.Id, nil
 		}
 	}
@@ -294,7 +284,7 @@ func MemberCheckByGid(uid, gid int64) (int64, error) {
 	}
 
 	for _, member := range *groupmember {
-		if member.Uid == uid {
+		if member.Uid == uid && member.Stat == 3{
 			return member.Id, nil
 		}
 	}
@@ -333,4 +323,189 @@ func TeamUpdate(id, owner int64, name, avator, description string) (string, erro
 	}
 
 	return "done", err
+}
+
+
+func TeamsGetByJoin(id int64) (*map[string]interface{}, error) {
+
+	teamMember, err := models.TeamsIDQueryByUid(id)
+	if err != nil {
+		return nil, err
+	}
+	if teamMember == nil {
+		return nil, nil
+	}
+
+	teamsinfo := map[string]interface{}{}
+
+	for _, id := range  *teamMember {
+		info, err := models.TeamGetbyId(id.Gid)
+		if err != nil{
+			return nil, err
+		}
+
+		teamsinfo[info.Name] = info
+	}
+
+	return &teamsinfo, nil
+}
+
+func TeamsGetByCreate(id int64) (*map[string]interface{}, error) {
+
+	infos, err := models.TeamsQueryByUid(id)
+	fmt.Println(infos)
+	if err != nil {
+		return nil, err
+	}
+	if infos == nil {
+		return nil, nil
+	}
+
+	teamsinfo := map[string]interface{}{}
+
+	for _, info := range  *infos {
+
+		teamsinfo[info.Name] = info
+	}
+
+	return &teamsinfo, nil
+}
+
+func MemberApply(gid, user int64) (string, error) {
+	//判断组是否存在
+	group, err := models.TeamGetbyId(gid)
+
+	if err != nil {
+		return "", fmt.Errorf("get Team failure : %s ", err.Error())
+	}
+	if group == nil {
+		return "", errors.New("Team not exist")
+	}
+
+	//判断用户是否合法
+	if user == group.Uid {
+		return "", errors.New("Your Group")
+	}
+
+	member, err := models.MemberGetByGidUid(gid, user)
+	if err != nil {
+		return "", fmt.Errorf("get record error :%s", err.Error())
+	}
+	if member != nil {
+		return "You have already invited", nil
+	}
+
+	//等待组长审核
+	invite := &models.TeamMember{Uid:user, Gid:gid, Stat:1}
+	_, err = models.MemberInsert(invite)
+	if err != nil {
+		return "", fmt.Errorf("update in sql failure: %s", err.Error())
+	}
+
+	return "Applyed!", nil
+
+}
+
+
+func MemberInvite(gid, uid, user int64) (string, error) {
+
+	//判断组是否存在
+	group, err := models.TeamGetbyId(gid)
+
+	if err != nil {
+		return "", fmt.Errorf("get Team failure : %s ", err.Error())
+	}
+	if group == nil {
+		return "", errors.New("Team not exist")
+	}
+
+	if user != group.Uid {
+		return "", errors.New("permition deny")
+	}
+
+	member, err := models.MemberGetByGidUid(gid, uid)
+	if err != nil {
+		return "", fmt.Errorf("get record error :%s", err.Error())
+	}
+	if member != nil {
+		return "You have already invited", nil
+	}
+	
+	//等待成员同意
+	invite := &models.TeamMember{Uid:uid, Gid:gid, Stat:2}
+	_, err = models.MemberInsert(invite)
+	if err != nil {
+		return "", fmt.Errorf("update in sql failure: %s", err.Error())
+	}
+	
+	return "invite!", nil
+
+}
+
+func MemberAudit(gid, uid, user int64, stat int) (string, error) {
+
+	//判断组是否存在
+	group, err := models.TeamGetbyId(gid)
+
+	if err != nil {
+		return "", fmt.Errorf("get Team failure : %s ", err.Error())
+	}
+	if group == nil {
+		return "", errors.New("Team not exist")
+	}
+
+	if user != group.Uid {
+		return "", errors.New("permition deny")
+	}
+
+	member, err := models.MemberGetByGidUid(gid, uid)
+	if err != nil {
+		return "", fmt.Errorf("get record error :%s", err.Error())
+	}
+
+	if member.Stat == 1 {
+
+		invite := &models.TeamMember{Id:member.Id, Uid:uid, Gid:gid, Stat:stat}
+		err = models.MemberUpdate(invite)
+		if err != nil {
+			return "", fmt.Errorf("update in sql failure: %s", err.Error())
+		}
+	} else {
+		return "", errors.New("you have already processed")
+	}
+	return "done!",  nil
+
+}
+
+func MemberAccept(gid, user int64, stat int) (string, error) {
+
+	//判断组是否存在
+	group, err := models.TeamGetbyId(gid)
+	if err != nil {
+		return "", fmt.Errorf("get Team failure : %s ", err.Error())
+	}
+	if group == nil {
+		return "", errors.New("Team not exist")
+	}
+
+	member, err := models.MemberGetByGidUid(gid, user)
+	if err != nil {
+		return "", fmt.Errorf("get record error :%s", err.Error())
+	}
+
+	if member.Stat == 2 {
+
+		accept := &models.TeamMember{Id:member.Id, Uid:user, Gid:gid, Stat:stat}
+		fmt.Println(accept)
+		err = models.MemberUpdate(accept)
+		if err != nil {
+			return "", fmt.Errorf("update in sql failure: %s", err.Error())
+		}
+
+	} else {
+		return "", errors.New("you have already processed")
+	}
+
+	return "done!",  nil
+
 }

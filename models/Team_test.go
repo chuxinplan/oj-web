@@ -29,9 +29,12 @@ func TestTeamGetbyName(t *testing.T) {
 
 func TestTeamGetbyId(t *testing.T) {
 	InitAllInTest()
-	ans, err := TeamGetbyId(0);
+	ans, err := TeamGetbyId(1);
 	if  err != nil {
 		t.Error("get group by id failed", err)
+	}
+	if ans == nil {
+		fmt.Println("dsdsds")
 	}
 	fmt.Println(ans)
 }
@@ -62,5 +65,7 @@ func TestTeamRemove(t *testing.T) {
 		t.Error("remove group 1 failed", err)
 	}
 }
+
+
 
 

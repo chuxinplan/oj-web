@@ -31,6 +31,7 @@ func TeamUpdate(teaminfo *Team) error {
 }
 
 func TeamGetbyId(id int64)(*Team, error) {
+
 	teaminfo := new(Team)
 
 	has, err := OrmWeb.Id(id).Get(teaminfo)
@@ -56,4 +57,20 @@ func TeamGetbyName(name string) (*Team, error)  {
 	}
 
 	return teaminfo, nil
+}
+
+func TeamsQueryByUid(id int64) (*[]Team, error) {
+
+	var info []Team
+
+	err := OrmWeb.Table("team").Select("*").
+	Where("uid = ?", id).
+	Find(&info)
+
+	if err != nil {
+	return nil, err
+	}
+
+	return &info, err
+
 }

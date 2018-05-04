@@ -3,8 +3,9 @@ package team
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/open-fightcoder/oj-web/router/controllers/base"
-	"net/http"
 	"github.com/open-fightcoder/oj-web/managers"
+	"net/http"
+	"fmt"
 )
 
 
@@ -16,12 +17,18 @@ type TeamInfo struct {
 	Avator string			`form:"avator" json:"avator"`
 }
 
+type TeamId struct {
+	Gid int64 				`form:"gid" json:"gid"`
+	Uid int64				`form:"uid" json:"uid"`
+}
 
 
 func RegisterTeam(router * gin.RouterGroup)  {
 	router.POST("create", httpHandlerTeamCreate)
 	router.POST("modify", httpHandlerTeamUpdate)
 	router.POST("delete", httpHandlerTeamDelete)
+	router.POST("joinlist", httpHandlerJoinList)
+	router.POST("createlist", httpHandlerCreateList)
 }
 
 func httpHandlerTeamCreate(c *gin.Context){
@@ -56,15 +63,43 @@ func httpHandlerTeamUpdate(c *gin.Context)  {
 
 func httpHandlerTeamDelete(c *gin.Context)  {
 	parm := TeamInfo{}
+
 	err := c.Bind(&parm)
 	if err != nil {
 		panic(err)
 	}
 	userId := base.UserId(c)
+	fmt.Println(parm)
 	err = managers.TeamRemove(parm.Id, userId)
 	if err != nil {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))
 		return
 	}
 	c.JSON(http.StatusOK, base.Success())
+}
+
+func httpHandlerJoinList(c *gin.Context)  {
+
+
+	userId := base.UserId(c)
+
+	infos, err := managers.TeamsGetByJoin(userId)
+	if err != nil {
+		c.JSON(http.StatusOK, base.Fail(err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, base.Success(infos))
+}
+
+func httpHandlerCreateList(c *gin.Context) {
+	userId := base.UserId(c)
+
+	infos, err := managers.TeamsGetByCreate(userId)
+	if err != nil {
+		c.JSON(http.StatusOK, base.Fail(err.Error()))
+		return
+	}
+
+	c.JSON(http.StatusOK, base.Success(infos))
+
 }

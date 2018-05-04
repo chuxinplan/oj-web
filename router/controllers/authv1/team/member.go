@@ -5,6 +5,7 @@ import (
 	"github.com/open-fightcoder/oj-web/router/controllers/base"
 	"github.com/open-fightcoder/oj-web/managers"
 	"net/http"
+	"fmt"
 )
 
 type Member struct {
@@ -17,7 +18,10 @@ type Member struct {
 
 
 func RegisterMember(router *gin.RouterGroup)  {
-	router.POST("member/add", httpHandlerMemeberAdd)
+	router.POST("member/add/invite", httpHandlerMemberInvite)
+	router.POST("member/add/apply", httpHandlerMemeberApply)
+	router.POST("member/add/audit",  httpHandlerMemeberAudit)
+	router.POST("member/add/accept",  httpHandlerMemeberAccept)
 	router.POST("member/delete", httpHandlerMemberDel)
 }
 
@@ -39,7 +43,7 @@ func httpHandlerMemberDel(c *gin.Context)  {
 }
 
 
-func httpHandlerMemeberAdd(c *gin.Context)  {
+func httpHandlerMemeberAccept(c *gin.Context)  {
 	parm := Member{}
 
 	err := c.Bind(&parm)
@@ -47,9 +51,9 @@ func httpHandlerMemeberAdd(c *gin.Context)  {
 		panic(err)
 	}
 
-	//Userid := base.UserId(c)
+	Userid := base.UserId(c)
 
-	status, err := managers.MemberApply(parm.Gid, parm.Uid, parm.Stats)
+	status, err := managers.MemberAccept(parm.Gid , Userid, parm.Stats)
 	if err != nil {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))
 		return
@@ -59,3 +63,63 @@ func httpHandlerMemeberAdd(c *gin.Context)  {
 }
 
 
+func httpHandlerMemeberApply(c *gin.Context){
+	parm := Member{}
+
+	err := c.Bind(&parm)
+	if err != nil {
+		panic(err)
+	}
+
+	Userid := base.UserId(c)
+	fmt.Println(Userid)
+
+	status, err := managers.MemberApply(parm.Gid , Userid)
+	if err != nil {
+		c.JSON(http.StatusOK, base.Fail(err.Error()))
+		return
+	}
+
+	c.JSON(http.StatusOK, base.Success(status))
+
+}
+
+func httpHandlerMemeberAudit(c *gin.Context) {
+	parm := Member{}
+
+	err := c.Bind(&parm)
+	if err != nil {
+		panic(err)
+	}
+
+	Userid := base.UserId(c)
+
+	status, err := managers.MemberAudit(parm.Gid , parm.Uid, Userid, parm.Stats)
+	if err != nil {
+		c.JSON(http.StatusOK, base.Fail(err.Error()))
+		return
+	}
+
+	c.JSON(http.StatusOK, base.Success(status))
+
+}
+
+func httpHandlerMemberInvite(c *gin.Context) {
+	parm := Member{}
+
+	err := c.Bind(&parm)
+	if err != nil {
+		panic(err)
+	}
+
+	Userid := base.UserId(c)
+
+	status, err := managers.MemberInvite(parm.Gid , parm.Uid, Userid)
+	if err != nil {
+		c.JSON(http.StatusOK, base.Fail(err.Error()))
+		return
+	}
+
+	c.JSON(http.StatusOK, base.Success(status))
+
+}
