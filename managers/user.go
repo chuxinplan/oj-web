@@ -135,6 +135,23 @@ func GetUserMess(userName string) (map[string]interface{}, error) {
 }
 
 func GetUserProgress(userName string) (map[string]interface{}, error) {
+	problemMess := map[string]interface{}{
+		"pre_num":  0,
+		"ac_num":   0,
+		"fail_num": 0,
+	}
+	totalStr, err := redis.ProblemNumGet()
+	if err != nil {
+		return nil, errors.New("获取失败")
+	}
+	if totalStr == "" {
+		return problemMess, nil
+	}
+	totalInt, err := strconv.ParseInt(totalStr, 10, 64)
+	if err != nil {
+		return nil, errors.New("转换失败")
+	}
+	problemMess["pre_num"] = totalInt
 	user, err := models.GetByUserName(userName)
 	if err != nil {
 		return nil, errors.New("获取失败")
@@ -146,24 +163,17 @@ func GetUserProgress(userName string) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, errors.New("获取失败")
 	}
-	totalStr, err := redis.ProblemNumGet()
-	if err != nil {
-		return nil, errors.New("获取失败")
-	}
-	totalInt, err := strconv.Atoi(totalStr)
-	if err != nil {
-		return nil, errors.New("转换失败")
+	if jsonStr == "" {
+		return problemMess, nil
 	}
 	var submitCount SubmitCount
 	err = json.Unmarshal([]byte(jsonStr), &submitCount)
 	if err != nil {
 		return nil, errors.New("获取失败")
 	}
-	problemMess := map[string]interface{}{
-		"pre_num":  totalInt,
-		"ac_num":   submitCount.Accepted,
-		"fail_num": submitCount.FailNum,
-	}
+	problemMess["pre_num"] = totalInt - submitCount.Accepted - submitCount.FailNum
+	problemMess["ac_num"] = submitCount.Accepted
+	problemMess["fail_num"] = submitCount.FailNum
 	return problemMess, nil
 }
 
