@@ -10,6 +10,8 @@ import (
 
 	"fmt"
 
+	"time"
+
 	"github.com/open-fightcoder/oj-web/models"
 	"github.com/open-fightcoder/oj-web/redis"
 	"github.com/pkg/errors"
@@ -76,11 +78,20 @@ func GetUserRecentSubmit(userName string) ([]map[string]interface{}, error) {
 	if err != nil {
 		return nil, errors.New("查询失败")
 	}
-	var messLists []map[string]interface{}
-	for _, v := range mess {
+	messLists := make([]map[string]interface{}, 0)
+	currentTime := time.Now().Unix()
+	for i := 0; i < 30; i++ {
+		timeNum := currentTime - int64(i*86400)
+		timeStr := time.Unix(timeNum, 0).Format("2006-01-02")
 		projects := make(map[string]interface{})
-		projects["submit_num"] = v.SubmitNum
-		projects["date"] = v.DateTime
+		projects["date"] = timeStr
+		projects["submit_num"] = 0
+		for _, val := range mess {
+			if val.DateTime == timeStr {
+				projects["submit_num"] = val.SubmitNum
+				break
+			}
+		}
 		messLists = append(messLists, projects)
 	}
 	return messLists, nil
@@ -99,11 +110,20 @@ func GetUserRecentRank(userName string) ([]map[string]interface{}, error) {
 	if err != nil {
 		return nil, errors.New("查询失败")
 	}
-	var messLists []map[string]interface{}
-	for _, v := range mess {
+	messLists := make([]map[string]interface{}, 0)
+	currentTime := time.Now().Unix()
+	for i := 0; i < 30; i++ {
+		timeNum := currentTime - int64(i*86400)
+		timeStr := time.Unix(timeNum, 0).Format("2006-01-02")
 		projects := make(map[string]interface{})
-		projects["rank_num"] = v.RankNum
-		projects["date"] = v.DateTime
+		projects["date"] = timeStr
+		projects["rank_num"] = 0
+		for _, val := range mess {
+			if val.DateTime == timeStr {
+				projects["rank_num"] = val.RankNum
+				break
+			}
+		}
 		messLists = append(messLists, projects)
 	}
 	return messLists, nil
@@ -135,6 +155,23 @@ func GetUserMess(userName string) (map[string]interface{}, error) {
 }
 
 func GetUserProgress(userName string) (map[string]interface{}, error) {
+	problemMess := map[string]interface{}{
+		"pre_num":  0,
+		"ac_num":   0,
+		"fail_num": 0,
+	}
+	totalStr, err := redis.ProblemNumGet()
+	if err != nil {
+		return nil, errors.New("获取失败")
+	}
+	if totalStr == "" {
+		return problemMess, nil
+	}
+	totalInt, err := strconv.ParseInt(totalStr, 10, 64)
+	if err != nil {
+		return nil, errors.New("转换失败")
+	}
+	problemMess["pre_num"] = totalInt
 	user, err := models.GetByUserName(userName)
 	if err != nil {
 		return nil, errors.New("获取失败")
@@ -146,24 +183,17 @@ func GetUserProgress(userName string) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, errors.New("获取失败")
 	}
-	totalStr, err := redis.ProblemNumGet()
-	if err != nil {
-		return nil, errors.New("获取失败")
-	}
-	totalInt, err := strconv.Atoi(totalStr)
-	if err != nil {
-		return nil, errors.New("转换失败")
+	if jsonStr == "" {
+		return problemMess, nil
 	}
 	var submitCount SubmitCount
 	err = json.Unmarshal([]byte(jsonStr), &submitCount)
 	if err != nil {
 		return nil, errors.New("获取失败")
 	}
-	problemMess := map[string]interface{}{
-		"pre_num":  totalInt,
-		"ac_num":   submitCount.Accepted,
-		"fail_num": submitCount.FailNum,
-	}
+	problemMess["pre_num"] = totalInt - submitCount.Accepted - submitCount.FailNum
+	problemMess["ac_num"] = submitCount.Accepted
+	problemMess["fail_num"] = submitCount.FailNum
 	return problemMess, nil
 }
 
@@ -178,6 +208,18 @@ func GetUserCount(userName string) (map[string]interface{}, error) {
 	jsonStr, err := redis.SubmitCountGet(user.Id)
 	if err != nil {
 		return nil, errors.New("获取失败")
+	}
+	if jsonStr == "" {
+		return map[string]interface{}{
+			"wa_num": 0,
+			"ce_num": 0,
+			"te_num": 0,
+			"me_num": 0,
+			"oe_num": 0,
+			"re_num": 0,
+			"se_num": 0,
+			"ac_num": 0,
+		}, nil
 	}
 	var submitCount SubmitCount
 	err = json.Unmarshal([]byte(jsonStr), &submitCount)

@@ -13,5 +13,8 @@ func SubmitCountGet(userId int64) (string, error) {
 	if res.Err() != nil {
 		return "", res.Err()
 	}
+	if res.Val()[0] == nil {
+		return "", nil
+	}
 	return fmt.Sprint(res.Val()[0]), nil
 }
