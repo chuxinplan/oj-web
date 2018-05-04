@@ -26,14 +26,14 @@ func PersonWeekRankUpdate(increment int, userId int64) error {
 }
 
 func PersonWeekRankGet(userId int64) ([]map[string]interface{}, error) {
-	sizeRet := RedisClient.ZCard("person_week_rank")
-	if sizeRet.Err() != nil {
-		return nil, errors.New("获取失败")
-	}
-	size := sizeRet.Val()
 	idStr := strconv.FormatInt(userId, 10)
 	isExitRet := RedisClient.ZScore("person_week_rank", idStr)
 	if isExitRet.Val() > 0 {
+		sizeRet := RedisClient.ZCard("person_week_rank")
+		if sizeRet.Err() != nil {
+			return nil, errors.New("获取失败")
+		}
+		size := sizeRet.Val()
 		var start int64
 		var end int64
 		if size <= 5 {
@@ -61,11 +61,10 @@ func PersonWeekRankGet(userId int64) ([]map[string]interface{}, error) {
 			return nil, errors.New("获取失败")
 		}
 		var rankLists []map[string]interface{}
-		for _, v := range result.Val() {
+		for i, v := range result.Val() {
 			projects := make(map[string]interface{})
 			scoreRes := RedisClient.ZScore("person_week_rank", v)
-			rankId := RedisClient.ZRevRank("person_week_rank", v)
-			projects["rank_num"] = rankId.Val() + 1
+			projects["rank_num"] = i + 1
 			projects["user_id"] = v
 			projects["ac_num"] = scoreRes.Val()
 			rankLists = append(rankLists, projects)
@@ -93,14 +92,14 @@ func PersonMonthRankUpdate(increment int, userId int64) error {
 }
 
 func PersonMonthRankGet(userId int64) ([]map[string]interface{}, error) {
-	sizeRet := RedisClient.ZCard("person_month_rank")
-	if sizeRet.Err() != nil {
-		return nil, errors.New("获取失败")
-	}
-	size := sizeRet.Val()
 	idStr := strconv.FormatInt(userId, 10)
 	isExitRet := RedisClient.ZScore("person_month_rank", idStr)
 	if isExitRet.Val() > 0 {
+		sizeRet := RedisClient.ZCard("person_month_rank")
+		if sizeRet.Err() != nil {
+			return nil, errors.New("获取失败")
+		}
+		size := sizeRet.Val()
 		var start int64
 		var end int64
 		if size <= 5 {

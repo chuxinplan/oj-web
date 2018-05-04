@@ -40,7 +40,7 @@ imgBucket = "image"
 codeBucket = "code"
 saveCodeBucket = "savecode"
 caseBucket = "case"
-getBaseUrl = "http://10.0.1.211:9000/"
+getBaseUrl = "10.0.1.211:9001/"
 
 [common]
 languageLimit = ["C++", "JAVA", "GO"]
