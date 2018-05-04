@@ -52,7 +52,7 @@ func QQCallback(code string, reqState string) (string, error) {
 		"grant_type":    "authorization_code",
 		"client_id":     "101466300",
 		"client_secret": "0104260a8f8faac3900cbf184bae55f5",
-		"redirect_uri":  url.QueryEscape("http://www.fightcoder.com/#/problem/open"),
+		"redirect_uri":  url.QueryEscape("http://www.fightcoder.com/#/user/login"),
 		"code":          code,
 	}
 	body, err := (&Url{}).get(baseUrl, param)

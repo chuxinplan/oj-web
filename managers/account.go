@@ -113,7 +113,7 @@ func Login(param1, param2, loginType string) (int, string, int64, string) {
 				return QQ_LOGIN_ERROR, err.Error(), 0, ""
 			}
 			user := &models.User{AccountId: id, UserName: strconv.FormatInt(time.Now().Unix(), 10), NickName: qqMess.NickName, Avator: qqMess.FigureurlQQ}
-			_, err = models.Create(user)
+			models.Create(user)
 			accountId = id
 			isFirstLogin = true
 		} else {
