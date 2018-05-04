@@ -18,7 +18,7 @@ import (
 
 func GetSaveCode(name string) (string, error) {
 	cfg := g.Conf()
-	resp, err := http.Get("http://xupt1.fightcoder.com:9001/" + cfg.Minio.SaveCodeBucket + "/" + name)
+	resp, err := http.Get("http://" + cfg.Minio.Endpoint + "/" + cfg.Minio.SaveCodeBucket + "/" + name)
 	if err != nil {
 		return "", errors.New("获取失败")
 	}
@@ -33,7 +33,7 @@ func GetSaveCode(name string) (string, error) {
 
 func GetCode(name string) (string, error) {
 	cfg := g.Conf()
-	resp, err := http.Get("http://xupt1.fightcoder.com:9001/" + cfg.Minio.CodeBucket + "/" + name)
+	resp, err := http.Get("http://" + cfg.Minio.Endpoint + "/" + cfg.Minio.CodeBucket + "/" + name)
 	if err != nil {
 		return "", errors.New("获取失败")
 	}
