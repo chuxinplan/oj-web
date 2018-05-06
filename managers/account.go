@@ -2,12 +2,10 @@ package managers
 
 import (
 	"fmt"
-
 	"io/ioutil"
 	"net/http"
-	"strings"
-
 	"strconv"
+	"strings"
 	"time"
 
 	"github.com/open-fightcoder/oj-web/common/components"
