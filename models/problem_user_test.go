@@ -8,7 +8,7 @@ import (
 func TestProblemUserCreate(t *testing.T) {
 	InitAllInTest()
 
-	problemUser := &ProblemUser{UserId: 2, Tag: 10, Title: "六", Description: "六"}
+	problemUser := &ProblemUser{UserId: 25, Tag: 10, Title: "四", Description: "四"}
 	if _, err := ProblemUserCreate(problemUser); err != nil {
 		t.Error("Create() failed. Error:", err)
 	}

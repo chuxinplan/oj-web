@@ -7,7 +7,7 @@ import (
 	"github.com/open-fightcoder/oj-web/models"
 )
 
-func UserRegister(userName string, email string, password string) (int64, error) {
+func UserRegister(userName string, nickName string, email string, password string) (int64, error) {
 	session := OrmWeb.NewSession()
 	defer session.Close()
 
@@ -35,7 +35,7 @@ func UserRegister(userName string, email string, password string) (int64, error)
 		session.Rollback()
 		return 0, errors.New("注册失败")
 	}
-	user := &models.User{AccountId: account.Id, UserName: userName}
+	user := &models.User{AccountId: account.Id, UserName: userName, NickName: nickName}
 	_, err = session.Insert(user)
 	if err != nil {
 		session.Rollback()

@@ -11,7 +11,12 @@ import (
 func RegisterUser(router *gin.RouterGroup) {
 	router.POST("uploadimage", httpHandlerUploadImage)
 	router.POST("updatemess", httpHandlerUpdateMess)
-	router.POST("collection", httpHandlerCollection)
+	router.GET("collection", httpHandlerCollection)
+}
+
+type CollectionParam struct {
+	CurrentPage int `form:"current_page" json:"current_page"`
+	PerPage     int `form:"per_page" json:"per_page"`
 }
 
 type UserImageParam struct {
@@ -32,7 +37,18 @@ type UserMessParam struct {
 }
 
 func httpHandlerCollection(c *gin.Context) {
-
+	param := CollectionParam{}
+	err := c.Bind(&param)
+	if err != nil {
+		panic(err)
+	}
+	userId := base.UserId(c)
+	mess, err := managers.GetUserCollection(userId, param.CurrentPage, param.PerPage)
+	if err != nil {
+		c.JSON(http.StatusOK, base.Fail(err.Error()))
+		return
+	}
+	c.JSON(http.StatusOK, base.Success(mess))
 }
 
 func httpHandlerUploadImage(c *gin.Context) {

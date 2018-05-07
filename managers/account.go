@@ -148,7 +148,7 @@ func Login(param1, param2, loginType string) (int, string, int64, string) {
 	}
 }
 
-func AccountRegister(userName string, email string, password string) (int64, error) {
+func AccountRegister(userName string, nickName string, email string, password string) (int64, error) {
 	//TODO 邮箱参数校验,userName校验
-	return data.UserRegister(userName, email, components.MD5Encode(password))
+	return data.UserRegister(userName, nickName, email, components.MD5Encode(password))
 }

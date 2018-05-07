@@ -29,6 +29,39 @@ type SubmitCount struct {
 	SystemError         int64 `json:"system_error"`
 }
 
+func GetUserCollection(userId int64, currentPage int, perPage int) (map[string]interface{}, error) {
+	collectionList, err := models.UserCollectionGetByUserId(userId, currentPage, perPage)
+	if err != nil {
+		return nil, errors.New("获取题目失败")
+	}
+	count, err := models.UserCollectionCountByUserId(userId)
+	if err != nil {
+		return nil, errors.New("获取题目失败")
+	}
+	problemLists := make([]map[string]interface{}, 0)
+	for _, v := range collectionList {
+		problem, err := models.ProblemGetById(v.ProblemId)
+		if err != nil {
+			return nil, errors.New("查询失败")
+		}
+		if problem == nil {
+			return nil, errors.New("问题不存在")
+		}
+		projects := make(map[string]interface{})
+		projects["id"] = problem.Id
+		projects["title"] = problem.Title
+		projects["description"] = problem.Description
+		projects["status"] = "已做"
+		problemLists = append(problemLists, projects)
+	}
+	problemMess := map[string]interface{}{
+		"list":         problemLists,
+		"current_page": currentPage,
+		"total":        count,
+	}
+	return problemMess, nil
+}
+
 func UpdateUserMess(userId int64, userName string, NickName string, Sex string, Blog string, Git string, Description string, Birthday string, DailyAddress string, StatSchool string, SchoolName string) error {
 	user, err := models.GetByUserName(userName)
 	if err != nil {

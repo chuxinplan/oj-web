@@ -36,6 +36,7 @@ type AccountRegister struct {
 	Email    string `form:"email" json:"email"`
 	Password string `form:"password" json:"password"`
 	UserName string `form:"user_name" json:"user_name"`
+	NickName string `form:"nick_name" json:"nick_name"`
 }
 
 func httpHandlerGetQQUrl(c *gin.Context) {
@@ -117,7 +118,7 @@ func httpHandlerRegister(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	userId, err := managers.AccountRegister(account.UserName, account.Email, account.Password)
+	userId, err := managers.AccountRegister(account.UserName, account.NickName, account.Email, account.Password)
 	if err != nil {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))
 		return
