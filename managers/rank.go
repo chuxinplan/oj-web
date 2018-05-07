@@ -8,7 +8,7 @@ import (
 	"github.com/pkg/errors"
 )
 
-func RankListGet(currentPage int, perPage int) ([]map[string]interface{}, error) {
+func RankListGet(currentPage int, perPage int) (map[string]interface{}, error) {
 	rankList, err := redis.RankListGet(currentPage, perPage)
 	if err != nil {
 		return nil, err
@@ -32,7 +32,12 @@ func RankListGet(currentPage int, perPage int) ([]map[string]interface{}, error)
 		projects["total_num"] = 100
 		rankLists = append(rankLists, projects)
 	}
-	return rankLists, nil
+	rankMess := map[string]interface{}{
+		"list":         rankLists,
+		"current_page": currentPage,
+		"total":        redis.RankListCount(),
+	}
+	return rankMess, nil
 }
 
 func PersonRankGet(userId int64, isWeek int) ([]map[string]interface{}, error) {

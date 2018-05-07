@@ -22,7 +22,6 @@ func RegisterCollection(router *gin.RouterGroup) {
 	router.GET("collection/get", httpHandlerCollectionGet)
 	router.POST("collection/set", httpHandlerCollectionSet)
 }
-
 func httpHandlerCollectionGet(c *gin.Context) {
 	param := CollectionGetParam{}
 	err := c.Bind(&param)

@@ -37,6 +37,24 @@ func UserCollectionGetById(id int64) (*UserCollection, error) {
 	return userCollection, nil
 }
 
+func UserCollectionGetByUserId(userId int64, currentPage int, perPage int) ([]*UserCollection, error) {
+	userCollectionList := make([]*UserCollection, 0)
+	err := OrmWeb.Where("user_id=?", userId).Limit(perPage, (currentPage-1)*perPage).Find(&userCollectionList)
+	if err != nil {
+		return nil, err
+	}
+	return userCollectionList, nil
+}
+
+func UserCollectionCountByUserId(userId int64) (int64, error) {
+	collection := &UserCollection{}
+	count, err := OrmWeb.Where("user_id=?", userId).Count(collection)
+	if err != nil {
+		return 0, err
+	}
+	return count, nil
+}
+
 func UserCollectionGetUserCollection(userId, problemId int64) (*UserCollection, error) {
 	userCollection := new(UserCollection)
 	has, err := OrmWeb.Where("user_id=?", userId).And("problem_id=?", problemId).Get(userCollection)
