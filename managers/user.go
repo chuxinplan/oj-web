@@ -113,7 +113,7 @@ func GetUserRecentSubmit(userName string) ([]map[string]interface{}, error) {
 	}
 	messLists := make([]map[string]interface{}, 0)
 	currentTime := time.Now().Unix()
-	for i := 0; i < 30; i++ {
+	for i := 29; i >= 0; i-- {
 		timeNum := currentTime - int64(i*86400)
 		timeStr := time.Unix(timeNum, 0).Format("2006-01-02")
 		projects := make(map[string]interface{})
@@ -145,7 +145,7 @@ func GetUserRecentRank(userName string) ([]map[string]interface{}, error) {
 	}
 	messLists := make([]map[string]interface{}, 0)
 	currentTime := time.Now().Unix()
-	for i := 0; i < 30; i++ {
+	for i := 29; i >= 0; i-- {
 		timeNum := currentTime - int64(i*86400)
 		timeStr := time.Unix(timeNum, 0).Format("2006-01-02")
 		projects := make(map[string]interface{})
