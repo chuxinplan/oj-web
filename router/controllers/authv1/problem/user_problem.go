@@ -14,7 +14,6 @@ type UserProblemListParam struct {
 }
 
 func RegisterUserProblem(router *gin.RouterGroup) {
-
 	router.GET("userproblem/list", httpHandlerUserProblemList)
 	router.GET("userproblem/get", httpHandlerUserProblemGet)
 	router.POST("userproblem/check", httpHandlerUserProblemCheck)
@@ -37,6 +36,7 @@ func httpHandlerUserProblemList(c *gin.Context) {
 	c.JSON(http.StatusOK, base.Success(problemList))
 }
 func httpHandlerUserProblemGet(c *gin.Context) {
+
 }
 func httpHandlerUserProblemCheck(c *gin.Context) {
 }
