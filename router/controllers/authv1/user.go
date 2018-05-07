@@ -11,6 +11,7 @@ import (
 func RegisterUser(router *gin.RouterGroup) {
 	router.POST("uploadimage", httpHandlerUploadImage)
 	router.POST("updatemess", httpHandlerUpdateMess)
+	router.POST("collection", httpHandlerCollection)
 }
 
 type UserImageParam struct {
@@ -28,6 +29,10 @@ type UserMessParam struct {
 	DailyAddress string `form:"daily_address" json:"daily_address"`
 	StatSchool   string `form:"stat_school" json:"stat_school"`
 	SchoolName   string `form:"school_name" json:"school_name"`
+}
+
+func httpHandlerCollection(c *gin.Context) {
+
 }
 
 func httpHandlerUploadImage(c *gin.Context) {

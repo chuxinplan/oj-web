@@ -23,6 +23,14 @@ func RankListUpdate(increment int, userId int64) error {
 	return nil
 }
 
+func RankListCount() int64 {
+	res := RedisClient.ZCard("rank_list")
+	if res.Err() != nil {
+		return 0
+	}
+	return res.Val()
+}
+
 func RankListGet(currentPage int, perPage int) ([]map[string]interface{}, error) {
 	res := RedisClient.ZRevRange("rank_list", int64((currentPage-1)*perPage), int64(currentPage*perPage-1))
 	if res.Err() != nil {
