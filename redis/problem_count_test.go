@@ -13,8 +13,9 @@ func TestProblemCountSet(t *testing.T) {
 	g.LoadConfig("../cfg/cfg.toml.debug")
 	store.InitRedis()
 
-	aa := ProblemCountSet(13, "accepted\":1,\"fail_num\":3,\"wrong_answer\":1,\"compilation_error\":1,\"time_limit_exceeded\":5,\"memory_limit_exceeded\":1,\"output_limit_exceeded\":1,\"runtime_error\":3,\"system_error\":2}")
-	fmt.Println(aa)
+	for i := 1; i <= 2000; i++ {
+		ProblemCountSet(int64(i), "{\"ac_num\":0,\"total_num\":1}")
+	}
 }
 
 func TestProblemCountGet(t *testing.T) {

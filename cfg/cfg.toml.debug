@@ -42,4 +42,4 @@ caseBucket = "case"
 getBaseUrl = "xupt1.fightcoder.com:9001/"
 
 [common]
-languageLimit = ["c++", "java", "go"]
+languageLimit = ["c++", "c", "go", "java"]

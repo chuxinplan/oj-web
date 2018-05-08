@@ -35,12 +35,31 @@ func ProblemList(origin string, tag string, sort int, isAsc int, currentPage int
 	if err != nil {
 		return nil, errors.New("获取题目失败")
 	}
-	problemMess := map[string]interface{}{
-		"list":         problemList,
+	problemMess := make([]map[string]interface{}, 0)
+	for _, v := range problemList {
+		jsonStr, err := redis.ProblemCountGet(v.Id)
+		if err != nil || jsonStr == "" {
+			return nil, errors.New("获取失败")
+		}
+		var problemCount ProblemCount
+		err = json.Unmarshal([]byte(jsonStr), &problemCount)
+		if err != nil {
+			return nil, errors.New("获取失败")
+		}
+		projects := make(map[string]interface{})
+		projects["id"] = v.Id
+		projects["title"] = v.Title
+		projects["difficulty"] = v.Difficulty
+		projects["status"] = 0
+		projects["ac_rate"] = strconv.FormatFloat(float64(problemCount.AcNum*100)/float64(problemCount.TotalNum), 'f', 2, 64)
+		problemMess = append(problemMess, projects)
+	}
+	result := map[string]interface{}{
+		"list":         problemMess,
 		"current_page": currentPage,
 		"total":        count,
 	}
-	return problemMess, nil
+	return result, nil
 }
 
 func ProblemGet(id int64) (map[string]interface{}, error) {
