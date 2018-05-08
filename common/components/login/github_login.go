@@ -17,13 +17,10 @@ type GithubMess struct {
 	UserName string `json:"login"`
 	Avatar   string `json:"avatar_url"`
 	NickName string `json:"name"`
-	OpenId   string `json:"id"`
+	OpenId   int    `json:"id"`
 }
 
-//返回access_token
 func GithubCallback(code string) (string, error) {
-	//成功：access_token=28AA149D4520BAA0EA7A09879B81A3DE&expires_in=7776000&refresh_token=B9D9DED6BBAC973EDF0FD51B7AF8362F
-	//失败：callback( {"error":100020,"error_description":"code is reused error"} );
 	baseUrl := "https://github.com/login/oauth/access_token"
 	param := map[string]string{
 		"client_id":     "080191e49e855122ea33",
@@ -32,7 +29,7 @@ func GithubCallback(code string) (string, error) {
 	}
 	body, err := (&Url{}).post(baseUrl, param)
 	if err != nil {
-		return "", errors.New("get response fail")
+		return "", err
 	}
 	if strings.Contains(body, "error_description") {
 		return "", errors.New(body)

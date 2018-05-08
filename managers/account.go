@@ -134,8 +134,8 @@ func Login(param1, param2, loginType string) (int, string, int64, string) {
 		if err != nil {
 			return GITHUB_LOGIN_ERROR, err.Error(), 0, ""
 		}
-		acc, _ := models.AccountGetGithubOpenId(githubMess.OpenId)
-		account := &models.Account{GithubId: githubMess.OpenId}
+		acc, _ := models.AccountGetGithubOpenId(strconv.Itoa(githubMess.OpenId))
+		account := &models.Account{GithubId: strconv.Itoa(githubMess.OpenId)}
 		if acc == nil {
 			id, _ := models.AccountAdd(account)
 			user := &models.User{AccountId: id, UserName: githubMess.UserName, NickName: githubMess.NickName, Avator: githubMess.Avatar}

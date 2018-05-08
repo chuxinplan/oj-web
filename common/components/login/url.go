@@ -92,6 +92,9 @@ func (this *Url) post_contents(url string, params string) (string, error) {
  * @return string           返回的资源内容
  */
 func (this *Url) post(url string, keysArr map[string]string) (string, error) {
-	requestUrl := this.combineURL("", keysArr)
-	return this.post_contents(url, requestUrl)
+	str := ""
+	for i, v := range keysArr {
+		str += i + "=" + v + "&"
+	}
+	return this.post_contents(url, str[0:len(str)-1])
 }
