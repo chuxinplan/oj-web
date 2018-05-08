@@ -4,6 +4,7 @@ import (
 	"math"
 	"strings"
 
+	"github.com/open-fightcoder/oj-web/common/g"
 	. "github.com/open-fightcoder/oj-web/common/store"
 )
 
@@ -78,9 +79,10 @@ func ProblemCountByUserId(userId int64) (int64, error) {
 }
 
 func getOriginList(origin string) []int64 {
-	originMap := map[string]int64{
-		"HDU":    1,
-		"CodeVs": 2,
+	problemCfg := g.Conf().Problem
+	originMap := make(map[string]int64)
+	for i, v := range problemCfg.OjName {
+		originMap[v] = problemCfg.UserId[i]
 	}
 	origins := []int64{}
 	if origin != "" {

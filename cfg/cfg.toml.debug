@@ -43,3 +43,7 @@ getBaseUrl = "xupt1.fightcoder.com:9001/"
 
 [common]
 languageLimit = ["c++", "c", "go", "java"]
+
+[problem]
+userId = [1, 2, 3]
+ojName = ["官方", "HDU", "CodeVs"]
