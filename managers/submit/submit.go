@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/open-fightcoder/oj-web/common/components"
+	"github.com/open-fightcoder/oj-web/common/g"
 	"github.com/open-fightcoder/oj-web/managers"
 	"github.com/open-fightcoder/oj-web/models"
 )
@@ -51,6 +52,18 @@ func SubmitList(problemId int64, userName string, status int, lang string, curre
 	return submitMess, nil
 }
 
+func isInOj(userId int64) bool {
+	flag := false
+	ojIds := g.Conf().Problem.UserId
+	for _, v := range ojIds {
+		if v == userId {
+			flag = true
+			break
+		}
+	}
+	return flag
+}
+
 func SubmitCommon(problemId int64, userId int64, language string, code string) (map[string]interface{}, error) {
 	codePath, err := managers.SaveSubmitCode(code, userId, language)
 	if err != nil {
@@ -63,8 +76,7 @@ func SubmitCommon(problemId int64, userId int64, language string, code string) (
 	}
 	sendMess := &components.SendMess{"default", id}
 	var flag bool
-	//TODO 预留其他OJ的用户
-	if userId < 0 {
+	if isInOj(userId) {
 		flag = components.Send("vjudger", sendMess)
 	} else {
 		flag = components.Send("judge", sendMess)
