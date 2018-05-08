@@ -2,6 +2,7 @@ package models
 
 import (
 	"fmt"
+	"math/rand"
 	"testing"
 )
 
@@ -23,9 +24,11 @@ func TestProblemRemove(t *testing.T) {
 func TestProblemUpdate(t *testing.T) {
 	InitAllInTest()
 
-	problem := &Problem{Id: 1, Title: "sadas", Description: "asdasdasd"}
-	if err := ProblemUpdate(problem); err != nil {
-		t.Error("Update() failed. Error:", err)
+	strs := [4]string{"简单", "中等", "困难", "极难"}
+	for i := 2; i < 2000; i++ {
+		problem, _ := ProblemGetById(int64(i))
+		problem.Difficulty = strs[rand.Intn(4)]
+		ProblemUpdate(problem)
 	}
 }
 func TestProblemGetById(t *testing.T) {
