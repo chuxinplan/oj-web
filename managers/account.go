@@ -20,12 +20,13 @@ import (
 )
 
 const (
-	EMAIL_NOT_EXIT    = 0
-	PASSWORD_IS_WRONG = 1
-	PARAM_IS_WRONG    = 2
-	FIRST_LOGIN       = 3
-	LOGIN             = 4
-	QQ_LOGIN_ERROR    = 5
+	EMAIL_NOT_EXIT     = 0
+	PASSWORD_IS_WRONG  = 1
+	PARAM_IS_WRONG     = 2
+	FIRST_LOGIN        = 3
+	LOGIN              = 4
+	QQ_LOGIN_ERROR     = 5
+	GITHUB_LOGIN_ERROR = 6
 )
 
 func GetQQUrl() string {
@@ -75,7 +76,7 @@ func getQQOpenId(code string, state string) (string, string, error) {
 	if err != nil {
 		return "", "", err
 	}
-	openId, err := login.GetOpenid(accessToken)
+	openId, err := login.GetQQOpenid(accessToken)
 	if err != nil {
 		return "", "", err
 	}
@@ -125,13 +126,19 @@ func Login(param1, param2, loginType string) (int, string, int64, string) {
 		}
 
 	} else if loginType == "github" {
-		openId := getGithubOpenId(param1)
-		acc, _ := models.AccountGetGithubOpenId(openId)
-		account := &models.Account{GithubId: openId}
+		code, err := login.GithubCallback(param1)
+		if err != nil {
+			return GITHUB_LOGIN_ERROR, err.Error(), 0, ""
+		}
+		githubMess, err := login.GetGithubMess(code)
+		if err != nil {
+			return GITHUB_LOGIN_ERROR, err.Error(), 0, ""
+		}
+		acc, _ := models.AccountGetGithubOpenId(strconv.Itoa(githubMess.OpenId))
+		account := &models.Account{GithubId: strconv.Itoa(githubMess.OpenId)}
 		if acc == nil {
 			id, _ := models.AccountAdd(account)
-
-			user := &models.User{AccountId: id, NickName: strconv.FormatInt(time.Now().UnixNano(), 10)}
+			user := &models.User{AccountId: id, UserName: githubMess.UserName, NickName: githubMess.NickName, Avator: githubMess.Avatar}
 			models.Create(user)
 			createUserRedis(user.Id)
 			accountId = id

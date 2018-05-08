@@ -35,7 +35,7 @@ func UserRegister(userName string, nickName string, email string, password strin
 		session.Rollback()
 		return 0, errors.New("注册失败")
 	}
-	user := &models.User{AccountId: account.Id, UserName: userName, NickName: nickName}
+	user := &models.User{AccountId: account.Id, UserName: userName, NickName: nickName, Avator: "http://xupt1.fightcoder.com:9001/image/default.png"}
 	_, err = session.Insert(user)
 	if err != nil {
 		session.Rollback()

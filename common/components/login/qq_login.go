@@ -76,7 +76,7 @@ func QQCallback(code string, reqState string) (string, error) {
 }
 
 //返回openId
-func GetOpenid(accessToken string) (string, error) {
+func GetQQOpenid(accessToken string) (string, error) {
 	//成功：callback( {"client_id":"101466300","openid":"9EC58C000E554465E68F8F51D3D1A1AF"} );
 	//失败：callback( {"error":100013,"error_description":"access token is illegal"} );
 	baseUrl := "https://graph.qq.com/oauth2.0/me"
