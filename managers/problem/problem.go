@@ -1,15 +1,24 @@
 package problem
 
 import (
+	"encoding/json"
 	"math/rand"
 	"time"
 
 	"strings"
 
+	"strconv"
+
 	"github.com/open-fightcoder/oj-web/common/g"
 	"github.com/open-fightcoder/oj-web/models"
+	"github.com/open-fightcoder/oj-web/redis"
 	"github.com/pkg/errors"
 )
+
+type ProblemCount struct {
+	AcNum    int64 `json:"ac_num"`
+	TotalNum int64 `json:"total_num"`
+}
 
 func ProblemList(origin string, tag string, sort int, isAsc int, currentPage int, perPage int) (map[string]interface{}, error) {
 	//TODO 排序条件 1-编号 2-难度 3-通过率
@@ -39,7 +48,6 @@ func ProblemGet(id int64) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, errors.New("获取题目失败")
 	}
-	//TODO 从Redis中去获取ac_rate
 	userMess, err := models.GetById(problem.UserId)
 	if err != nil {
 		return nil, errors.New("获取题目失败")
@@ -48,7 +56,7 @@ func ProblemGet(id int64) (map[string]interface{}, error) {
 		"id":             problem.Id,
 		"user_avator":    userMess.Avator,
 		"user_name":      userMess.UserName,
-		"ac_rate":        11,
+		"ac_rate":        0,
 		"time_limit":     problem.TimeLimit,
 		"memory_limit":   problem.MemoryLimit,
 		"title":          problem.Title,
@@ -60,6 +68,19 @@ func ProblemGet(id int64) (map[string]interface{}, error) {
 		"hint":           problem.Hint,
 		"language_limit": getLimitLanguage(problem.LanguageLimit),
 	}
+	jsonStr, err := redis.ProblemCountGet(problem.Id)
+	if err != nil {
+		return nil, errors.New("获取失败")
+	}
+	if jsonStr == "" {
+		return problemMess, nil
+	}
+	var problemCount ProblemCount
+	err = json.Unmarshal([]byte(jsonStr), &problemCount)
+	if err != nil {
+		return nil, errors.New("获取失败")
+	}
+	problemMess["ac_rate"] = strconv.FormatFloat(float64(problemCount.AcNum*100)/float64(problemCount.TotalNum), 'f', 2, 64)
 	return problemMess, nil
 }
 
