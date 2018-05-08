@@ -43,4 +43,4 @@ caseBucket = "case"
 getBaseUrl = "10.0.1.211:9001/"
 
 [common]
-languageLimit = ["C++", "JAVA", "GO"]
+languageLimit = ["c++", "c", "go", "java"]
