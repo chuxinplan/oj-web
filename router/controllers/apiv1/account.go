@@ -73,7 +73,7 @@ func httpHandlerLogin(c *gin.Context) {
 		panic(errors.New("参数错误"))
 	}
 
-	if state == managers.EMAIL_NOT_EXIT || state == managers.PASSWORD_IS_WRONG || state == managers.PARAM_IS_WRONG {
+	if state == managers.EMAIL_NOT_EXIT || state == managers.PASSWORD_IS_WRONG || state == managers.PARAM_IS_WRONG || state == managers.QQ_LOGIN_ERROR || state == managers.GITHUB_LOGIN_ERROR {
 		var msg string
 		switch state {
 		case managers.EMAIL_NOT_EXIT:
@@ -86,6 +86,9 @@ func httpHandlerLogin(c *gin.Context) {
 			msg = "Param is wrong!"
 			break
 		case managers.QQ_LOGIN_ERROR:
+			msg = msg
+			break
+		case managers.GITHUB_LOGIN_ERROR:
 			msg = msg
 			break
 		}
