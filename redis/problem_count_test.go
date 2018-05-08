@@ -22,6 +22,6 @@ func TestProblemCountGet(t *testing.T) {
 	g.LoadConfig("../cfg/cfg.toml.debug")
 	store.InitRedis()
 
-	aa, err := ProblemCountGet(13)
+	aa, err := ProblemCountGet(1)
 	fmt.Println(aa, err)
 }

@@ -10,14 +10,15 @@ import (
 )
 
 type Config struct {
-	Run    RunConfig    `toml:"run"`
-	Log    LogConfig    `toml:"log"`
-	Mysql  MysqlConfig  `toml:"mysql"`
-	Jwt    JwtConfig    `toml:"jwt"`
-	Nsq    NsqConfig    `toml:"nsq"`
-	Redis  RedisConfig  `toml:"redis"`
-	Minio  MinioConfig  `toml:"minio"`
-	Common CommonConfig `toml:"common"`
+	Run     RunConfig     `toml:"run"`
+	Log     LogConfig     `toml:"log"`
+	Mysql   MysqlConfig   `toml:"mysql"`
+	Jwt     JwtConfig     `toml:"jwt"`
+	Nsq     NsqConfig     `toml:"nsq"`
+	Redis   RedisConfig   `toml:"redis"`
+	Minio   MinioConfig   `toml:"minio"`
+	Common  CommonConfig  `toml:"common"`
+	Problem ProblemConfig `toml:"problem"`
 }
 
 type RunConfig struct {
@@ -59,6 +60,11 @@ type NsqConfig struct {
 
 type CommonConfig struct {
 	LanguageLimit []string `toml:"languageLimit"`
+}
+
+type ProblemConfig struct {
+	UserId []int64  `toml:"userId"`
+	OjName []string `toml:"ojName"`
 }
 
 type MinioConfig struct {
