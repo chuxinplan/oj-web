@@ -8,10 +8,15 @@ import (
 	"strings"
 	"time"
 
+	"encoding/json"
+
+	"errors"
+
 	"github.com/open-fightcoder/oj-web/common/components"
 	"github.com/open-fightcoder/oj-web/common/components/login"
 	"github.com/open-fightcoder/oj-web/data"
 	"github.com/open-fightcoder/oj-web/models"
+	"github.com/open-fightcoder/oj-web/redis"
 )
 
 const (
@@ -112,6 +117,7 @@ func Login(param1, param2, loginType string) (int, string, int64, string) {
 			}
 			user := &models.User{AccountId: id, UserName: strconv.FormatInt(time.Now().Unix(), 10), NickName: qqMess.NickName, Avator: qqMess.FigureurlQQ}
 			models.Create(user)
+			createUserRedis(user.Id)
 			accountId = id
 			isFirstLogin = true
 		} else {
@@ -127,6 +133,7 @@ func Login(param1, param2, loginType string) (int, string, int64, string) {
 
 			user := &models.User{AccountId: id, NickName: strconv.FormatInt(time.Now().UnixNano(), 10)}
 			models.Create(user)
+			createUserRedis(user.Id)
 			accountId = id
 			isFirstLogin = true
 		} else {
@@ -149,6 +156,26 @@ func Login(param1, param2, loginType string) (int, string, int64, string) {
 }
 
 func AccountRegister(userName string, nickName string, email string, password string) (int64, error) {
-	//TODO 邮箱参数校验,userName校验
-	return data.UserRegister(userName, nickName, email, components.MD5Encode(password))
+	userId, err := data.UserRegister(userName, nickName, email, components.MD5Encode(password))
+	if err != nil {
+		return 0, err
+	}
+	err = createUserRedis(userId)
+	if err != nil {
+		return 0, err
+	}
+	return userId, nil
+}
+
+func createUserRedis(userId int64) error {
+	count := &SubmitCount{0, 0, 0, 0, 0, 0, 0, 0, 0}
+	str, err := json.Marshal(count)
+	if err != nil {
+		return errors.New("创建失败")
+	}
+	boolRet := redis.SubmitCountSet(userId, string(str))
+	if !boolRet {
+		return errors.New("创建失败")
+	}
+	return nil
 }
