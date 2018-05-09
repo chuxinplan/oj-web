@@ -2,15 +2,13 @@ package models
 
 import (
 	"fmt"
-	"strconv"
 	"testing"
-	"time"
 )
 
 func TestUserCreate(t *testing.T) {
 	InitAllInTest()
 
-	user := &User{AccountId: 1, UserName: strconv.FormatInt(time.Now().Unix(), 10), NickName: "11111", Avator: "11111"}
+	user := &User{AccountId: 0, UserName: "HDU", NickName: "HDU"}
 	Create(user)
 	//for i := 1; i < 20; i++ {
 	//user := &User{Id: 7, AccountId: 3, NickName: "fffffffffff", UserName: "aaaa"}

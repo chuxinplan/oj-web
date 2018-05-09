@@ -51,7 +51,11 @@ func ProblemList(origin string, tag string, sort int, isAsc int, currentPage int
 		projects["title"] = v.Title
 		projects["difficulty"] = v.Difficulty
 		projects["status"] = 0
-		projects["ac_rate"] = strconv.FormatFloat(float64(problemCount.AcNum*100)/float64(problemCount.TotalNum), 'f', 2, 64)
+		if problemCount.TotalNum == 0 {
+			projects["ac_rate"] = 0.00
+		} else {
+			projects["ac_rate"] = strconv.FormatFloat(float64(problemCount.AcNum*100)/float64(problemCount.TotalNum), 'f', 2, 64)
+		}
 		problemMess = append(problemMess, projects)
 	}
 	result := map[string]interface{}{
@@ -99,7 +103,11 @@ func ProblemGet(id int64) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, errors.New("获取失败")
 	}
-	problemMess["ac_rate"] = strconv.FormatFloat(float64(problemCount.AcNum*100)/float64(problemCount.TotalNum), 'f', 2, 64)
+	if problemCount.TotalNum == 0 {
+		problemMess["ac_rate"] = 0.00
+	} else {
+		problemMess["ac_rate"] = strconv.FormatFloat(float64(problemCount.AcNum*100)/float64(problemCount.TotalNum), 'f', 2, 64)
+	}
 	return problemMess, nil
 }
 

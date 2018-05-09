@@ -135,7 +135,7 @@ CREATE TABLE `submit_test` (
   `running_memory` int(11) DEFAULT NULL COMMENT '所占空间',
   `result` int(11) DEFAULT NULL COMMENT '运行状态',
   `input` varchar(300) DEFAULT NULL COMMENT '输入',
-  `result_des` varchar(300) DEFAULT NULL COMMENT '结果',
+  `result_des` varchar(1000) DEFAULT NULL COMMENT '结果',
   `code` varchar(200) NOT NULL COMMENT '提交代码',
   PRIMARY KEY (`id`),
   KEY `user_id` (`user_id`),
