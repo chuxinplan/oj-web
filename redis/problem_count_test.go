@@ -13,8 +13,8 @@ func TestProblemCountSet(t *testing.T) {
 	g.LoadConfig("../cfg/cfg.toml.debug")
 	store.InitRedis()
 
-	for i := 1; i <= 2000; i++ {
-		ProblemCountSet(int64(i), "{\"ac_num\":0,\"total_num\":1}")
+	for i := 1; i <= 2300; i++ {
+		ProblemCountSet(int64(i), "{\"ac_num\":0,\"total_num\":0}")
 	}
 }
 

@@ -43,7 +43,7 @@ caseBucket = "case"
 getBaseUrl = "10.0.1.211:9001/"
 
 [common]
-languageLimit = ["c++", "c", "go", "python"]
+languageLimit = ["c++", "c", "golang", "python"]
 
 [problem]
 userId = [1, 3, 4]

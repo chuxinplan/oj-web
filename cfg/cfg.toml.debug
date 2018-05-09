@@ -42,7 +42,7 @@ caseBucket = "case"
 getBaseUrl = "xupt1.fightcoder.com:9001/"
 
 [common]
-languageLimit = ["c++", "c", "go", "python"]
+languageLimit = ["c++", "c", "golang", "python"]
 
 [problem]
 userId = [1, 3, 4]
