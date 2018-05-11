@@ -74,9 +74,13 @@ func SubmitCommon(problemId int64, userId int64, language string, code string) (
 	if err != nil {
 		return nil, errors.New("提交失败")
 	}
+	problem, err := models.ProblemGetById(problemId)
+	if err != nil {
+		return nil, errors.New("提交失败")
+	}
 	sendMess := &components.SendMess{"default", id}
 	var flag bool
-	if isInOj(userId) {
+	if isInOj(problem.UserId) {
 		flag = components.Send("vjudger", sendMess)
 	} else {
 		flag = components.Send("judge", sendMess)
