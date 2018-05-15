@@ -135,6 +135,7 @@ func SubmitGetCommon(SubmitId int64) (map[string]interface{}, error) {
 		"lang":         submit.Language,
 		"code":         code,
 		"time":         time.Unix(submit.SubmitTime, 0).Format("2006-01-02 15:04:05"),
+		"result_des":   submit.ResultDes,
 	}
 	return submitMess, nil
 }
@@ -153,7 +154,7 @@ func SubmitGetTest(SubmitId int64) (map[string]interface{}, error) {
 		"time_cost":   submit.RunningTime,
 		"lang":        submit.Language,
 		"code":        code,
-		"output":      submit.ResultDes,
+		"result_des":  submit.ResultDes,
 		"time":        time.Unix(submit.SubmitTime, 0).Format("2006-01-02 15:04:05"),
 	}
 	return submitMess, nil
