@@ -80,7 +80,7 @@ func ProblemCountByUserId(userId int64) (int64, error) {
 
 func getOriginList(origin string) []int64 {
 	problemCfg := g.Conf().Problem
-	originMap := make(map[string]int64)
+	originMap := map[string]int64{"官方": 1}
 	for i, v := range problemCfg.OjName {
 		originMap[v] = problemCfg.UserId[i]
 	}
