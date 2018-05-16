@@ -134,8 +134,12 @@ func ProblemGetIdsByConds(origins string, tag string) ([]*Problem, error) {
 	return problemList, nil
 }
 
-func ProblemGetProblem(origins string, tag string, sortKey string, isAscKey string, currentPage int, perPage int) ([]*Problem, error) {
+func ProblemGetProblem(difficult string, origins string, tag string, sortKey string, isAscKey string, currentPage int, perPage int) ([]*Problem, error) {
 	session := OrmWeb.NewSession()
+	diffStrs := strings.Split(difficult, ",")
+	if difficult != "" {
+		session.In("difficulty", diffStrs)
+	}
 	originIds := getOriginList(origins)
 	if origins != "" {
 		session.In("user_id", originIds)
@@ -158,8 +162,12 @@ func ProblemGetProblem(origins string, tag string, sortKey string, isAscKey stri
 	return problemList, nil
 }
 
-func ProblemCountProblem(origins string, tag string) (int64, error) {
+func ProblemCountProblem(difficult string, origins string, tag string) (int64, error) {
 	session := OrmWeb.NewSession()
+	diffStrs := strings.Split(difficult, ",")
+	if difficult != "" {
+		session.In("difficulty", diffStrs)
+	}
 	originIds := getOriginList(origins)
 	if origins != "" {
 		session.In("user_id", originIds)

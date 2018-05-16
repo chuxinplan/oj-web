@@ -11,6 +11,7 @@ import (
 type ListParam struct {
 	Origin      string `form:"origin" json:"origin"`
 	Tag         string `form:"tag" json:"tag"`
+	Difficult   string `form:"diff" json:"diff"`
 	Sort        int    `form:"sort" json:"sort"`
 	IsAsc       int    `form:"is_asc" json:"is_asc"`
 	CurrentPage int    `form:"current_page" json:"current_page"`
@@ -38,7 +39,7 @@ func httpHandlerProblemList(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	mess, err := problem.ProblemList(param.Origin, param.Tag, param.Sort, param.IsAsc, param.CurrentPage, param.PerPage)
+	mess, err := problem.ProblemList(param.Difficult, param.Origin, param.Tag, param.Sort, param.IsAsc, param.CurrentPage, param.PerPage)
 	if err != nil {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))
 		return
