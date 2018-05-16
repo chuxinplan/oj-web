@@ -27,6 +27,7 @@ const (
 	LOGIN              = 4
 	QQ_LOGIN_ERROR     = 5
 	GITHUB_LOGIN_ERROR = 6
+	SYSTEM_ERROR       = 7
 )
 
 func GetQQUrl() string {
@@ -90,9 +91,8 @@ func Login(param1, param2, loginType string) (int, string, int64, string) {
 	if loginType == "simple" {
 		account, err := models.AccountGetByEmail(param1)
 		if err != nil {
-			panic(err)
+			return SYSTEM_ERROR, err.Error(), 0, ""
 		}
-
 		if account == nil {
 			return EMAIL_NOT_EXIT, "", 0, ""
 		} else {
@@ -108,7 +108,10 @@ func Login(param1, param2, loginType string) (int, string, int64, string) {
 		if err != nil {
 			return QQ_LOGIN_ERROR, err.Error(), 0, ""
 		}
-		acc, _ := models.AccountGetQQOpenId(openId)
+		acc, err := models.AccountGetQQOpenId(openId)
+		if err != nil {
+			return QQ_LOGIN_ERROR, err.Error(), 0, ""
+		}
 		account := &models.Account{QqId: openId}
 		if acc == nil {
 			id, _ := models.AccountAdd(account)
@@ -134,7 +137,10 @@ func Login(param1, param2, loginType string) (int, string, int64, string) {
 		if err != nil {
 			return GITHUB_LOGIN_ERROR, err.Error(), 0, ""
 		}
-		acc, _ := models.AccountGetGithubOpenId(strconv.Itoa(githubMess.OpenId))
+		acc, err := models.AccountGetGithubOpenId(strconv.Itoa(githubMess.OpenId))
+		if err != nil {
+			return GITHUB_LOGIN_ERROR, err.Error(), 0, ""
+		}
 		account := &models.Account{GithubId: strconv.Itoa(githubMess.OpenId)}
 		if acc == nil {
 			id, _ := models.AccountAdd(account)
