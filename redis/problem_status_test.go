@@ -14,7 +14,7 @@ func TestProblemStatusSet(t *testing.T) {
 	store.InitRedis()
 
 	//for i := 1; i <= 2300; i++ {
-	fmt.Println(ProblemStatusSet(1, 1, 2))
+	fmt.Println(ProblemStatusSet(10, 7, 1))
 	//}
 }
 
