@@ -20,6 +20,18 @@ type ProblemCount struct {
 	TotalNum int64 `json:"total_num"`
 }
 
+func IsInOj(userId int64) bool {
+	flag := false
+	ojIds := g.Conf().Problem.UserId
+	for _, v := range ojIds {
+		if v == userId {
+			flag = true
+			break
+		}
+	}
+	return flag
+}
+
 func ProblemList(difficult string, origin string, tag string, sort int, isAsc int, currentPage int, perPage int) (map[string]interface{}, error) {
 	//TODO 排序条件 1-编号 2-难度 3-通过率
 	sortKey := "id"
@@ -75,6 +87,11 @@ func ProblemGet(id int64) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, errors.New("获取题目失败")
 	}
+	languageLimit := strings.Split(problem.LanguageLimit, ",")
+	if IsInOj(problem.UserId) {
+		languageLimit = getLimitLanguage(problem.LanguageLimit)
+	}
+
 	problemMess := map[string]interface{}{
 		"id":             problem.Id,
 		"user_avator":    userMess.Avator,
@@ -89,7 +106,7 @@ func ProblemGet(id int64) (map[string]interface{}, error) {
 		"input_case":     problem.InputCase,
 		"output_case":    problem.OutputCase,
 		"hint":           problem.Hint,
-		"language_limit": getLimitLanguage(problem.LanguageLimit),
+		"language_limit": languageLimit,
 	}
 	jsonStr, err := redis.ProblemCountGet(problem.Id)
 	if err != nil {
