@@ -147,16 +147,11 @@ func SubmitGetTest(SubmitId int64) (map[string]interface{}, error) {
 	if err != nil {
 		return nil, errors.New("获取失败")
 	}
-	code, err := managers.GetCode(submit.Code)
-	if err != nil {
-		return nil, err
-	}
 	submitMess := map[string]interface{}{
 		"status":      submit.Result,
 		"memory_cost": submit.RunningMemory,
 		"time_cost":   submit.RunningTime,
 		"lang":        submit.Language,
-		"code":        code,
 		"result_des":  submit.ResultDes,
 		"time":        time.Unix(submit.SubmitTime, 0).Format("2006-01-02 15:04:05"),
 	}
