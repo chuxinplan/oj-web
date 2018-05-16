@@ -190,5 +190,17 @@ func createUserRedis(userId int64) error {
 	if !boolRet {
 		return errors.New("创建失败")
 	}
+	err = redis.PersonWeekRankAdd(userId)
+	if err != nil {
+		return errors.New("创建失败")
+	}
+	err = redis.PersonMonthRankAdd(userId)
+	if err != nil {
+		return errors.New("创建失败")
+	}
+	err = redis.RankListAdd(userId)
+	if err != nil {
+		return errors.New("创建失败")
+	}
 	return nil
 }
