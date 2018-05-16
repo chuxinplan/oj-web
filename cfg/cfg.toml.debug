@@ -45,5 +45,5 @@ getBaseUrl = "xupt1.fightcoder.com:9001/"
 languageLimit = ["c++", "c", "golang", "python"]
 
 [problem]
-userId = [3, 4]
+userId = [2, 3]
 ojName = ["CodeVs", "HDU"]
