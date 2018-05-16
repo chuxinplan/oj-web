@@ -53,7 +53,7 @@ func SubmitList(problemId int64, userName string, status int, lang string, curre
 	return submitMess, nil
 }
 
-func isInOj(userId int64) bool {
+func IsInOj(userId int64) bool {
 	flag := false
 	ojIds := g.Conf().Problem.UserId
 	for _, v := range ojIds {
@@ -81,7 +81,7 @@ func SubmitCommon(problemId int64, userId int64, language string, code string) (
 	}
 	sendMess := &components.SendMess{"default", id}
 	var flag bool
-	if isInOj(problem.UserId) {
+	if IsInOj(problem.UserId) {
 		flag = components.Send("vjudger", sendMess)
 	} else {
 		flag = components.Send("judge", sendMess)
