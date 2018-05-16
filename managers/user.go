@@ -47,11 +47,21 @@ func GetUserCollection(userId int64, currentPage int, perPage int) (map[string]i
 		if problem == nil {
 			return nil, errors.New("问题不存在")
 		}
+		status, err := redis.ProblemStatusGet(userId, problem.Id)
+		if err != nil {
+			return nil, errors.New("获取做题状态失败")
+		}
 		projects := make(map[string]interface{})
 		projects["id"] = problem.Id
 		projects["title"] = problem.Title
 		projects["description"] = problem.Description
-		projects["status"] = "已做"
+		if status == 0 {
+			projects["status"] = "待做"
+		} else if status == 1 {
+			projects["status"] = "通过"
+		} else {
+			projects["status"] = "失败"
+		}
 		problemLists = append(problemLists, projects)
 	}
 	problemMess := map[string]interface{}{
