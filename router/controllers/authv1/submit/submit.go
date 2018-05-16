@@ -67,7 +67,8 @@ func httpHandlerSubmitGetCommon(c *gin.Context) {
 	if err != nil {
 		panic(err)
 	}
-	mess, err := submit.SubmitGetCommon(param.SubmitId)
+	userId := base.UserId(c)
+	mess, err := submit.SubmitGetCommon(param.SubmitId, userId)
 	if err != nil {
 		c.JSON(http.StatusOK, base.Fail(err.Error()))
 		return
