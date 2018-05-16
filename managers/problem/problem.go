@@ -139,3 +139,24 @@ func getLimitLanguage(language string) []string {
 	}
 	return retList
 }
+
+func ProblemStatus(userId int64, problemId string) ([]int, error) {
+	ids := []int64{}
+	if problemId != "" {
+		strs := strings.Split(problemId, ",")
+		for i := 0; i < len(strs); i++ {
+			id, _ := strconv.ParseInt(strs[i], 10, 64)
+			ids = append(ids, id)
+		}
+	}
+
+	resMap := []int{}
+	for _, val := range ids {
+		status, err := redis.ProblemStatusGet(userId, val)
+		if err != nil {
+			return nil, err
+		}
+		resMap = append(resMap, status)
+	}
+	return resMap, nil
+}
