@@ -32,6 +32,7 @@ func SubmitList(problemId int64, userName string, status int, lang string, curre
 			return nil, errors.New("查询失败")
 		}
 		projects := make(map[string]interface{})
+		projects["problem_id"] = problem.Id
 		projects["problem_name"] = problem.Title
 		projects["user_id"] = user.Id
 		projects["user_name"] = user.UserName
