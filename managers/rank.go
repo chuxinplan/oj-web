@@ -1,6 +1,7 @@
 package managers
 
 import (
+	"encoding/json"
 	"strconv"
 
 	"github.com/open-fightcoder/oj-web/models"
@@ -23,13 +24,23 @@ func RankListGet(currentPage int, perPage int) (map[string]interface{}, error) {
 		if user == nil {
 			return nil, errors.New("用户不存在!")
 		}
+		jsonStr, err := redis.SubmitCountGet(user.Id)
+		if err != nil {
+			return nil, errors.New("获取失败")
+		}
+		var submitCount SubmitCount
+		err = json.Unmarshal([]byte(jsonStr), &submitCount)
+		if err != nil {
+			return nil, errors.New("获取失败")
+		}
 		projects := make(map[string]interface{})
 		projects["rank_num"] = v["rank_num"]
 		projects["user_name"] = user.UserName
 		projects["nick_name"] = user.NickName
 		projects["avator"] = user.Avator
 		projects["ac_num"] = v["ac_num"]
-		projects["total_num"] = 100
+		projects["total_num"] = submitCount.WrongAnswer + submitCount.CompilationError + submitCount.TimeLimitExceeded +
+			submitCount.MemoryLimitExceeded + submitCount.OutputLimitExceeded + submitCount.RuntimeError + submitCount.SystemError + submitCount.Accepted
 		rankLists = append(rankLists, projects)
 	}
 	rankMess := map[string]interface{}{
@@ -62,6 +73,7 @@ func PersonRankGet(userId int64, isWeek int) ([]map[string]interface{}, error) {
 		projects["rank_num"] = v["rank_num"]
 		projects["user_id"] = v["user_id"]
 		projects["nick_name"] = user.NickName
+		projects["user_name"] = user.UserName
 		projects["avator"] = user.Avator
 		projects["ac_num"] = v["ac_num"]
 		rankLists = append(rankLists, projects)
