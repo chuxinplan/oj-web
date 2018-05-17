@@ -61,10 +61,11 @@ func PersonWeekRankGet(userId int64) ([]map[string]interface{}, error) {
 			return nil, errors.New("获取失败")
 		}
 		var rankLists []map[string]interface{}
-		for i, v := range result.Val() {
+		for _, v := range result.Val() {
 			projects := make(map[string]interface{})
 			scoreRes := RedisClient.ZScore("person_week_rank", v)
-			projects["rank_num"] = i + 1
+			rankId := RedisClient.ZRevRank("person_week_rank", v)
+			projects["rank_num"] = rankId.Val() + 1
 			projects["user_id"] = v
 			projects["ac_num"] = scoreRes.Val()
 			rankLists = append(rankLists, projects)
